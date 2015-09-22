@@ -1,0 +1,58 @@
+{
+  "name": "ndocs",
+  "description": "The best project ever..",
+  "version": "0.1.0",
+  "homepage": "https://github.com/dennishn/ndocs",
+  "author": {
+    "name": "Dennis Haulund Nielsen",
+    "url": "http://github.com/dennishn/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dennishn/ndocs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dennishn/ndocs/issues"
+  },
+  "engines": {
+    "node": ">=0.10"
+  },
+  "scripts": {
+    "test": "grunt assemble"
+  },
+  "devDependencies": {
+    "assemble": "^0.4.42",
+    "assemble-middleware-anchors": "^0.2.4",
+    "assemble-middleware-permalinks": "^0.5.2",
+    "assemble-middleware-sitemap": "^0.2.5",
+    "assemble-middleware-toc": "^0.2.3",
+    "browser-sync": "^2.9.6",
+    "grunt": "^0.4.5",
+    "grunt-autoprefixer": "^3.0.3",
+    "grunt-browser-sync": "^2.1.3",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-connect": "^0.8.0",
+    "grunt-contrib-copy": "^0.5.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-sass": "^1.1.0-beta",
+    "grunt-usemin": "3.0.0",
+    "grunt-wiredep": "^2.0.0",
+    "load-grunt-tasks": "^0.6.0",
+    "time-grunt": "^1.0.0"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/dennishn/ndocs/blob/master/LICENSE-MIT"
+    }
+  ],
+  "keywords": [
+    "assemble",
+    "templates",
+    "handlebars",
+    "site generator",
+    "site builder",
+    "grunt"
+  ]
+}
