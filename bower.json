@@ -1,8 +1,10 @@
 {
-  "name": "ndocs",
-  "version": "0.1.0",
+  "name": "ndoc",
+  "ignore": [
+  ],
   "dependencies": {
-    "bootstrap": "~3.2.0"
+  },
+  "devDependencies": {
   },
   "private": true
 }
