@@ -8,10 +8,7 @@ module.exports = {
 	},
 	sass: {
 		files: ['<%= paths.scss %>**/*.scss', '<%= paths.doc %>assets/**/*.scss'],
-		tasks: ['sass'],
-		options: {
-			livereload:true
-		}
+		tasks: ['sass']
 	},
 	js: {
 		files: ['<%= paths.js %>**/*.js', '<%= paths.doc %>assets/js/**/*.js'],

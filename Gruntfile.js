@@ -26,10 +26,8 @@ module.exports = function(grunt) {
   // Load Grunt configurations and tasks
   require('load-grunt-config')(grunt, {
     configPath: require('path').join(process.cwd(), project.paths.config),
-    data: project,
-    jitGrunt: {
-      staticMappings: {
-      }
-    }
+    data: project
   });
+
+  //grunt.loadNpmTasks('grunt-browser-sync');
 };
