@@ -1,4 +1,5 @@
 module.exports = function(grunt) {
+
 	// Define project configuration
 	var project = {
 		paths: {
@@ -17,11 +18,25 @@ module.exports = function(grunt) {
 				return project.paths.config + '*.js';
 			},
 			grunt: 'Gruntfile.js',
-			js: ['js/foundation/foundation.js', 'js/foundation/*.js'],
+			js: ['js/*.js'],
 			scss: ['scss/nodes.scss']
 		},
 		pkg: grunt.file.readJSON('package.json')
 	};
+
+	grunt.registerTask('bs-connect', function () {
+		browserSync({
+			server: {
+				baseDir: ['app', '.tmp'],
+				routes: {
+					'/bower_components': './bower_components'
+				}
+			},
+			middleware: [
+				modRewrite(['!(\\..+)$ /index.html [L]'])
+			]
+		});
+	});
 
 	// Load Grunt configurations and tasks
 	require('load-grunt-config')(grunt, {

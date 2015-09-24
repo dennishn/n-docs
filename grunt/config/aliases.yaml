@@ -20,7 +20,8 @@ deploy:
   - 'build'
 # Server
 server:
-  - 'browserSync'
+  - 'build'
+  - 'connect'
   - 'watch'
 # Default
 default:
