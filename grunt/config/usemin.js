@@ -1,5 +1,6 @@
 module.exports = {
-	vendor: {
-		html: ['<%= paths.dist %>/docs/']
+	html: '<%= paths.dist %>**/*.html',
+	options: {
+		assetsDirs: ['<%= paths.dist %>']
 	}
-}
+};

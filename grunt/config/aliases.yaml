@@ -2,22 +2,15 @@
 ---
 # Build everything
 build:
-  - 'build:assets'
-  - 'assemble'
-# Build assets
-'build:assets':
   - 'clean'
+  - 'assemble'
+  - 'useminPrepare'
   - 'sass'
+  - 'postcss'
+  - 'copy'
   - 'concat'
   - 'uglify'
-  - 'copy'
-  - 'cssmin'
-# Develop
-develop:
-  - 'watch'
-# Deploy
-deploy:
-  - 'build'
+  - 'usemin'
 # Server
 server:
   - 'build'
@@ -25,5 +18,4 @@ server:
   - 'watch'
 # Default
 default:
-  - 'build'
-  - 'watch'
+  - 'server'

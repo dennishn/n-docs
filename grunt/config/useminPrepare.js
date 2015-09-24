@@ -1,16 +1,10 @@
 module.exports = {
-	vendor: {
-		html: '<%= paths.doc %>includes/vendor-scripts.html',
-		options: {
-			dest: '<%= yeoman.dist %>',
-			flow: {
-				steps: {
-					js: [
-						'concat',
-						'uglifyjs'
-					]
-				},
-				post: {}
+	html: '<%= paths.doc %>layouts/default.html',
+	options: {
+		dest: '<%= paths.dist %>',
+		flow: {
+			steps: {
+				js: ['concat', 'uglify']
 			}
 		}
 	}

@@ -1,32 +1,32 @@
 // https://github.com/gruntjs/grunt-contrib-watch
 module.exports = {
 	grunt: {
-		options: {
-			spawn: false
-		},
 		files: ['Gruntfile.js']
 	},
 	sass: {
 		files: ['<%= paths.scss %>**/*.scss', '<%= paths.doc %>assets/**/*.scss'],
-		tasks: ['sass']
+		tasks: ['sass', 'postcss'],
+		options: {
+			livereload: true
+		}
 	},
 	js: {
 		files: ['<%= paths.js %>**/*.js', '<%= paths.doc %>assets/js/**/*.js'],
-		tasks: ['copy', 'concat', 'uglify'],
+		tasks: ['build'],
 		options: {
 			livereload: true
 		}
 	},
 	assemble_all: {
 		files: ['<%= paths.doc %>{includes,layouts}/**/*.html'],
-		tasks: ['assemble'],
+		tasks: ['build'],
 		options: {
 			livereload: true
 		}
 	},
 	assemble_pages: {
 		files: ['<%= paths.doc %>pages/**/*.html'],
-		tasks: ['newer:assemble'],
+		tasks: ['build'],
 		options: {
 			livereload: true
 		}

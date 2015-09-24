@@ -2,8 +2,8 @@
 module.exports = {
   dist: {
     files: {
-      '<%= paths.dist %>assets/js/nodes.js': '<%= files.js %>',
-      '<%= paths.dist %>assets/js/docs.js': '<%= paths.doc %>assets/js/docs'
+      '<%= paths.dist %>assets/js/docs.js': '<%= paths.doc %>assets/js/*.js',
+      '<%= paths.dist %>assets/js/nodes.js': '<%= paths.js %>*.js'
     }
   }
 };

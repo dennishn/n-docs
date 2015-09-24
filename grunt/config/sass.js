@@ -6,7 +6,7 @@ module.exports = {
     },
     files: {
       '<%= paths.dist %>assets/css/nodes.css': '<%= files.scss %>',
-      '<%= paths.dist %>docs/assets/css/docs.css': '<%= paths.doc %>assets/scss/docs.scss'
+      '<%= paths.dist %>assets/css/docs.css': '<%= paths.doc %>assets/scss/docs.scss'
     }
   }
 };

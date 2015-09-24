@@ -24,26 +24,13 @@ module.exports = function(grunt) {
 		pkg: grunt.file.readJSON('package.json')
 	};
 
-	grunt.registerTask('bs-connect', function () {
-		browserSync({
-			server: {
-				baseDir: ['app', '.tmp'],
-				routes: {
-					'/bower_components': './bower_components'
-				}
-			},
-			middleware: [
-				modRewrite(['!(\\..+)$ /index.html [L]'])
-			]
-		});
-	});
-
 	// Load Grunt configurations and tasks
 	require('load-grunt-config')(grunt, {
 		configPath: require('path').join(process.cwd(), project.paths.config),
 		data: project,
 		jitGrunt: {
 			staticMappings: {
+				useminPrepare: 'grunt-usemin'
 			}
 		}
 	});

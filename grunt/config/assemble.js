@@ -16,16 +16,19 @@ module.exports = {
 	dist: {
 		options: {
 			flatten: false,
-			assets: '<%= paths.dist %>docs/assets',
+			assets: '<%= paths.dist %>assets',
 			data: ['<%= paths.doc %>data/*.json'],
 			helpers: ['<%= paths.doc %>helpers/*.js'],
 			partials: ['<%= paths.doc %>includes/**/*.{html,scss}'],
 			layoutdir: '<%= paths.doc %>layouts',
-			layout: 'default.html'
+			layout: 'default.html',
+			site: {
+				base: '<%= paths.dist %>'
+			}
 		},
 		expand: true,
 		cwd: '<%= paths.doc %>pages',
 		src: '**/*.{html,md}',
-		dest: '<%= paths.dist %>docs/'
+		dest: '<%= paths.dist %>'
 	}
 };
