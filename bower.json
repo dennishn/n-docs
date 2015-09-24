@@ -1,10 +1,9 @@
 {
   "name": "ndoc",
-  "ignore": [
-  ],
+  "ignore": [],
   "dependencies": {
+    "jquery": "~2.1.4"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "private": true
 }
