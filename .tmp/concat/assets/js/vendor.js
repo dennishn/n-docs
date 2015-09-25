@@ -9208,3 +9208,5653 @@ if ( typeof noGlobal === strundefined ) {
 return jQuery;
 
 }));
+
+/*!
+ * Bootstrap v3.3.5 (http://getbootstrap.com)
+ * Copyright 2011-2015 Twitter, Inc.
+ * Licensed under the MIT license
+ */
+
+if (typeof jQuery === 'undefined') {
+  throw new Error('Bootstrap\'s JavaScript requires jQuery')
+}
+
++function ($) {
+  'use strict';
+  var version = $.fn.jquery.split(' ')[0].split('.')
+  if ((version[0] < 2 && version[1] < 9) || (version[0] == 1 && version[1] == 9 && version[2] < 1)) {
+    throw new Error('Bootstrap\'s JavaScript requires jQuery version 1.9.1 or higher')
+  }
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: transition.js v3.3.5
+ * http://getbootstrap.com/javascript/#transitions
+ * ========================================================================
+ * Copyright 2011-2015 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
+  // ============================================================
+
+  function transitionEnd() {
+    var el = document.createElement('bootstrap')
+
+    var transEndEventNames = {
+      WebkitTransition : 'webkitTransitionEnd',
+      MozTransition    : 'transitionend',
+      OTransition      : 'oTransitionEnd otransitionend',
+      transition       : 'transitionend'
+    }
+
+    for (var name in transEndEventNames) {
+      if (el.style[name] !== undefined) {
+        return { end: transEndEventNames[name] }
+      }
+    }
+
+    return false // explicit for ie8 (  ._.)
+  }
+
+  // http://blog.alexmaccaw.com/css-transitions
+  $.fn.emulateTransitionEnd = function (duration) {
+    var called = false
+    var $el = this
+    $(this).one('bsTransitionEnd', function () { called = true })
+    var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
+    setTimeout(callback, duration)
+    return this
+  }
+
+  $(function () {
+    $.support.transition = transitionEnd()
+
+    if (!$.support.transition) return
+
+    $.event.special.bsTransitionEnd = {
+      bindType: $.support.transition.end,
+      delegateType: $.support.transition.end,
+      handle: function (e) {
+        if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
+      }
+    }
+  })
+
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: alert.js v3.3.5
+ * http://getbootstrap.com/javascript/#alerts
+ * ========================================================================
+ * Copyright 2011-2015 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // ALERT CLASS DEFINITION
+  // ======================
+
+  var dismiss = '[data-dismiss="alert"]'
+  var Alert   = function (el) {
+    $(el).on('click', dismiss, this.close)
+  }
+
+  Alert.VERSION = '3.3.5'
+
+  Alert.TRANSITION_DURATION = 150
+
+  Alert.prototype.close = function (e) {
+    var $this    = $(this)
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = $(selector)
+
+    if (e) e.preventDefault()
+
+    if (!$parent.length) {
+      $parent = $this.closest('.alert')
+    }
+
+    $parent.trigger(e = $.Event('close.bs.alert'))
+
+    if (e.isDefaultPrevented()) return
+
+    $parent.removeClass('in')
+
+    function removeElement() {
+      // detach from parent, fire event then clean up data
+      $parent.detach().trigger('closed.bs.alert').remove()
+    }
+
+    $.support.transition && $parent.hasClass('fade') ?
+      $parent
+        .one('bsTransitionEnd', removeElement)
+        .emulateTransitionEnd(Alert.TRANSITION_DURATION) :
+      removeElement()
+  }
+
+
+  // ALERT PLUGIN DEFINITION
+  // =======================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.alert')
+
+      if (!data) $this.data('bs.alert', (data = new Alert(this)))
+      if (typeof option == 'string') data[option].call($this)
+    })
+  }
+
+  var old = $.fn.alert
+
+  $.fn.alert             = Plugin
+  $.fn.alert.Constructor = Alert
+
+
+  // ALERT NO CONFLICT
+  // =================
+
+  $.fn.alert.noConflict = function () {
+    $.fn.alert = old
+    return this
+  }
+
+
+  // ALERT DATA-API
+  // ==============
+
+  $(document).on('click.bs.alert.data-api', dismiss, Alert.prototype.close)
+
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: button.js v3.3.5
+ * http://getbootstrap.com/javascript/#buttons
+ * ========================================================================
+ * Copyright 2011-2015 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // BUTTON PUBLIC CLASS DEFINITION
+  // ==============================
+
+  var Button = function (element, options) {
+    this.$element  = $(element)
+    this.options   = $.extend({}, Button.DEFAULTS, options)
+    this.isLoading = false
+  }
+
+  Button.VERSION  = '3.3.5'
+
+  Button.DEFAULTS = {
+    loadingText: 'loading...'
+  }
+
+  Button.prototype.setState = function (state) {
+    var d    = 'disabled'
+    var $el  = this.$element
+    var val  = $el.is('input') ? 'val' : 'html'
+    var data = $el.data()
+
+    state += 'Text'
+
+    if (data.resetText == null) $el.data('resetText', $el[val]())
+
+    // push to event loop to allow forms to submit
+    setTimeout($.proxy(function () {
+      $el[val](data[state] == null ? this.options[state] : data[state])
+
+      if (state == 'loadingText') {
+        this.isLoading = true
+        $el.addClass(d).attr(d, d)
+      } else if (this.isLoading) {
+        this.isLoading = false
+        $el.removeClass(d).removeAttr(d)
+      }
+    }, this), 0)
+  }
+
+  Button.prototype.toggle = function () {
+    var changed = true
+    var $parent = this.$element.closest('[data-toggle="buttons"]')
+
+    if ($parent.length) {
+      var $input = this.$element.find('input')
+      if ($input.prop('type') == 'radio') {
+        if ($input.prop('checked')) changed = false
+        $parent.find('.active').removeClass('active')
+        this.$element.addClass('active')
+      } else if ($input.prop('type') == 'checkbox') {
+        if (($input.prop('checked')) !== this.$element.hasClass('active')) changed = false
+        this.$element.toggleClass('active')
+      }
+      $input.prop('checked', this.$element.hasClass('active'))
+      if (changed) $input.trigger('change')
+    } else {
+      this.$element.attr('aria-pressed', !this.$element.hasClass('active'))
+      this.$element.toggleClass('active')
+    }
+  }
+
+
+  // BUTTON PLUGIN DEFINITION
+  // ========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.button')
+      var options = typeof option == 'object' && option
+
+      if (!data) $this.data('bs.button', (data = new Button(this, options)))
+
+      if (option == 'toggle') data.toggle()
+      else if (option) data.setState(option)
+    })
+  }
+
+  var old = $.fn.button
+
+  $.fn.button             = Plugin
+  $.fn.button.Constructor = Button
+
+
+  // BUTTON NO CONFLICT
+  // ==================
+
+  $.fn.button.noConflict = function () {
+    $.fn.button = old
+    return this
+  }
+
+
+  // BUTTON DATA-API
+  // ===============
+
+  $(document)
+    .on('click.bs.button.data-api', '[data-toggle^="button"]', function (e) {
+      var $btn = $(e.target)
+      if (!$btn.hasClass('btn')) $btn = $btn.closest('.btn')
+      Plugin.call($btn, 'toggle')
+      if (!($(e.target).is('input[type="radio"]') || $(e.target).is('input[type="checkbox"]'))) e.preventDefault()
+    })
+    .on('focus.bs.button.data-api blur.bs.button.data-api', '[data-toggle^="button"]', function (e) {
+      $(e.target).closest('.btn').toggleClass('focus', /^focus(in)?$/.test(e.type))
+    })
+
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: carousel.js v3.3.5
+ * http://getbootstrap.com/javascript/#carousel
+ * ========================================================================
+ * Copyright 2011-2015 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // CAROUSEL CLASS DEFINITION
+  // =========================
+
+  var Carousel = function (element, options) {
+    this.$element    = $(element)
+    this.$indicators = this.$element.find('.carousel-indicators')
+    this.options     = options
+    this.paused      = null
+    this.sliding     = null
+    this.interval    = null
+    this.$active     = null
+    this.$items      = null
+
+    this.options.keyboard && this.$element.on('keydown.bs.carousel', $.proxy(this.keydown, this))
+
+    this.options.pause == 'hover' && !('ontouchstart' in document.documentElement) && this.$element
+      .on('mouseenter.bs.carousel', $.proxy(this.pause, this))
+      .on('mouseleave.bs.carousel', $.proxy(this.cycle, this))
+  }
+
+  Carousel.VERSION  = '3.3.5'
+
+  Carousel.TRANSITION_DURATION = 600
+
+  Carousel.DEFAULTS = {
+    interval: 5000,
+    pause: 'hover',
+    wrap: true,
+    keyboard: true
+  }
+
+  Carousel.prototype.keydown = function (e) {
+    if (/input|textarea/i.test(e.target.tagName)) return
+    switch (e.which) {
+      case 37: this.prev(); break
+      case 39: this.next(); break
+      default: return
+    }
+
+    e.preventDefault()
+  }
+
+  Carousel.prototype.cycle = function (e) {
+    e || (this.paused = false)
+
+    this.interval && clearInterval(this.interval)
+
+    this.options.interval
+      && !this.paused
+      && (this.interval = setInterval($.proxy(this.next, this), this.options.interval))
+
+    return this
+  }
+
+  Carousel.prototype.getItemIndex = function (item) {
+    this.$items = item.parent().children('.item')
+    return this.$items.index(item || this.$active)
+  }
+
+  Carousel.prototype.getItemForDirection = function (direction, active) {
+    var activeIndex = this.getItemIndex(active)
+    var willWrap = (direction == 'prev' && activeIndex === 0)
+                || (direction == 'next' && activeIndex == (this.$items.length - 1))
+    if (willWrap && !this.options.wrap) return active
+    var delta = direction == 'prev' ? -1 : 1
+    var itemIndex = (activeIndex + delta) % this.$items.length
+    return this.$items.eq(itemIndex)
+  }
+
+  Carousel.prototype.to = function (pos) {
+    var that        = this
+    var activeIndex = this.getItemIndex(this.$active = this.$element.find('.item.active'))
+
+    if (pos > (this.$items.length - 1) || pos < 0) return
+
+    if (this.sliding)       return this.$element.one('slid.bs.carousel', function () { that.to(pos) }) // yes, "slid"
+    if (activeIndex == pos) return this.pause().cycle()
+
+    return this.slide(pos > activeIndex ? 'next' : 'prev', this.$items.eq(pos))
+  }
+
+  Carousel.prototype.pause = function (e) {
+    e || (this.paused = true)
+
+    if (this.$element.find('.next, .prev').length && $.support.transition) {
+      this.$element.trigger($.support.transition.end)
+      this.cycle(true)
+    }
+
+    this.interval = clearInterval(this.interval)
+
+    return this
+  }
+
+  Carousel.prototype.next = function () {
+    if (this.sliding) return
+    return this.slide('next')
+  }
+
+  Carousel.prototype.prev = function () {
+    if (this.sliding) return
+    return this.slide('prev')
+  }
+
+  Carousel.prototype.slide = function (type, next) {
+    var $active   = this.$element.find('.item.active')
+    var $next     = next || this.getItemForDirection(type, $active)
+    var isCycling = this.interval
+    var direction = type == 'next' ? 'left' : 'right'
+    var that      = this
+
+    if ($next.hasClass('active')) return (this.sliding = false)
+
+    var relatedTarget = $next[0]
+    var slideEvent = $.Event('slide.bs.carousel', {
+      relatedTarget: relatedTarget,
+      direction: direction
+    })
+    this.$element.trigger(slideEvent)
+    if (slideEvent.isDefaultPrevented()) return
+
+    this.sliding = true
+
+    isCycling && this.pause()
+
+    if (this.$indicators.length) {
+      this.$indicators.find('.active').removeClass('active')
+      var $nextIndicator = $(this.$indicators.children()[this.getItemIndex($next)])
+      $nextIndicator && $nextIndicator.addClass('active')
+    }
+
+    var slidEvent = $.Event('slid.bs.carousel', { relatedTarget: relatedTarget, direction: direction }) // yes, "slid"
+    if ($.support.transition && this.$element.hasClass('slide')) {
+      $next.addClass(type)
+      $next[0].offsetWidth // force reflow
+      $active.addClass(direction)
+      $next.addClass(direction)
+      $active
+        .one('bsTransitionEnd', function () {
+          $next.removeClass([type, direction].join(' ')).addClass('active')
+          $active.removeClass(['active', direction].join(' '))
+          that.sliding = false
+          setTimeout(function () {
+            that.$element.trigger(slidEvent)
+          }, 0)
+        })
+        .emulateTransitionEnd(Carousel.TRANSITION_DURATION)
+    } else {
+      $active.removeClass('active')
+      $next.addClass('active')
+      this.sliding = false
+      this.$element.trigger(slidEvent)
+    }
+
+    isCycling && this.cycle()
+
+    return this
+  }
+
+
+  // CAROUSEL PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.carousel')
+      var options = $.extend({}, Carousel.DEFAULTS, $this.data(), typeof option == 'object' && option)
+      var action  = typeof option == 'string' ? option : options.slide
+
+      if (!data) $this.data('bs.carousel', (data = new Carousel(this, options)))
+      if (typeof option == 'number') data.to(option)
+      else if (action) data[action]()
+      else if (options.interval) data.pause().cycle()
+    })
+  }
+
+  var old = $.fn.carousel
+
+  $.fn.carousel             = Plugin
+  $.fn.carousel.Constructor = Carousel
+
+
+  // CAROUSEL NO CONFLICT
+  // ====================
+
+  $.fn.carousel.noConflict = function () {
+    $.fn.carousel = old
+    return this
+  }
+
+
+  // CAROUSEL DATA-API
+  // =================
+
+  var clickHandler = function (e) {
+    var href
+    var $this   = $(this)
+    var $target = $($this.attr('data-target') || (href = $this.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '')) // strip for ie7
+    if (!$target.hasClass('carousel')) return
+    var options = $.extend({}, $target.data(), $this.data())
+    var slideIndex = $this.attr('data-slide-to')
+    if (slideIndex) options.interval = false
+
+    Plugin.call($target, options)
+
+    if (slideIndex) {
+      $target.data('bs.carousel').to(slideIndex)
+    }
+
+    e.preventDefault()
+  }
+
+  $(document)
+    .on('click.bs.carousel.data-api', '[data-slide]', clickHandler)
+    .on('click.bs.carousel.data-api', '[data-slide-to]', clickHandler)
+
+  $(window).on('load', function () {
+    $('[data-ride="carousel"]').each(function () {
+      var $carousel = $(this)
+      Plugin.call($carousel, $carousel.data())
+    })
+  })
+
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: collapse.js v3.3.5
+ * http://getbootstrap.com/javascript/#collapse
+ * ========================================================================
+ * Copyright 2011-2015 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // COLLAPSE PUBLIC CLASS DEFINITION
+  // ================================
+
+  var Collapse = function (element, options) {
+    this.$element      = $(element)
+    this.options       = $.extend({}, Collapse.DEFAULTS, options)
+    this.$trigger      = $('[data-toggle="collapse"][href="#' + element.id + '"],' +
+                           '[data-toggle="collapse"][data-target="#' + element.id + '"]')
+    this.transitioning = null
+
+    if (this.options.parent) {
+      this.$parent = this.getParent()
+    } else {
+      this.addAriaAndCollapsedClass(this.$element, this.$trigger)
+    }
+
+    if (this.options.toggle) this.toggle()
+  }
+
+  Collapse.VERSION  = '3.3.5'
+
+  Collapse.TRANSITION_DURATION = 350
+
+  Collapse.DEFAULTS = {
+    toggle: true
+  }
+
+  Collapse.prototype.dimension = function () {
+    var hasWidth = this.$element.hasClass('width')
+    return hasWidth ? 'width' : 'height'
+  }
+
+  Collapse.prototype.show = function () {
+    if (this.transitioning || this.$element.hasClass('in')) return
+
+    var activesData
+    var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+
+    if (actives && actives.length) {
+      activesData = actives.data('bs.collapse')
+      if (activesData && activesData.transitioning) return
+    }
+
+    var startEvent = $.Event('show.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    if (actives && actives.length) {
+      Plugin.call(actives, 'hide')
+      activesData || actives.data('bs.collapse', null)
+    }
+
+    var dimension = this.dimension()
+
+    this.$element
+      .removeClass('collapse')
+      .addClass('collapsing')[dimension](0)
+      .attr('aria-expanded', true)
+
+    this.$trigger
+      .removeClass('collapsed')
+      .attr('aria-expanded', true)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse in')[dimension]('')
+      this.transitioning = 0
+      this.$element
+        .trigger('shown.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    var scrollSize = $.camelCase(['scroll', dimension].join('-'))
+
+    this.$element
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
+  }
+
+  Collapse.prototype.hide = function () {
+    if (this.transitioning || !this.$element.hasClass('in')) return
+
+    var startEvent = $.Event('hide.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    var dimension = this.dimension()
+
+    this.$element[dimension](this.$element[dimension]())[0].offsetHeight
+
+    this.$element
+      .addClass('collapsing')
+      .removeClass('collapse in')
+      .attr('aria-expanded', false)
+
+    this.$trigger
+      .addClass('collapsed')
+      .attr('aria-expanded', false)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.transitioning = 0
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse')
+        .trigger('hidden.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    this.$element
+      [dimension](0)
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)
+  }
+
+  Collapse.prototype.toggle = function () {
+    this[this.$element.hasClass('in') ? 'hide' : 'show']()
+  }
+
+  Collapse.prototype.getParent = function () {
+    return $(this.options.parent)
+      .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
+      .each($.proxy(function (i, element) {
+        var $element = $(element)
+        this.addAriaAndCollapsedClass(getTargetFromTrigger($element), $element)
+      }, this))
+      .end()
+  }
+
+  Collapse.prototype.addAriaAndCollapsedClass = function ($element, $trigger) {
+    var isOpen = $element.hasClass('in')
+
+    $element.attr('aria-expanded', isOpen)
+    $trigger
+      .toggleClass('collapsed', !isOpen)
+      .attr('aria-expanded', isOpen)
+  }
+
+  function getTargetFromTrigger($trigger) {
+    var href
+    var target = $trigger.attr('data-target')
+      || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+
+    return $(target)
+  }
+
+
+  // COLLAPSE PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.collapse')
+      var options = $.extend({}, Collapse.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
+      if (!data) $this.data('bs.collapse', (data = new Collapse(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.collapse
+
+  $.fn.collapse             = Plugin
+  $.fn.collapse.Constructor = Collapse
+
+
+  // COLLAPSE NO CONFLICT
+  // ====================
+
+  $.fn.collapse.noConflict = function () {
+    $.fn.collapse = old
+    return this
+  }
+
+
+  // COLLAPSE DATA-API
+  // =================
+
+  $(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
+    var $this   = $(this)
+
+    if (!$this.attr('data-target')) e.preventDefault()
+
+    var $target = getTargetFromTrigger($this)
+    var data    = $target.data('bs.collapse')
+    var option  = data ? 'toggle' : $this.data()
+
+    Plugin.call($target, option)
+  })
+
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: dropdown.js v3.3.5
+ * http://getbootstrap.com/javascript/#dropdowns
+ * ========================================================================
+ * Copyright 2011-2015 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // DROPDOWN CLASS DEFINITION
+  // =========================
+
+  var backdrop = '.dropdown-backdrop'
+  var toggle   = '[data-toggle="dropdown"]'
+  var Dropdown = function (element) {
+    $(element).on('click.bs.dropdown', this.toggle)
+  }
+
+  Dropdown.VERSION = '3.3.5'
+
+  function getParent($this) {
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = selector && $(selector)
+
+    return $parent && $parent.length ? $parent : $this.parent()
+  }
+
+  function clearMenus(e) {
+    if (e && e.which === 3) return
+    $(backdrop).remove()
+    $(toggle).each(function () {
+      var $this         = $(this)
+      var $parent       = getParent($this)
+      var relatedTarget = { relatedTarget: this }
+
+      if (!$parent.hasClass('open')) return
+
+      if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
+
+      $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this.attr('aria-expanded', 'false')
+      $parent.removeClass('open').trigger('hidden.bs.dropdown', relatedTarget)
+    })
+  }
+
+  Dropdown.prototype.toggle = function (e) {
+    var $this = $(this)
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    clearMenus()
+
+    if (!isActive) {
+      if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+        // if mobile we use a backdrop because click events don't delegate
+        $(document.createElement('div'))
+          .addClass('dropdown-backdrop')
+          .insertAfter($(this))
+          .on('click', clearMenus)
+      }
+
+      var relatedTarget = { relatedTarget: this }
+      $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this
+        .trigger('focus')
+        .attr('aria-expanded', 'true')
+
+      $parent
+        .toggleClass('open')
+        .trigger('shown.bs.dropdown', relatedTarget)
+    }
+
+    return false
+  }
+
+  Dropdown.prototype.keydown = function (e) {
+    if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return
+
+    var $this = $(this)
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    if (!isActive && e.which != 27 || isActive && e.which == 27) {
+      if (e.which == 27) $parent.find(toggle).trigger('focus')
+      return $this.trigger('click')
+    }
+
+    var desc = ' li:not(.disabled):visible a'
+    var $items = $parent.find('.dropdown-menu' + desc)
+
+    if (!$items.length) return
+
+    var index = $items.index(e.target)
+
+    if (e.which == 38 && index > 0)                 index--         // up
+    if (e.which == 40 && index < $items.length - 1) index++         // down
+    if (!~index)                                    index = 0
+
+    $items.eq(index).trigger('focus')
+  }
+
+
+  // DROPDOWN PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.dropdown')
+
+      if (!data) $this.data('bs.dropdown', (data = new Dropdown(this)))
+      if (typeof option == 'string') data[option].call($this)
+    })
+  }
+
+  var old = $.fn.dropdown
+
+  $.fn.dropdown             = Plugin
+  $.fn.dropdown.Constructor = Dropdown
+
+
+  // DROPDOWN NO CONFLICT
+  // ====================
+
+  $.fn.dropdown.noConflict = function () {
+    $.fn.dropdown = old
+    return this
+  }
+
+
+  // APPLY TO STANDARD DROPDOWN ELEMENTS
+  // ===================================
+
+  $(document)
+    .on('click.bs.dropdown.data-api', clearMenus)
+    .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
+    .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+    .on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown)
+    .on('keydown.bs.dropdown.data-api', '.dropdown-menu', Dropdown.prototype.keydown)
+
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: modal.js v3.3.5
+ * http://getbootstrap.com/javascript/#modals
+ * ========================================================================
+ * Copyright 2011-2015 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // MODAL CLASS DEFINITION
+  // ======================
+
+  var Modal = function (element, options) {
+    this.options             = options
+    this.$body               = $(document.body)
+    this.$element            = $(element)
+    this.$dialog             = this.$element.find('.modal-dialog')
+    this.$backdrop           = null
+    this.isShown             = null
+    this.originalBodyPad     = null
+    this.scrollbarWidth      = 0
+    this.ignoreBackdropClick = false
+
+    if (this.options.remote) {
+      this.$element
+        .find('.modal-content')
+        .load(this.options.remote, $.proxy(function () {
+          this.$element.trigger('loaded.bs.modal')
+        }, this))
+    }
+  }
+
+  Modal.VERSION  = '3.3.5'
+
+  Modal.TRANSITION_DURATION = 300
+  Modal.BACKDROP_TRANSITION_DURATION = 150
+
+  Modal.DEFAULTS = {
+    backdrop: true,
+    keyboard: true,
+    show: true
+  }
+
+  Modal.prototype.toggle = function (_relatedTarget) {
+    return this.isShown ? this.hide() : this.show(_relatedTarget)
+  }
+
+  Modal.prototype.show = function (_relatedTarget) {
+    var that = this
+    var e    = $.Event('show.bs.modal', { relatedTarget: _relatedTarget })
+
+    this.$element.trigger(e)
+
+    if (this.isShown || e.isDefaultPrevented()) return
+
+    this.isShown = true
+
+    this.checkScrollbar()
+    this.setScrollbar()
+    this.$body.addClass('modal-open')
+
+    this.escape()
+    this.resize()
+
+    this.$element.on('click.dismiss.bs.modal', '[data-dismiss="modal"]', $.proxy(this.hide, this))
+
+    this.$dialog.on('mousedown.dismiss.bs.modal', function () {
+      that.$element.one('mouseup.dismiss.bs.modal', function (e) {
+        if ($(e.target).is(that.$element)) that.ignoreBackdropClick = true
+      })
+    })
+
+    this.backdrop(function () {
+      var transition = $.support.transition && that.$element.hasClass('fade')
+
+      if (!that.$element.parent().length) {
+        that.$element.appendTo(that.$body) // don't move modals dom position
+      }
+
+      that.$element
+        .show()
+        .scrollTop(0)
+
+      that.adjustDialog()
+
+      if (transition) {
+        that.$element[0].offsetWidth // force reflow
+      }
+
+      that.$element.addClass('in')
+
+      that.enforceFocus()
+
+      var e = $.Event('shown.bs.modal', { relatedTarget: _relatedTarget })
+
+      transition ?
+        that.$dialog // wait for modal to slide in
+          .one('bsTransitionEnd', function () {
+            that.$element.trigger('focus').trigger(e)
+          })
+          .emulateTransitionEnd(Modal.TRANSITION_DURATION) :
+        that.$element.trigger('focus').trigger(e)
+    })
+  }
+
+  Modal.prototype.hide = function (e) {
+    if (e) e.preventDefault()
+
+    e = $.Event('hide.bs.modal')
+
+    this.$element.trigger(e)
+
+    if (!this.isShown || e.isDefaultPrevented()) return
+
+    this.isShown = false
+
+    this.escape()
+    this.resize()
+
+    $(document).off('focusin.bs.modal')
+
+    this.$element
+      .removeClass('in')
+      .off('click.dismiss.bs.modal')
+      .off('mouseup.dismiss.bs.modal')
+
+    this.$dialog.off('mousedown.dismiss.bs.modal')
+
+    $.support.transition && this.$element.hasClass('fade') ?
+      this.$element
+        .one('bsTransitionEnd', $.proxy(this.hideModal, this))
+        .emulateTransitionEnd(Modal.TRANSITION_DURATION) :
+      this.hideModal()
+  }
+
+  Modal.prototype.enforceFocus = function () {
+    $(document)
+      .off('focusin.bs.modal') // guard against infinite focus loop
+      .on('focusin.bs.modal', $.proxy(function (e) {
+        if (this.$element[0] !== e.target && !this.$element.has(e.target).length) {
+          this.$element.trigger('focus')
+        }
+      }, this))
+  }
+
+  Modal.prototype.escape = function () {
+    if (this.isShown && this.options.keyboard) {
+      this.$element.on('keydown.dismiss.bs.modal', $.proxy(function (e) {
+        e.which == 27 && this.hide()
+      }, this))
+    } else if (!this.isShown) {
+      this.$element.off('keydown.dismiss.bs.modal')
+    }
+  }
+
+  Modal.prototype.resize = function () {
+    if (this.isShown) {
+      $(window).on('resize.bs.modal', $.proxy(this.handleUpdate, this))
+    } else {
+      $(window).off('resize.bs.modal')
+    }
+  }
+
+  Modal.prototype.hideModal = function () {
+    var that = this
+    this.$element.hide()
+    this.backdrop(function () {
+      that.$body.removeClass('modal-open')
+      that.resetAdjustments()
+      that.resetScrollbar()
+      that.$element.trigger('hidden.bs.modal')
+    })
+  }
+
+  Modal.prototype.removeBackdrop = function () {
+    this.$backdrop && this.$backdrop.remove()
+    this.$backdrop = null
+  }
+
+  Modal.prototype.backdrop = function (callback) {
+    var that = this
+    var animate = this.$element.hasClass('fade') ? 'fade' : ''
+
+    if (this.isShown && this.options.backdrop) {
+      var doAnimate = $.support.transition && animate
+
+      this.$backdrop = $(document.createElement('div'))
+        .addClass('modal-backdrop ' + animate)
+        .appendTo(this.$body)
+
+      this.$element.on('click.dismiss.bs.modal', $.proxy(function (e) {
+        if (this.ignoreBackdropClick) {
+          this.ignoreBackdropClick = false
+          return
+        }
+        if (e.target !== e.currentTarget) return
+        this.options.backdrop == 'static'
+          ? this.$element[0].focus()
+          : this.hide()
+      }, this))
+
+      if (doAnimate) this.$backdrop[0].offsetWidth // force reflow
+
+      this.$backdrop.addClass('in')
+
+      if (!callback) return
+
+      doAnimate ?
+        this.$backdrop
+          .one('bsTransitionEnd', callback)
+          .emulateTransitionEnd(Modal.BACKDROP_TRANSITION_DURATION) :
+        callback()
+
+    } else if (!this.isShown && this.$backdrop) {
+      this.$backdrop.removeClass('in')
+
+      var callbackRemove = function () {
+        that.removeBackdrop()
+        callback && callback()
+      }
+      $.support.transition && this.$element.hasClass('fade') ?
+        this.$backdrop
+          .one('bsTransitionEnd', callbackRemove)
+          .emulateTransitionEnd(Modal.BACKDROP_TRANSITION_DURATION) :
+        callbackRemove()
+
+    } else if (callback) {
+      callback()
+    }
+  }
+
+  // these following methods are used to handle overflowing modals
+
+  Modal.prototype.handleUpdate = function () {
+    this.adjustDialog()
+  }
+
+  Modal.prototype.adjustDialog = function () {
+    var modalIsOverflowing = this.$element[0].scrollHeight > document.documentElement.clientHeight
+
+    this.$element.css({
+      paddingLeft:  !this.bodyIsOverflowing && modalIsOverflowing ? this.scrollbarWidth : '',
+      paddingRight: this.bodyIsOverflowing && !modalIsOverflowing ? this.scrollbarWidth : ''
+    })
+  }
+
+  Modal.prototype.resetAdjustments = function () {
+    this.$element.css({
+      paddingLeft: '',
+      paddingRight: ''
+    })
+  }
+
+  Modal.prototype.checkScrollbar = function () {
+    var fullWindowWidth = window.innerWidth
+    if (!fullWindowWidth) { // workaround for missing window.innerWidth in IE8
+      var documentElementRect = document.documentElement.getBoundingClientRect()
+      fullWindowWidth = documentElementRect.right - Math.abs(documentElementRect.left)
+    }
+    this.bodyIsOverflowing = document.body.clientWidth < fullWindowWidth
+    this.scrollbarWidth = this.measureScrollbar()
+  }
+
+  Modal.prototype.setScrollbar = function () {
+    var bodyPad = parseInt((this.$body.css('padding-right') || 0), 10)
+    this.originalBodyPad = document.body.style.paddingRight || ''
+    if (this.bodyIsOverflowing) this.$body.css('padding-right', bodyPad + this.scrollbarWidth)
+  }
+
+  Modal.prototype.resetScrollbar = function () {
+    this.$body.css('padding-right', this.originalBodyPad)
+  }
+
+  Modal.prototype.measureScrollbar = function () { // thx walsh
+    var scrollDiv = document.createElement('div')
+    scrollDiv.className = 'modal-scrollbar-measure'
+    this.$body.append(scrollDiv)
+    var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth
+    this.$body[0].removeChild(scrollDiv)
+    return scrollbarWidth
+  }
+
+
+  // MODAL PLUGIN DEFINITION
+  // =======================
+
+  function Plugin(option, _relatedTarget) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.modal')
+      var options = $.extend({}, Modal.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data) $this.data('bs.modal', (data = new Modal(this, options)))
+      if (typeof option == 'string') data[option](_relatedTarget)
+      else if (options.show) data.show(_relatedTarget)
+    })
+  }
+
+  var old = $.fn.modal
+
+  $.fn.modal             = Plugin
+  $.fn.modal.Constructor = Modal
+
+
+  // MODAL NO CONFLICT
+  // =================
+
+  $.fn.modal.noConflict = function () {
+    $.fn.modal = old
+    return this
+  }
+
+
+  // MODAL DATA-API
+  // ==============
+
+  $(document).on('click.bs.modal.data-api', '[data-toggle="modal"]', function (e) {
+    var $this   = $(this)
+    var href    = $this.attr('href')
+    var $target = $($this.attr('data-target') || (href && href.replace(/.*(?=#[^\s]+$)/, ''))) // strip for ie7
+    var option  = $target.data('bs.modal') ? 'toggle' : $.extend({ remote: !/#/.test(href) && href }, $target.data(), $this.data())
+
+    if ($this.is('a')) e.preventDefault()
+
+    $target.one('show.bs.modal', function (showEvent) {
+      if (showEvent.isDefaultPrevented()) return // only register focus restorer if modal will actually get shown
+      $target.one('hidden.bs.modal', function () {
+        $this.is(':visible') && $this.trigger('focus')
+      })
+    })
+    Plugin.call($target, option, this)
+  })
+
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: tooltip.js v3.3.5
+ * http://getbootstrap.com/javascript/#tooltip
+ * Inspired by the original jQuery.tipsy by Jason Frame
+ * ========================================================================
+ * Copyright 2011-2015 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // TOOLTIP PUBLIC CLASS DEFINITION
+  // ===============================
+
+  var Tooltip = function (element, options) {
+    this.type       = null
+    this.options    = null
+    this.enabled    = null
+    this.timeout    = null
+    this.hoverState = null
+    this.$element   = null
+    this.inState    = null
+
+    this.init('tooltip', element, options)
+  }
+
+  Tooltip.VERSION  = '3.3.5'
+
+  Tooltip.TRANSITION_DURATION = 150
+
+  Tooltip.DEFAULTS = {
+    animation: true,
+    placement: 'top',
+    selector: false,
+    template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
+    trigger: 'hover focus',
+    title: '',
+    delay: 0,
+    html: false,
+    container: false,
+    viewport: {
+      selector: 'body',
+      padding: 0
+    }
+  }
+
+  Tooltip.prototype.init = function (type, element, options) {
+    this.enabled   = true
+    this.type      = type
+    this.$element  = $(element)
+    this.options   = this.getOptions(options)
+    this.$viewport = this.options.viewport && $($.isFunction(this.options.viewport) ? this.options.viewport.call(this, this.$element) : (this.options.viewport.selector || this.options.viewport))
+    this.inState   = { click: false, hover: false, focus: false }
+
+    if (this.$element[0] instanceof document.constructor && !this.options.selector) {
+      throw new Error('`selector` option must be specified when initializing ' + this.type + ' on the window.document object!')
+    }
+
+    var triggers = this.options.trigger.split(' ')
+
+    for (var i = triggers.length; i--;) {
+      var trigger = triggers[i]
+
+      if (trigger == 'click') {
+        this.$element.on('click.' + this.type, this.options.selector, $.proxy(this.toggle, this))
+      } else if (trigger != 'manual') {
+        var eventIn  = trigger == 'hover' ? 'mouseenter' : 'focusin'
+        var eventOut = trigger == 'hover' ? 'mouseleave' : 'focusout'
+
+        this.$element.on(eventIn  + '.' + this.type, this.options.selector, $.proxy(this.enter, this))
+        this.$element.on(eventOut + '.' + this.type, this.options.selector, $.proxy(this.leave, this))
+      }
+    }
+
+    this.options.selector ?
+      (this._options = $.extend({}, this.options, { trigger: 'manual', selector: '' })) :
+      this.fixTitle()
+  }
+
+  Tooltip.prototype.getDefaults = function () {
+    return Tooltip.DEFAULTS
+  }
+
+  Tooltip.prototype.getOptions = function (options) {
+    options = $.extend({}, this.getDefaults(), this.$element.data(), options)
+
+    if (options.delay && typeof options.delay == 'number') {
+      options.delay = {
+        show: options.delay,
+        hide: options.delay
+      }
+    }
+
+    return options
+  }
+
+  Tooltip.prototype.getDelegateOptions = function () {
+    var options  = {}
+    var defaults = this.getDefaults()
+
+    this._options && $.each(this._options, function (key, value) {
+      if (defaults[key] != value) options[key] = value
+    })
+
+    return options
+  }
+
+  Tooltip.prototype.enter = function (obj) {
+    var self = obj instanceof this.constructor ?
+      obj : $(obj.currentTarget).data('bs.' + this.type)
+
+    if (!self) {
+      self = new this.constructor(obj.currentTarget, this.getDelegateOptions())
+      $(obj.currentTarget).data('bs.' + this.type, self)
+    }
+
+    if (obj instanceof $.Event) {
+      self.inState[obj.type == 'focusin' ? 'focus' : 'hover'] = true
+    }
+
+    if (self.tip().hasClass('in') || self.hoverState == 'in') {
+      self.hoverState = 'in'
+      return
+    }
+
+    clearTimeout(self.timeout)
+
+    self.hoverState = 'in'
+
+    if (!self.options.delay || !self.options.delay.show) return self.show()
+
+    self.timeout = setTimeout(function () {
+      if (self.hoverState == 'in') self.show()
+    }, self.options.delay.show)
+  }
+
+  Tooltip.prototype.isInStateTrue = function () {
+    for (var key in this.inState) {
+      if (this.inState[key]) return true
+    }
+
+    return false
+  }
+
+  Tooltip.prototype.leave = function (obj) {
+    var self = obj instanceof this.constructor ?
+      obj : $(obj.currentTarget).data('bs.' + this.type)
+
+    if (!self) {
+      self = new this.constructor(obj.currentTarget, this.getDelegateOptions())
+      $(obj.currentTarget).data('bs.' + this.type, self)
+    }
+
+    if (obj instanceof $.Event) {
+      self.inState[obj.type == 'focusout' ? 'focus' : 'hover'] = false
+    }
+
+    if (self.isInStateTrue()) return
+
+    clearTimeout(self.timeout)
+
+    self.hoverState = 'out'
+
+    if (!self.options.delay || !self.options.delay.hide) return self.hide()
+
+    self.timeout = setTimeout(function () {
+      if (self.hoverState == 'out') self.hide()
+    }, self.options.delay.hide)
+  }
+
+  Tooltip.prototype.show = function () {
+    var e = $.Event('show.bs.' + this.type)
+
+    if (this.hasContent() && this.enabled) {
+      this.$element.trigger(e)
+
+      var inDom = $.contains(this.$element[0].ownerDocument.documentElement, this.$element[0])
+      if (e.isDefaultPrevented() || !inDom) return
+      var that = this
+
+      var $tip = this.tip()
+
+      var tipId = this.getUID(this.type)
+
+      this.setContent()
+      $tip.attr('id', tipId)
+      this.$element.attr('aria-describedby', tipId)
+
+      if (this.options.animation) $tip.addClass('fade')
+
+      var placement = typeof this.options.placement == 'function' ?
+        this.options.placement.call(this, $tip[0], this.$element[0]) :
+        this.options.placement
+
+      var autoToken = /\s?auto?\s?/i
+      var autoPlace = autoToken.test(placement)
+      if (autoPlace) placement = placement.replace(autoToken, '') || 'top'
+
+      $tip
+        .detach()
+        .css({ top: 0, left: 0, display: 'block' })
+        .addClass(placement)
+        .data('bs.' + this.type, this)
+
+      this.options.container ? $tip.appendTo(this.options.container) : $tip.insertAfter(this.$element)
+      this.$element.trigger('inserted.bs.' + this.type)
+
+      var pos          = this.getPosition()
+      var actualWidth  = $tip[0].offsetWidth
+      var actualHeight = $tip[0].offsetHeight
+
+      if (autoPlace) {
+        var orgPlacement = placement
+        var viewportDim = this.getPosition(this.$viewport)
+
+        placement = placement == 'bottom' && pos.bottom + actualHeight > viewportDim.bottom ? 'top'    :
+                    placement == 'top'    && pos.top    - actualHeight < viewportDim.top    ? 'bottom' :
+                    placement == 'right'  && pos.right  + actualWidth  > viewportDim.width  ? 'left'   :
+                    placement == 'left'   && pos.left   - actualWidth  < viewportDim.left   ? 'right'  :
+                    placement
+
+        $tip
+          .removeClass(orgPlacement)
+          .addClass(placement)
+      }
+
+      var calculatedOffset = this.getCalculatedOffset(placement, pos, actualWidth, actualHeight)
+
+      this.applyPlacement(calculatedOffset, placement)
+
+      var complete = function () {
+        var prevHoverState = that.hoverState
+        that.$element.trigger('shown.bs.' + that.type)
+        that.hoverState = null
+
+        if (prevHoverState == 'out') that.leave(that)
+      }
+
+      $.support.transition && this.$tip.hasClass('fade') ?
+        $tip
+          .one('bsTransitionEnd', complete)
+          .emulateTransitionEnd(Tooltip.TRANSITION_DURATION) :
+        complete()
+    }
+  }
+
+  Tooltip.prototype.applyPlacement = function (offset, placement) {
+    var $tip   = this.tip()
+    var width  = $tip[0].offsetWidth
+    var height = $tip[0].offsetHeight
+
+    // manually read margins because getBoundingClientRect includes difference
+    var marginTop = parseInt($tip.css('margin-top'), 10)
+    var marginLeft = parseInt($tip.css('margin-left'), 10)
+
+    // we must check for NaN for ie 8/9
+    if (isNaN(marginTop))  marginTop  = 0
+    if (isNaN(marginLeft)) marginLeft = 0
+
+    offset.top  += marginTop
+    offset.left += marginLeft
+
+    // $.fn.offset doesn't round pixel values
+    // so we use setOffset directly with our own function B-0
+    $.offset.setOffset($tip[0], $.extend({
+      using: function (props) {
+        $tip.css({
+          top: Math.round(props.top),
+          left: Math.round(props.left)
+        })
+      }
+    }, offset), 0)
+
+    $tip.addClass('in')
+
+    // check to see if placing tip in new offset caused the tip to resize itself
+    var actualWidth  = $tip[0].offsetWidth
+    var actualHeight = $tip[0].offsetHeight
+
+    if (placement == 'top' && actualHeight != height) {
+      offset.top = offset.top + height - actualHeight
+    }
+
+    var delta = this.getViewportAdjustedDelta(placement, offset, actualWidth, actualHeight)
+
+    if (delta.left) offset.left += delta.left
+    else offset.top += delta.top
+
+    var isVertical          = /top|bottom/.test(placement)
+    var arrowDelta          = isVertical ? delta.left * 2 - width + actualWidth : delta.top * 2 - height + actualHeight
+    var arrowOffsetPosition = isVertical ? 'offsetWidth' : 'offsetHeight'
+
+    $tip.offset(offset)
+    this.replaceArrow(arrowDelta, $tip[0][arrowOffsetPosition], isVertical)
+  }
+
+  Tooltip.prototype.replaceArrow = function (delta, dimension, isVertical) {
+    this.arrow()
+      .css(isVertical ? 'left' : 'top', 50 * (1 - delta / dimension) + '%')
+      .css(isVertical ? 'top' : 'left', '')
+  }
+
+  Tooltip.prototype.setContent = function () {
+    var $tip  = this.tip()
+    var title = this.getTitle()
+
+    $tip.find('.tooltip-inner')[this.options.html ? 'html' : 'text'](title)
+    $tip.removeClass('fade in top bottom left right')
+  }
+
+  Tooltip.prototype.hide = function (callback) {
+    var that = this
+    var $tip = $(this.$tip)
+    var e    = $.Event('hide.bs.' + this.type)
+
+    function complete() {
+      if (that.hoverState != 'in') $tip.detach()
+      that.$element
+        .removeAttr('aria-describedby')
+        .trigger('hidden.bs.' + that.type)
+      callback && callback()
+    }
+
+    this.$element.trigger(e)
+
+    if (e.isDefaultPrevented()) return
+
+    $tip.removeClass('in')
+
+    $.support.transition && $tip.hasClass('fade') ?
+      $tip
+        .one('bsTransitionEnd', complete)
+        .emulateTransitionEnd(Tooltip.TRANSITION_DURATION) :
+      complete()
+
+    this.hoverState = null
+
+    return this
+  }
+
+  Tooltip.prototype.fixTitle = function () {
+    var $e = this.$element
+    if ($e.attr('title') || typeof $e.attr('data-original-title') != 'string') {
+      $e.attr('data-original-title', $e.attr('title') || '').attr('title', '')
+    }
+  }
+
+  Tooltip.prototype.hasContent = function () {
+    return this.getTitle()
+  }
+
+  Tooltip.prototype.getPosition = function ($element) {
+    $element   = $element || this.$element
+
+    var el     = $element[0]
+    var isBody = el.tagName == 'BODY'
+
+    var elRect    = el.getBoundingClientRect()
+    if (elRect.width == null) {
+      // width and height are missing in IE8, so compute them manually; see https://github.com/twbs/bootstrap/issues/14093
+      elRect = $.extend({}, elRect, { width: elRect.right - elRect.left, height: elRect.bottom - elRect.top })
+    }
+    var elOffset  = isBody ? { top: 0, left: 0 } : $element.offset()
+    var scroll    = { scroll: isBody ? document.documentElement.scrollTop || document.body.scrollTop : $element.scrollTop() }
+    var outerDims = isBody ? { width: $(window).width(), height: $(window).height() } : null
+
+    return $.extend({}, elRect, scroll, outerDims, elOffset)
+  }
+
+  Tooltip.prototype.getCalculatedOffset = function (placement, pos, actualWidth, actualHeight) {
+    return placement == 'bottom' ? { top: pos.top + pos.height,   left: pos.left + pos.width / 2 - actualWidth / 2 } :
+           placement == 'top'    ? { top: pos.top - actualHeight, left: pos.left + pos.width / 2 - actualWidth / 2 } :
+           placement == 'left'   ? { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left - actualWidth } :
+        /* placement == 'right' */ { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width }
+
+  }
+
+  Tooltip.prototype.getViewportAdjustedDelta = function (placement, pos, actualWidth, actualHeight) {
+    var delta = { top: 0, left: 0 }
+    if (!this.$viewport) return delta
+
+    var viewportPadding = this.options.viewport && this.options.viewport.padding || 0
+    var viewportDimensions = this.getPosition(this.$viewport)
+
+    if (/right|left/.test(placement)) {
+      var topEdgeOffset    = pos.top - viewportPadding - viewportDimensions.scroll
+      var bottomEdgeOffset = pos.top + viewportPadding - viewportDimensions.scroll + actualHeight
+      if (topEdgeOffset < viewportDimensions.top) { // top overflow
+        delta.top = viewportDimensions.top - topEdgeOffset
+      } else if (bottomEdgeOffset > viewportDimensions.top + viewportDimensions.height) { // bottom overflow
+        delta.top = viewportDimensions.top + viewportDimensions.height - bottomEdgeOffset
+      }
+    } else {
+      var leftEdgeOffset  = pos.left - viewportPadding
+      var rightEdgeOffset = pos.left + viewportPadding + actualWidth
+      if (leftEdgeOffset < viewportDimensions.left) { // left overflow
+        delta.left = viewportDimensions.left - leftEdgeOffset
+      } else if (rightEdgeOffset > viewportDimensions.right) { // right overflow
+        delta.left = viewportDimensions.left + viewportDimensions.width - rightEdgeOffset
+      }
+    }
+
+    return delta
+  }
+
+  Tooltip.prototype.getTitle = function () {
+    var title
+    var $e = this.$element
+    var o  = this.options
+
+    title = $e.attr('data-original-title')
+      || (typeof o.title == 'function' ? o.title.call($e[0]) :  o.title)
+
+    return title
+  }
+
+  Tooltip.prototype.getUID = function (prefix) {
+    do prefix += ~~(Math.random() * 1000000)
+    while (document.getElementById(prefix))
+    return prefix
+  }
+
+  Tooltip.prototype.tip = function () {
+    if (!this.$tip) {
+      this.$tip = $(this.options.template)
+      if (this.$tip.length != 1) {
+        throw new Error(this.type + ' `template` option must consist of exactly 1 top-level element!')
+      }
+    }
+    return this.$tip
+  }
+
+  Tooltip.prototype.arrow = function () {
+    return (this.$arrow = this.$arrow || this.tip().find('.tooltip-arrow'))
+  }
+
+  Tooltip.prototype.enable = function () {
+    this.enabled = true
+  }
+
+  Tooltip.prototype.disable = function () {
+    this.enabled = false
+  }
+
+  Tooltip.prototype.toggleEnabled = function () {
+    this.enabled = !this.enabled
+  }
+
+  Tooltip.prototype.toggle = function (e) {
+    var self = this
+    if (e) {
+      self = $(e.currentTarget).data('bs.' + this.type)
+      if (!self) {
+        self = new this.constructor(e.currentTarget, this.getDelegateOptions())
+        $(e.currentTarget).data('bs.' + this.type, self)
+      }
+    }
+
+    if (e) {
+      self.inState.click = !self.inState.click
+      if (self.isInStateTrue()) self.enter(self)
+      else self.leave(self)
+    } else {
+      self.tip().hasClass('in') ? self.leave(self) : self.enter(self)
+    }
+  }
+
+  Tooltip.prototype.destroy = function () {
+    var that = this
+    clearTimeout(this.timeout)
+    this.hide(function () {
+      that.$element.off('.' + that.type).removeData('bs.' + that.type)
+      if (that.$tip) {
+        that.$tip.detach()
+      }
+      that.$tip = null
+      that.$arrow = null
+      that.$viewport = null
+    })
+  }
+
+
+  // TOOLTIP PLUGIN DEFINITION
+  // =========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.tooltip')
+      var options = typeof option == 'object' && option
+
+      if (!data && /destroy|hide/.test(option)) return
+      if (!data) $this.data('bs.tooltip', (data = new Tooltip(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.tooltip
+
+  $.fn.tooltip             = Plugin
+  $.fn.tooltip.Constructor = Tooltip
+
+
+  // TOOLTIP NO CONFLICT
+  // ===================
+
+  $.fn.tooltip.noConflict = function () {
+    $.fn.tooltip = old
+    return this
+  }
+
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: popover.js v3.3.5
+ * http://getbootstrap.com/javascript/#popovers
+ * ========================================================================
+ * Copyright 2011-2015 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // POPOVER PUBLIC CLASS DEFINITION
+  // ===============================
+
+  var Popover = function (element, options) {
+    this.init('popover', element, options)
+  }
+
+  if (!$.fn.tooltip) throw new Error('Popover requires tooltip.js')
+
+  Popover.VERSION  = '3.3.5'
+
+  Popover.DEFAULTS = $.extend({}, $.fn.tooltip.Constructor.DEFAULTS, {
+    placement: 'right',
+    trigger: 'click',
+    content: '',
+    template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+  })
+
+
+  // NOTE: POPOVER EXTENDS tooltip.js
+  // ================================
+
+  Popover.prototype = $.extend({}, $.fn.tooltip.Constructor.prototype)
+
+  Popover.prototype.constructor = Popover
+
+  Popover.prototype.getDefaults = function () {
+    return Popover.DEFAULTS
+  }
+
+  Popover.prototype.setContent = function () {
+    var $tip    = this.tip()
+    var title   = this.getTitle()
+    var content = this.getContent()
+
+    $tip.find('.popover-title')[this.options.html ? 'html' : 'text'](title)
+    $tip.find('.popover-content').children().detach().end()[ // we use append for html objects to maintain js events
+      this.options.html ? (typeof content == 'string' ? 'html' : 'append') : 'text'
+    ](content)
+
+    $tip.removeClass('fade top bottom left right in')
+
+    // IE8 doesn't accept hiding via the `:empty` pseudo selector, we have to do
+    // this manually by checking the contents.
+    if (!$tip.find('.popover-title').html()) $tip.find('.popover-title').hide()
+  }
+
+  Popover.prototype.hasContent = function () {
+    return this.getTitle() || this.getContent()
+  }
+
+  Popover.prototype.getContent = function () {
+    var $e = this.$element
+    var o  = this.options
+
+    return $e.attr('data-content')
+      || (typeof o.content == 'function' ?
+            o.content.call($e[0]) :
+            o.content)
+  }
+
+  Popover.prototype.arrow = function () {
+    return (this.$arrow = this.$arrow || this.tip().find('.arrow'))
+  }
+
+
+  // POPOVER PLUGIN DEFINITION
+  // =========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.popover')
+      var options = typeof option == 'object' && option
+
+      if (!data && /destroy|hide/.test(option)) return
+      if (!data) $this.data('bs.popover', (data = new Popover(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.popover
+
+  $.fn.popover             = Plugin
+  $.fn.popover.Constructor = Popover
+
+
+  // POPOVER NO CONFLICT
+  // ===================
+
+  $.fn.popover.noConflict = function () {
+    $.fn.popover = old
+    return this
+  }
+
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: scrollspy.js v3.3.5
+ * http://getbootstrap.com/javascript/#scrollspy
+ * ========================================================================
+ * Copyright 2011-2015 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // SCROLLSPY CLASS DEFINITION
+  // ==========================
+
+  function ScrollSpy(element, options) {
+    this.$body          = $(document.body)
+    this.$scrollElement = $(element).is(document.body) ? $(window) : $(element)
+    this.options        = $.extend({}, ScrollSpy.DEFAULTS, options)
+    this.selector       = (this.options.target || '') + ' .nav li > a'
+    this.offsets        = []
+    this.targets        = []
+    this.activeTarget   = null
+    this.scrollHeight   = 0
+
+    this.$scrollElement.on('scroll.bs.scrollspy', $.proxy(this.process, this))
+    this.refresh()
+    this.process()
+  }
+
+  ScrollSpy.VERSION  = '3.3.5'
+
+  ScrollSpy.DEFAULTS = {
+    offset: 10
+  }
+
+  ScrollSpy.prototype.getScrollHeight = function () {
+    return this.$scrollElement[0].scrollHeight || Math.max(this.$body[0].scrollHeight, document.documentElement.scrollHeight)
+  }
+
+  ScrollSpy.prototype.refresh = function () {
+    var that          = this
+    var offsetMethod  = 'offset'
+    var offsetBase    = 0
+
+    this.offsets      = []
+    this.targets      = []
+    this.scrollHeight = this.getScrollHeight()
+
+    if (!$.isWindow(this.$scrollElement[0])) {
+      offsetMethod = 'position'
+      offsetBase   = this.$scrollElement.scrollTop()
+    }
+
+    this.$body
+      .find(this.selector)
+      .map(function () {
+        var $el   = $(this)
+        var href  = $el.data('target') || $el.attr('href')
+        var $href = /^#./.test(href) && $(href)
+
+        return ($href
+          && $href.length
+          && $href.is(':visible')
+          && [[$href[offsetMethod]().top + offsetBase, href]]) || null
+      })
+      .sort(function (a, b) { return a[0] - b[0] })
+      .each(function () {
+        that.offsets.push(this[0])
+        that.targets.push(this[1])
+      })
+  }
+
+  ScrollSpy.prototype.process = function () {
+    var scrollTop    = this.$scrollElement.scrollTop() + this.options.offset
+    var scrollHeight = this.getScrollHeight()
+    var maxScroll    = this.options.offset + scrollHeight - this.$scrollElement.height()
+    var offsets      = this.offsets
+    var targets      = this.targets
+    var activeTarget = this.activeTarget
+    var i
+
+    if (this.scrollHeight != scrollHeight) {
+      this.refresh()
+    }
+
+    if (scrollTop >= maxScroll) {
+      return activeTarget != (i = targets[targets.length - 1]) && this.activate(i)
+    }
+
+    if (activeTarget && scrollTop < offsets[0]) {
+      this.activeTarget = null
+      return this.clear()
+    }
+
+    for (i = offsets.length; i--;) {
+      activeTarget != targets[i]
+        && scrollTop >= offsets[i]
+        && (offsets[i + 1] === undefined || scrollTop < offsets[i + 1])
+        && this.activate(targets[i])
+    }
+  }
+
+  ScrollSpy.prototype.activate = function (target) {
+    this.activeTarget = target
+
+    this.clear()
+
+    var selector = this.selector +
+      '[data-target="' + target + '"],' +
+      this.selector + '[href="' + target + '"]'
+
+    var active = $(selector)
+      .parents('li')
+      .addClass('active')
+
+    if (active.parent('.dropdown-menu').length) {
+      active = active
+        .closest('li.dropdown')
+        .addClass('active')
+    }
+
+    active.trigger('activate.bs.scrollspy')
+  }
+
+  ScrollSpy.prototype.clear = function () {
+    $(this.selector)
+      .parentsUntil(this.options.target, '.active')
+      .removeClass('active')
+  }
+
+
+  // SCROLLSPY PLUGIN DEFINITION
+  // ===========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.scrollspy')
+      var options = typeof option == 'object' && option
+
+      if (!data) $this.data('bs.scrollspy', (data = new ScrollSpy(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.scrollspy
+
+  $.fn.scrollspy             = Plugin
+  $.fn.scrollspy.Constructor = ScrollSpy
+
+
+  // SCROLLSPY NO CONFLICT
+  // =====================
+
+  $.fn.scrollspy.noConflict = function () {
+    $.fn.scrollspy = old
+    return this
+  }
+
+
+  // SCROLLSPY DATA-API
+  // ==================
+
+  $(window).on('load.bs.scrollspy.data-api', function () {
+    $('[data-spy="scroll"]').each(function () {
+      var $spy = $(this)
+      Plugin.call($spy, $spy.data())
+    })
+  })
+
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: tab.js v3.3.5
+ * http://getbootstrap.com/javascript/#tabs
+ * ========================================================================
+ * Copyright 2011-2015 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // TAB CLASS DEFINITION
+  // ====================
+
+  var Tab = function (element) {
+    // jscs:disable requireDollarBeforejQueryAssignment
+    this.element = $(element)
+    // jscs:enable requireDollarBeforejQueryAssignment
+  }
+
+  Tab.VERSION = '3.3.5'
+
+  Tab.TRANSITION_DURATION = 150
+
+  Tab.prototype.show = function () {
+    var $this    = this.element
+    var $ul      = $this.closest('ul:not(.dropdown-menu)')
+    var selector = $this.data('target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    if ($this.parent('li').hasClass('active')) return
+
+    var $previous = $ul.find('.active:last a')
+    var hideEvent = $.Event('hide.bs.tab', {
+      relatedTarget: $this[0]
+    })
+    var showEvent = $.Event('show.bs.tab', {
+      relatedTarget: $previous[0]
+    })
+
+    $previous.trigger(hideEvent)
+    $this.trigger(showEvent)
+
+    if (showEvent.isDefaultPrevented() || hideEvent.isDefaultPrevented()) return
+
+    var $target = $(selector)
+
+    this.activate($this.closest('li'), $ul)
+    this.activate($target, $target.parent(), function () {
+      $previous.trigger({
+        type: 'hidden.bs.tab',
+        relatedTarget: $this[0]
+      })
+      $this.trigger({
+        type: 'shown.bs.tab',
+        relatedTarget: $previous[0]
+      })
+    })
+  }
+
+  Tab.prototype.activate = function (element, container, callback) {
+    var $active    = container.find('> .active')
+    var transition = callback
+      && $.support.transition
+      && ($active.length && $active.hasClass('fade') || !!container.find('> .fade').length)
+
+    function next() {
+      $active
+        .removeClass('active')
+        .find('> .dropdown-menu > .active')
+          .removeClass('active')
+        .end()
+        .find('[data-toggle="tab"]')
+          .attr('aria-expanded', false)
+
+      element
+        .addClass('active')
+        .find('[data-toggle="tab"]')
+          .attr('aria-expanded', true)
+
+      if (transition) {
+        element[0].offsetWidth // reflow for transition
+        element.addClass('in')
+      } else {
+        element.removeClass('fade')
+      }
+
+      if (element.parent('.dropdown-menu').length) {
+        element
+          .closest('li.dropdown')
+            .addClass('active')
+          .end()
+          .find('[data-toggle="tab"]')
+            .attr('aria-expanded', true)
+      }
+
+      callback && callback()
+    }
+
+    $active.length && transition ?
+      $active
+        .one('bsTransitionEnd', next)
+        .emulateTransitionEnd(Tab.TRANSITION_DURATION) :
+      next()
+
+    $active.removeClass('in')
+  }
+
+
+  // TAB PLUGIN DEFINITION
+  // =====================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.tab')
+
+      if (!data) $this.data('bs.tab', (data = new Tab(this)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.tab
+
+  $.fn.tab             = Plugin
+  $.fn.tab.Constructor = Tab
+
+
+  // TAB NO CONFLICT
+  // ===============
+
+  $.fn.tab.noConflict = function () {
+    $.fn.tab = old
+    return this
+  }
+
+
+  // TAB DATA-API
+  // ============
+
+  var clickHandler = function (e) {
+    e.preventDefault()
+    Plugin.call($(this), 'show')
+  }
+
+  $(document)
+    .on('click.bs.tab.data-api', '[data-toggle="tab"]', clickHandler)
+    .on('click.bs.tab.data-api', '[data-toggle="pill"]', clickHandler)
+
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: affix.js v3.3.5
+ * http://getbootstrap.com/javascript/#affix
+ * ========================================================================
+ * Copyright 2011-2015 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // AFFIX CLASS DEFINITION
+  // ======================
+
+  var Affix = function (element, options) {
+    this.options = $.extend({}, Affix.DEFAULTS, options)
+
+    this.$target = $(this.options.target)
+      .on('scroll.bs.affix.data-api', $.proxy(this.checkPosition, this))
+      .on('click.bs.affix.data-api',  $.proxy(this.checkPositionWithEventLoop, this))
+
+    this.$element     = $(element)
+    this.affixed      = null
+    this.unpin        = null
+    this.pinnedOffset = null
+
+    this.checkPosition()
+  }
+
+  Affix.VERSION  = '3.3.5'
+
+  Affix.RESET    = 'affix affix-top affix-bottom'
+
+  Affix.DEFAULTS = {
+    offset: 0,
+    target: window
+  }
+
+  Affix.prototype.getState = function (scrollHeight, height, offsetTop, offsetBottom) {
+    var scrollTop    = this.$target.scrollTop()
+    var position     = this.$element.offset()
+    var targetHeight = this.$target.height()
+
+    if (offsetTop != null && this.affixed == 'top') return scrollTop < offsetTop ? 'top' : false
+
+    if (this.affixed == 'bottom') {
+      if (offsetTop != null) return (scrollTop + this.unpin <= position.top) ? false : 'bottom'
+      return (scrollTop + targetHeight <= scrollHeight - offsetBottom) ? false : 'bottom'
+    }
+
+    var initializing   = this.affixed == null
+    var colliderTop    = initializing ? scrollTop : position.top
+    var colliderHeight = initializing ? targetHeight : height
+
+    if (offsetTop != null && scrollTop <= offsetTop) return 'top'
+    if (offsetBottom != null && (colliderTop + colliderHeight >= scrollHeight - offsetBottom)) return 'bottom'
+
+    return false
+  }
+
+  Affix.prototype.getPinnedOffset = function () {
+    if (this.pinnedOffset) return this.pinnedOffset
+    this.$element.removeClass(Affix.RESET).addClass('affix')
+    var scrollTop = this.$target.scrollTop()
+    var position  = this.$element.offset()
+    return (this.pinnedOffset = position.top - scrollTop)
+  }
+
+  Affix.prototype.checkPositionWithEventLoop = function () {
+    setTimeout($.proxy(this.checkPosition, this), 1)
+  }
+
+  Affix.prototype.checkPosition = function () {
+    if (!this.$element.is(':visible')) return
+
+    var height       = this.$element.height()
+    var offset       = this.options.offset
+    var offsetTop    = offset.top
+    var offsetBottom = offset.bottom
+    var scrollHeight = Math.max($(document).height(), $(document.body).height())
+
+    if (typeof offset != 'object')         offsetBottom = offsetTop = offset
+    if (typeof offsetTop == 'function')    offsetTop    = offset.top(this.$element)
+    if (typeof offsetBottom == 'function') offsetBottom = offset.bottom(this.$element)
+
+    var affix = this.getState(scrollHeight, height, offsetTop, offsetBottom)
+
+    if (this.affixed != affix) {
+      if (this.unpin != null) this.$element.css('top', '')
+
+      var affixType = 'affix' + (affix ? '-' + affix : '')
+      var e         = $.Event(affixType + '.bs.affix')
+
+      this.$element.trigger(e)
+
+      if (e.isDefaultPrevented()) return
+
+      this.affixed = affix
+      this.unpin = affix == 'bottom' ? this.getPinnedOffset() : null
+
+      this.$element
+        .removeClass(Affix.RESET)
+        .addClass(affixType)
+        .trigger(affixType.replace('affix', 'affixed') + '.bs.affix')
+    }
+
+    if (affix == 'bottom') {
+      this.$element.offset({
+        top: scrollHeight - height - offsetBottom
+      })
+    }
+  }
+
+
+  // AFFIX PLUGIN DEFINITION
+  // =======================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.affix')
+      var options = typeof option == 'object' && option
+
+      if (!data) $this.data('bs.affix', (data = new Affix(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.affix
+
+  $.fn.affix             = Plugin
+  $.fn.affix.Constructor = Affix
+
+
+  // AFFIX NO CONFLICT
+  // =================
+
+  $.fn.affix.noConflict = function () {
+    $.fn.affix = old
+    return this
+  }
+
+
+  // AFFIX DATA-API
+  // ==============
+
+  $(window).on('load', function () {
+    $('[data-spy="affix"]').each(function () {
+      var $spy = $(this)
+      var data = $spy.data()
+
+      data.offset = data.offset || {}
+
+      if (data.offsetBottom != null) data.offset.bottom = data.offsetBottom
+      if (data.offsetTop    != null) data.offset.top    = data.offsetTop
+
+      Plugin.call($spy, data)
+    })
+  })
+
+}(jQuery);
+
+/*!
+ * ZeroClipboard
+ * The ZeroClipboard library provides an easy way to copy text to the clipboard using an invisible Adobe Flash movie and a JavaScript interface.
+ * Copyright (c) 2009-2014 Jon Rohan, James M. Greene
+ * Licensed MIT
+ * http://zeroclipboard.org/
+ * v2.2.0
+ */
+(function(window, undefined) {
+  "use strict";
+  /**
+ * Store references to critically important global functions that may be
+ * overridden on certain web pages.
+ */
+  var _window = window, _document = _window.document, _navigator = _window.navigator, _setTimeout = _window.setTimeout, _clearTimeout = _window.clearTimeout, _setInterval = _window.setInterval, _clearInterval = _window.clearInterval, _getComputedStyle = _window.getComputedStyle, _encodeURIComponent = _window.encodeURIComponent, _ActiveXObject = _window.ActiveXObject, _Error = _window.Error, _parseInt = _window.Number.parseInt || _window.parseInt, _parseFloat = _window.Number.parseFloat || _window.parseFloat, _isNaN = _window.Number.isNaN || _window.isNaN, _now = _window.Date.now, _keys = _window.Object.keys, _defineProperty = _window.Object.defineProperty, _hasOwn = _window.Object.prototype.hasOwnProperty, _slice = _window.Array.prototype.slice, _unwrap = function() {
+    var unwrapper = function(el) {
+      return el;
+    };
+    if (typeof _window.wrap === "function" && typeof _window.unwrap === "function") {
+      try {
+        var div = _document.createElement("div");
+        var unwrappedDiv = _window.unwrap(div);
+        if (div.nodeType === 1 && unwrappedDiv && unwrappedDiv.nodeType === 1) {
+          unwrapper = _window.unwrap;
+        }
+      } catch (e) {}
+    }
+    return unwrapper;
+  }();
+  /**
+ * Convert an `arguments` object into an Array.
+ *
+ * @returns The arguments as an Array
+ * @private
+ */
+  var _args = function(argumentsObj) {
+    return _slice.call(argumentsObj, 0);
+  };
+  /**
+ * Shallow-copy the owned, enumerable properties of one object over to another, similar to jQuery's `$.extend`.
+ *
+ * @returns The target object, augmented
+ * @private
+ */
+  var _extend = function() {
+    var i, len, arg, prop, src, copy, args = _args(arguments), target = args[0] || {};
+    for (i = 1, len = args.length; i < len; i++) {
+      if ((arg = args[i]) != null) {
+        for (prop in arg) {
+          if (_hasOwn.call(arg, prop)) {
+            src = target[prop];
+            copy = arg[prop];
+            if (target !== copy && copy !== undefined) {
+              target[prop] = copy;
+            }
+          }
+        }
+      }
+    }
+    return target;
+  };
+  /**
+ * Return a deep copy of the source object or array.
+ *
+ * @returns Object or Array
+ * @private
+ */
+  var _deepCopy = function(source) {
+    var copy, i, len, prop;
+    if (typeof source !== "object" || source == null || typeof source.nodeType === "number") {
+      copy = source;
+    } else if (typeof source.length === "number") {
+      copy = [];
+      for (i = 0, len = source.length; i < len; i++) {
+        if (_hasOwn.call(source, i)) {
+          copy[i] = _deepCopy(source[i]);
+        }
+      }
+    } else {
+      copy = {};
+      for (prop in source) {
+        if (_hasOwn.call(source, prop)) {
+          copy[prop] = _deepCopy(source[prop]);
+        }
+      }
+    }
+    return copy;
+  };
+  /**
+ * Makes a shallow copy of `obj` (like `_extend`) but filters its properties based on a list of `keys` to keep.
+ * The inverse of `_omit`, mostly. The big difference is that these properties do NOT need to be enumerable to
+ * be kept.
+ *
+ * @returns A new filtered object.
+ * @private
+ */
+  var _pick = function(obj, keys) {
+    var newObj = {};
+    for (var i = 0, len = keys.length; i < len; i++) {
+      if (keys[i] in obj) {
+        newObj[keys[i]] = obj[keys[i]];
+      }
+    }
+    return newObj;
+  };
+  /**
+ * Makes a shallow copy of `obj` (like `_extend`) but filters its properties based on a list of `keys` to omit.
+ * The inverse of `_pick`.
+ *
+ * @returns A new filtered object.
+ * @private
+ */
+  var _omit = function(obj, keys) {
+    var newObj = {};
+    for (var prop in obj) {
+      if (keys.indexOf(prop) === -1) {
+        newObj[prop] = obj[prop];
+      }
+    }
+    return newObj;
+  };
+  /**
+ * Remove all owned, enumerable properties from an object.
+ *
+ * @returns The original object without its owned, enumerable properties.
+ * @private
+ */
+  var _deleteOwnProperties = function(obj) {
+    if (obj) {
+      for (var prop in obj) {
+        if (_hasOwn.call(obj, prop)) {
+          delete obj[prop];
+        }
+      }
+    }
+    return obj;
+  };
+  /**
+ * Determine if an element is contained within another element.
+ *
+ * @returns Boolean
+ * @private
+ */
+  var _containedBy = function(el, ancestorEl) {
+    if (el && el.nodeType === 1 && el.ownerDocument && ancestorEl && (ancestorEl.nodeType === 1 && ancestorEl.ownerDocument && ancestorEl.ownerDocument === el.ownerDocument || ancestorEl.nodeType === 9 && !ancestorEl.ownerDocument && ancestorEl === el.ownerDocument)) {
+      do {
+        if (el === ancestorEl) {
+          return true;
+        }
+        el = el.parentNode;
+      } while (el);
+    }
+    return false;
+  };
+  /**
+ * Get the URL path's parent directory.
+ *
+ * @returns String or `undefined`
+ * @private
+ */
+  var _getDirPathOfUrl = function(url) {
+    var dir;
+    if (typeof url === "string" && url) {
+      dir = url.split("#")[0].split("?")[0];
+      dir = url.slice(0, url.lastIndexOf("/") + 1);
+    }
+    return dir;
+  };
+  /**
+ * Get the current script's URL by throwing an `Error` and analyzing it.
+ *
+ * @returns String or `undefined`
+ * @private
+ */
+  var _getCurrentScriptUrlFromErrorStack = function(stack) {
+    var url, matches;
+    if (typeof stack === "string" && stack) {
+      matches = stack.match(/^(?:|[^:@]*@|.+\)@(?=http[s]?|file)|.+?\s+(?: at |@)(?:[^:\(]+ )*[\(]?)((?:http[s]?|file):\/\/[\/]?.+?\/[^:\)]*?)(?::\d+)(?::\d+)?/);
+      if (matches && matches[1]) {
+        url = matches[1];
+      } else {
+        matches = stack.match(/\)@((?:http[s]?|file):\/\/[\/]?.+?\/[^:\)]*?)(?::\d+)(?::\d+)?/);
+        if (matches && matches[1]) {
+          url = matches[1];
+        }
+      }
+    }
+    return url;
+  };
+  /**
+ * Get the current script's URL by throwing an `Error` and analyzing it.
+ *
+ * @returns String or `undefined`
+ * @private
+ */
+  var _getCurrentScriptUrlFromError = function() {
+    var url, err;
+    try {
+      throw new _Error();
+    } catch (e) {
+      err = e;
+    }
+    if (err) {
+      url = err.sourceURL || err.fileName || _getCurrentScriptUrlFromErrorStack(err.stack);
+    }
+    return url;
+  };
+  /**
+ * Get the current script's URL.
+ *
+ * @returns String or `undefined`
+ * @private
+ */
+  var _getCurrentScriptUrl = function() {
+    var jsPath, scripts, i;
+    if (_document.currentScript && (jsPath = _document.currentScript.src)) {
+      return jsPath;
+    }
+    scripts = _document.getElementsByTagName("script");
+    if (scripts.length === 1) {
+      return scripts[0].src || undefined;
+    }
+    if ("readyState" in scripts[0]) {
+      for (i = scripts.length; i--; ) {
+        if (scripts[i].readyState === "interactive" && (jsPath = scripts[i].src)) {
+          return jsPath;
+        }
+      }
+    }
+    if (_document.readyState === "loading" && (jsPath = scripts[scripts.length - 1].src)) {
+      return jsPath;
+    }
+    if (jsPath = _getCurrentScriptUrlFromError()) {
+      return jsPath;
+    }
+    return undefined;
+  };
+  /**
+ * Get the unanimous parent directory of ALL script tags.
+ * If any script tags are either (a) inline or (b) from differing parent
+ * directories, this method must return `undefined`.
+ *
+ * @returns String or `undefined`
+ * @private
+ */
+  var _getUnanimousScriptParentDir = function() {
+    var i, jsDir, jsPath, scripts = _document.getElementsByTagName("script");
+    for (i = scripts.length; i--; ) {
+      if (!(jsPath = scripts[i].src)) {
+        jsDir = null;
+        break;
+      }
+      jsPath = _getDirPathOfUrl(jsPath);
+      if (jsDir == null) {
+        jsDir = jsPath;
+      } else if (jsDir !== jsPath) {
+        jsDir = null;
+        break;
+      }
+    }
+    return jsDir || undefined;
+  };
+  /**
+ * Get the presumed location of the "ZeroClipboard.swf" file, based on the location
+ * of the executing JavaScript file (e.g. "ZeroClipboard.js", etc.).
+ *
+ * @returns String
+ * @private
+ */
+  var _getDefaultSwfPath = function() {
+    var jsDir = _getDirPathOfUrl(_getCurrentScriptUrl()) || _getUnanimousScriptParentDir() || "";
+    return jsDir + "ZeroClipboard.swf";
+  };
+  /**
+ * Keep track of if the page is framed (in an `iframe`). This can never change.
+ * @private
+ */
+  var _pageIsFramed = function() {
+    return window.opener == null && (!!window.top && window != window.top || !!window.parent && window != window.parent);
+  }();
+  /**
+ * Keep track of the state of the Flash object.
+ * @private
+ */
+  var _flashState = {
+    bridge: null,
+    version: "0.0.0",
+    pluginType: "unknown",
+    disabled: null,
+    outdated: null,
+    sandboxed: null,
+    unavailable: null,
+    degraded: null,
+    deactivated: null,
+    overdue: null,
+    ready: null
+  };
+  /**
+ * The minimum Flash Player version required to use ZeroClipboard completely.
+ * @readonly
+ * @private
+ */
+  var _minimumFlashVersion = "11.0.0";
+  /**
+ * The ZeroClipboard library version number, as reported by Flash, at the time the SWF was compiled.
+ */
+  var _zcSwfVersion;
+  /**
+ * Keep track of all event listener registrations.
+ * @private
+ */
+  var _handlers = {};
+  /**
+ * Keep track of the currently activated element.
+ * @private
+ */
+  var _currentElement;
+  /**
+ * Keep track of the element that was activated when a `copy` process started.
+ * @private
+ */
+  var _copyTarget;
+  /**
+ * Keep track of data for the pending clipboard transaction.
+ * @private
+ */
+  var _clipData = {};
+  /**
+ * Keep track of data formats for the pending clipboard transaction.
+ * @private
+ */
+  var _clipDataFormatMap = null;
+  /**
+ * Keep track of the Flash availability check timeout.
+ * @private
+ */
+  var _flashCheckTimeout = 0;
+  /**
+ * Keep track of SWF network errors interval polling.
+ * @private
+ */
+  var _swfFallbackCheckInterval = 0;
+  /**
+ * The `message` store for events
+ * @private
+ */
+  var _eventMessages = {
+    ready: "Flash communication is established",
+    error: {
+      "flash-disabled": "Flash is disabled or not installed. May also be attempting to run Flash in a sandboxed iframe, which is impossible.",
+      "flash-outdated": "Flash is too outdated to support ZeroClipboard",
+      "flash-sandboxed": "Attempting to run Flash in a sandboxed iframe, which is impossible",
+      "flash-unavailable": "Flash is unable to communicate bidirectionally with JavaScript",
+      "flash-degraded": "Flash is unable to preserve data fidelity when communicating with JavaScript",
+      "flash-deactivated": "Flash is too outdated for your browser and/or is configured as click-to-activate.\nThis may also mean that the ZeroClipboard SWF object could not be loaded, so please check your `swfPath` configuration and/or network connectivity.\nMay also be attempting to run Flash in a sandboxed iframe, which is impossible.",
+      "flash-overdue": "Flash communication was established but NOT within the acceptable time limit",
+      "version-mismatch": "ZeroClipboard JS version number does not match ZeroClipboard SWF version number",
+      "clipboard-error": "At least one error was thrown while ZeroClipboard was attempting to inject your data into the clipboard",
+      "config-mismatch": "ZeroClipboard configuration does not match Flash's reality",
+      "swf-not-found": "The ZeroClipboard SWF object could not be loaded, so please check your `swfPath` configuration and/or network connectivity"
+    }
+  };
+  /**
+ * The `name`s of `error` events that can only occur is Flash has at least
+ * been able to load the SWF successfully.
+ * @private
+ */
+  var _errorsThatOnlyOccurAfterFlashLoads = [ "flash-unavailable", "flash-degraded", "flash-overdue", "version-mismatch", "config-mismatch", "clipboard-error" ];
+  /**
+ * The `name`s of `error` events that should likely result in the `_flashState`
+ * variable's property values being updated.
+ * @private
+ */
+  var _flashStateErrorNames = [ "flash-disabled", "flash-outdated", "flash-sandboxed", "flash-unavailable", "flash-degraded", "flash-deactivated", "flash-overdue" ];
+  /**
+ * A RegExp to match the `name` property of `error` events related to Flash.
+ * @private
+ */
+  var _flashStateErrorNameMatchingRegex = new RegExp("^flash-(" + _flashStateErrorNames.map(function(errorName) {
+    return errorName.replace(/^flash-/, "");
+  }).join("|") + ")$");
+  /**
+ * A RegExp to match the `name` property of `error` events related to Flash,
+ * which is enabled.
+ * @private
+ */
+  var _flashStateEnabledErrorNameMatchingRegex = new RegExp("^flash-(" + _flashStateErrorNames.slice(1).map(function(errorName) {
+    return errorName.replace(/^flash-/, "");
+  }).join("|") + ")$");
+  /**
+ * ZeroClipboard configuration defaults for the Core module.
+ * @private
+ */
+  var _globalConfig = {
+    swfPath: _getDefaultSwfPath(),
+    trustedDomains: window.location.host ? [ window.location.host ] : [],
+    cacheBust: true,
+    forceEnhancedClipboard: false,
+    flashLoadTimeout: 3e4,
+    autoActivate: true,
+    bubbleEvents: true,
+    containerId: "global-zeroclipboard-html-bridge",
+    containerClass: "global-zeroclipboard-container",
+    swfObjectId: "global-zeroclipboard-flash-bridge",
+    hoverClass: "zeroclipboard-is-hover",
+    activeClass: "zeroclipboard-is-active",
+    forceHandCursor: false,
+    title: null,
+    zIndex: 999999999
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.config`.
+ * @private
+ */
+  var _config = function(options) {
+    if (typeof options === "object" && options !== null) {
+      for (var prop in options) {
+        if (_hasOwn.call(options, prop)) {
+          if (/^(?:forceHandCursor|title|zIndex|bubbleEvents)$/.test(prop)) {
+            _globalConfig[prop] = options[prop];
+          } else if (_flashState.bridge == null) {
+            if (prop === "containerId" || prop === "swfObjectId") {
+              if (_isValidHtml4Id(options[prop])) {
+                _globalConfig[prop] = options[prop];
+              } else {
+                throw new Error("The specified `" + prop + "` value is not valid as an HTML4 Element ID");
+              }
+            } else {
+              _globalConfig[prop] = options[prop];
+            }
+          }
+        }
+      }
+    }
+    if (typeof options === "string" && options) {
+      if (_hasOwn.call(_globalConfig, options)) {
+        return _globalConfig[options];
+      }
+      return;
+    }
+    return _deepCopy(_globalConfig);
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.state`.
+ * @private
+ */
+  var _state = function() {
+    _detectSandbox();
+    return {
+      browser: _pick(_navigator, [ "userAgent", "platform", "appName" ]),
+      flash: _omit(_flashState, [ "bridge" ]),
+      zeroclipboard: {
+        version: ZeroClipboard.version,
+        config: ZeroClipboard.config()
+      }
+    };
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.isFlashUnusable`.
+ * @private
+ */
+  var _isFlashUnusable = function() {
+    return !!(_flashState.disabled || _flashState.outdated || _flashState.sandboxed || _flashState.unavailable || _flashState.degraded || _flashState.deactivated);
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.on`.
+ * @private
+ */
+  var _on = function(eventType, listener) {
+    var i, len, events, added = {};
+    if (typeof eventType === "string" && eventType) {
+      events = eventType.toLowerCase().split(/\s+/);
+    } else if (typeof eventType === "object" && eventType && typeof listener === "undefined") {
+      for (i in eventType) {
+        if (_hasOwn.call(eventType, i) && typeof i === "string" && i && typeof eventType[i] === "function") {
+          ZeroClipboard.on(i, eventType[i]);
+        }
+      }
+    }
+    if (events && events.length) {
+      for (i = 0, len = events.length; i < len; i++) {
+        eventType = events[i].replace(/^on/, "");
+        added[eventType] = true;
+        if (!_handlers[eventType]) {
+          _handlers[eventType] = [];
+        }
+        _handlers[eventType].push(listener);
+      }
+      if (added.ready && _flashState.ready) {
+        ZeroClipboard.emit({
+          type: "ready"
+        });
+      }
+      if (added.error) {
+        for (i = 0, len = _flashStateErrorNames.length; i < len; i++) {
+          if (_flashState[_flashStateErrorNames[i].replace(/^flash-/, "")] === true) {
+            ZeroClipboard.emit({
+              type: "error",
+              name: _flashStateErrorNames[i]
+            });
+            break;
+          }
+        }
+        if (_zcSwfVersion !== undefined && ZeroClipboard.version !== _zcSwfVersion) {
+          ZeroClipboard.emit({
+            type: "error",
+            name: "version-mismatch",
+            jsVersion: ZeroClipboard.version,
+            swfVersion: _zcSwfVersion
+          });
+        }
+      }
+    }
+    return ZeroClipboard;
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.off`.
+ * @private
+ */
+  var _off = function(eventType, listener) {
+    var i, len, foundIndex, events, perEventHandlers;
+    if (arguments.length === 0) {
+      events = _keys(_handlers);
+    } else if (typeof eventType === "string" && eventType) {
+      events = eventType.split(/\s+/);
+    } else if (typeof eventType === "object" && eventType && typeof listener === "undefined") {
+      for (i in eventType) {
+        if (_hasOwn.call(eventType, i) && typeof i === "string" && i && typeof eventType[i] === "function") {
+          ZeroClipboard.off(i, eventType[i]);
+        }
+      }
+    }
+    if (events && events.length) {
+      for (i = 0, len = events.length; i < len; i++) {
+        eventType = events[i].toLowerCase().replace(/^on/, "");
+        perEventHandlers = _handlers[eventType];
+        if (perEventHandlers && perEventHandlers.length) {
+          if (listener) {
+            foundIndex = perEventHandlers.indexOf(listener);
+            while (foundIndex !== -1) {
+              perEventHandlers.splice(foundIndex, 1);
+              foundIndex = perEventHandlers.indexOf(listener, foundIndex);
+            }
+          } else {
+            perEventHandlers.length = 0;
+          }
+        }
+      }
+    }
+    return ZeroClipboard;
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.handlers`.
+ * @private
+ */
+  var _listeners = function(eventType) {
+    var copy;
+    if (typeof eventType === "string" && eventType) {
+      copy = _deepCopy(_handlers[eventType]) || null;
+    } else {
+      copy = _deepCopy(_handlers);
+    }
+    return copy;
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.emit`.
+ * @private
+ */
+  var _emit = function(event) {
+    var eventCopy, returnVal, tmp;
+    event = _createEvent(event);
+    if (!event) {
+      return;
+    }
+    if (_preprocessEvent(event)) {
+      return;
+    }
+    if (event.type === "ready" && _flashState.overdue === true) {
+      return ZeroClipboard.emit({
+        type: "error",
+        name: "flash-overdue"
+      });
+    }
+    eventCopy = _extend({}, event);
+    _dispatchCallbacks.call(this, eventCopy);
+    if (event.type === "copy") {
+      tmp = _mapClipDataToFlash(_clipData);
+      returnVal = tmp.data;
+      _clipDataFormatMap = tmp.formatMap;
+    }
+    return returnVal;
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.create`.
+ * @private
+ */
+  var _create = function() {
+    var previousState = _flashState.sandboxed;
+    _detectSandbox();
+    if (typeof _flashState.ready !== "boolean") {
+      _flashState.ready = false;
+    }
+    if (_flashState.sandboxed !== previousState && _flashState.sandboxed === true) {
+      _flashState.ready = false;
+      ZeroClipboard.emit({
+        type: "error",
+        name: "flash-sandboxed"
+      });
+    } else if (!ZeroClipboard.isFlashUnusable() && _flashState.bridge === null) {
+      var maxWait = _globalConfig.flashLoadTimeout;
+      if (typeof maxWait === "number" && maxWait >= 0) {
+        _flashCheckTimeout = _setTimeout(function() {
+          if (typeof _flashState.deactivated !== "boolean") {
+            _flashState.deactivated = true;
+          }
+          if (_flashState.deactivated === true) {
+            ZeroClipboard.emit({
+              type: "error",
+              name: "flash-deactivated"
+            });
+          }
+        }, maxWait);
+      }
+      _flashState.overdue = false;
+      _embedSwf();
+    }
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.destroy`.
+ * @private
+ */
+  var _destroy = function() {
+    ZeroClipboard.clearData();
+    ZeroClipboard.blur();
+    ZeroClipboard.emit("destroy");
+    _unembedSwf();
+    ZeroClipboard.off();
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.setData`.
+ * @private
+ */
+  var _setData = function(format, data) {
+    var dataObj;
+    if (typeof format === "object" && format && typeof data === "undefined") {
+      dataObj = format;
+      ZeroClipboard.clearData();
+    } else if (typeof format === "string" && format) {
+      dataObj = {};
+      dataObj[format] = data;
+    } else {
+      return;
+    }
+    for (var dataFormat in dataObj) {
+      if (typeof dataFormat === "string" && dataFormat && _hasOwn.call(dataObj, dataFormat) && typeof dataObj[dataFormat] === "string" && dataObj[dataFormat]) {
+        _clipData[dataFormat] = dataObj[dataFormat];
+      }
+    }
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.clearData`.
+ * @private
+ */
+  var _clearData = function(format) {
+    if (typeof format === "undefined") {
+      _deleteOwnProperties(_clipData);
+      _clipDataFormatMap = null;
+    } else if (typeof format === "string" && _hasOwn.call(_clipData, format)) {
+      delete _clipData[format];
+    }
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.getData`.
+ * @private
+ */
+  var _getData = function(format) {
+    if (typeof format === "undefined") {
+      return _deepCopy(_clipData);
+    } else if (typeof format === "string" && _hasOwn.call(_clipData, format)) {
+      return _clipData[format];
+    }
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.focus`/`ZeroClipboard.activate`.
+ * @private
+ */
+  var _focus = function(element) {
+    if (!(element && element.nodeType === 1)) {
+      return;
+    }
+    if (_currentElement) {
+      _removeClass(_currentElement, _globalConfig.activeClass);
+      if (_currentElement !== element) {
+        _removeClass(_currentElement, _globalConfig.hoverClass);
+      }
+    }
+    _currentElement = element;
+    _addClass(element, _globalConfig.hoverClass);
+    var newTitle = element.getAttribute("title") || _globalConfig.title;
+    if (typeof newTitle === "string" && newTitle) {
+      var htmlBridge = _getHtmlBridge(_flashState.bridge);
+      if (htmlBridge) {
+        htmlBridge.setAttribute("title", newTitle);
+      }
+    }
+    var useHandCursor = _globalConfig.forceHandCursor === true || _getStyle(element, "cursor") === "pointer";
+    _setHandCursor(useHandCursor);
+    _reposition();
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.blur`/`ZeroClipboard.deactivate`.
+ * @private
+ */
+  var _blur = function() {
+    var htmlBridge = _getHtmlBridge(_flashState.bridge);
+    if (htmlBridge) {
+      htmlBridge.removeAttribute("title");
+      htmlBridge.style.left = "0px";
+      htmlBridge.style.top = "-9999px";
+      htmlBridge.style.width = "1px";
+      htmlBridge.style.height = "1px";
+    }
+    if (_currentElement) {
+      _removeClass(_currentElement, _globalConfig.hoverClass);
+      _removeClass(_currentElement, _globalConfig.activeClass);
+      _currentElement = null;
+    }
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.activeElement`.
+ * @private
+ */
+  var _activeElement = function() {
+    return _currentElement || null;
+  };
+  /**
+ * Check if a value is a valid HTML4 `ID` or `Name` token.
+ * @private
+ */
+  var _isValidHtml4Id = function(id) {
+    return typeof id === "string" && id && /^[A-Za-z][A-Za-z0-9_:\-\.]*$/.test(id);
+  };
+  /**
+ * Create or update an `event` object, based on the `eventType`.
+ * @private
+ */
+  var _createEvent = function(event) {
+    var eventType;
+    if (typeof event === "string" && event) {
+      eventType = event;
+      event = {};
+    } else if (typeof event === "object" && event && typeof event.type === "string" && event.type) {
+      eventType = event.type;
+    }
+    if (!eventType) {
+      return;
+    }
+    eventType = eventType.toLowerCase();
+    if (!event.target && (/^(copy|aftercopy|_click)$/.test(eventType) || eventType === "error" && event.name === "clipboard-error")) {
+      event.target = _copyTarget;
+    }
+    _extend(event, {
+      type: eventType,
+      target: event.target || _currentElement || null,
+      relatedTarget: event.relatedTarget || null,
+      currentTarget: _flashState && _flashState.bridge || null,
+      timeStamp: event.timeStamp || _now() || null
+    });
+    var msg = _eventMessages[event.type];
+    if (event.type === "error" && event.name && msg) {
+      msg = msg[event.name];
+    }
+    if (msg) {
+      event.message = msg;
+    }
+    if (event.type === "ready") {
+      _extend(event, {
+        target: null,
+        version: _flashState.version
+      });
+    }
+    if (event.type === "error") {
+      if (_flashStateErrorNameMatchingRegex.test(event.name)) {
+        _extend(event, {
+          target: null,
+          minimumVersion: _minimumFlashVersion
+        });
+      }
+      if (_flashStateEnabledErrorNameMatchingRegex.test(event.name)) {
+        _extend(event, {
+          version: _flashState.version
+        });
+      }
+    }
+    if (event.type === "copy") {
+      event.clipboardData = {
+        setData: ZeroClipboard.setData,
+        clearData: ZeroClipboard.clearData
+      };
+    }
+    if (event.type === "aftercopy") {
+      event = _mapClipResultsFromFlash(event, _clipDataFormatMap);
+    }
+    if (event.target && !event.relatedTarget) {
+      event.relatedTarget = _getRelatedTarget(event.target);
+    }
+    return _addMouseData(event);
+  };
+  /**
+ * Get a relatedTarget from the target's `data-clipboard-target` attribute
+ * @private
+ */
+  var _getRelatedTarget = function(targetEl) {
+    var relatedTargetId = targetEl && targetEl.getAttribute && targetEl.getAttribute("data-clipboard-target");
+    return relatedTargetId ? _document.getElementById(relatedTargetId) : null;
+  };
+  /**
+ * Add element and position data to `MouseEvent` instances
+ * @private
+ */
+  var _addMouseData = function(event) {
+    if (event && /^_(?:click|mouse(?:over|out|down|up|move))$/.test(event.type)) {
+      var srcElement = event.target;
+      var fromElement = event.type === "_mouseover" && event.relatedTarget ? event.relatedTarget : undefined;
+      var toElement = event.type === "_mouseout" && event.relatedTarget ? event.relatedTarget : undefined;
+      var pos = _getElementPosition(srcElement);
+      var screenLeft = _window.screenLeft || _window.screenX || 0;
+      var screenTop = _window.screenTop || _window.screenY || 0;
+      var scrollLeft = _document.body.scrollLeft + _document.documentElement.scrollLeft;
+      var scrollTop = _document.body.scrollTop + _document.documentElement.scrollTop;
+      var pageX = pos.left + (typeof event._stageX === "number" ? event._stageX : 0);
+      var pageY = pos.top + (typeof event._stageY === "number" ? event._stageY : 0);
+      var clientX = pageX - scrollLeft;
+      var clientY = pageY - scrollTop;
+      var screenX = screenLeft + clientX;
+      var screenY = screenTop + clientY;
+      var moveX = typeof event.movementX === "number" ? event.movementX : 0;
+      var moveY = typeof event.movementY === "number" ? event.movementY : 0;
+      delete event._stageX;
+      delete event._stageY;
+      _extend(event, {
+        srcElement: srcElement,
+        fromElement: fromElement,
+        toElement: toElement,
+        screenX: screenX,
+        screenY: screenY,
+        pageX: pageX,
+        pageY: pageY,
+        clientX: clientX,
+        clientY: clientY,
+        x: clientX,
+        y: clientY,
+        movementX: moveX,
+        movementY: moveY,
+        offsetX: 0,
+        offsetY: 0,
+        layerX: 0,
+        layerY: 0
+      });
+    }
+    return event;
+  };
+  /**
+ * Determine if an event's registered handlers should be execute synchronously or asynchronously.
+ *
+ * @returns {boolean}
+ * @private
+ */
+  var _shouldPerformAsync = function(event) {
+    var eventType = event && typeof event.type === "string" && event.type || "";
+    return !/^(?:(?:before)?copy|destroy)$/.test(eventType);
+  };
+  /**
+ * Control if a callback should be executed asynchronously or not.
+ *
+ * @returns `undefined`
+ * @private
+ */
+  var _dispatchCallback = function(func, context, args, async) {
+    if (async) {
+      _setTimeout(function() {
+        func.apply(context, args);
+      }, 0);
+    } else {
+      func.apply(context, args);
+    }
+  };
+  /**
+ * Handle the actual dispatching of events to client instances.
+ *
+ * @returns `undefined`
+ * @private
+ */
+  var _dispatchCallbacks = function(event) {
+    if (!(typeof event === "object" && event && event.type)) {
+      return;
+    }
+    var async = _shouldPerformAsync(event);
+    var wildcardTypeHandlers = _handlers["*"] || [];
+    var specificTypeHandlers = _handlers[event.type] || [];
+    var handlers = wildcardTypeHandlers.concat(specificTypeHandlers);
+    if (handlers && handlers.length) {
+      var i, len, func, context, eventCopy, originalContext = this;
+      for (i = 0, len = handlers.length; i < len; i++) {
+        func = handlers[i];
+        context = originalContext;
+        if (typeof func === "string" && typeof _window[func] === "function") {
+          func = _window[func];
+        }
+        if (typeof func === "object" && func && typeof func.handleEvent === "function") {
+          context = func;
+          func = func.handleEvent;
+        }
+        if (typeof func === "function") {
+          eventCopy = _extend({}, event);
+          _dispatchCallback(func, context, [ eventCopy ], async);
+        }
+      }
+    }
+    return this;
+  };
+  /**
+ * Check an `error` event's `name` property to see if Flash has
+ * already loaded, which rules out possible `iframe` sandboxing.
+ * @private
+ */
+  var _getSandboxStatusFromErrorEvent = function(event) {
+    var isSandboxed = null;
+    if (_pageIsFramed === false || event && event.type === "error" && event.name && _errorsThatOnlyOccurAfterFlashLoads.indexOf(event.name) !== -1) {
+      isSandboxed = false;
+    }
+    return isSandboxed;
+  };
+  /**
+ * Preprocess any special behaviors, reactions, or state changes after receiving this event.
+ * Executes only once per event emitted, NOT once per client.
+ * @private
+ */
+  var _preprocessEvent = function(event) {
+    var element = event.target || _currentElement || null;
+    var sourceIsSwf = event._source === "swf";
+    delete event._source;
+    switch (event.type) {
+     case "error":
+      var isSandboxed = event.name === "flash-sandboxed" || _getSandboxStatusFromErrorEvent(event);
+      if (typeof isSandboxed === "boolean") {
+        _flashState.sandboxed = isSandboxed;
+      }
+      if (_flashStateErrorNames.indexOf(event.name) !== -1) {
+        _extend(_flashState, {
+          disabled: event.name === "flash-disabled",
+          outdated: event.name === "flash-outdated",
+          unavailable: event.name === "flash-unavailable",
+          degraded: event.name === "flash-degraded",
+          deactivated: event.name === "flash-deactivated",
+          overdue: event.name === "flash-overdue",
+          ready: false
+        });
+      } else if (event.name === "version-mismatch") {
+        _zcSwfVersion = event.swfVersion;
+        _extend(_flashState, {
+          disabled: false,
+          outdated: false,
+          unavailable: false,
+          degraded: false,
+          deactivated: false,
+          overdue: false,
+          ready: false
+        });
+      }
+      _clearTimeoutsAndPolling();
+      break;
+
+     case "ready":
+      _zcSwfVersion = event.swfVersion;
+      var wasDeactivated = _flashState.deactivated === true;
+      _extend(_flashState, {
+        disabled: false,
+        outdated: false,
+        sandboxed: false,
+        unavailable: false,
+        degraded: false,
+        deactivated: false,
+        overdue: wasDeactivated,
+        ready: !wasDeactivated
+      });
+      _clearTimeoutsAndPolling();
+      break;
+
+     case "beforecopy":
+      _copyTarget = element;
+      break;
+
+     case "copy":
+      var textContent, htmlContent, targetEl = event.relatedTarget;
+      if (!(_clipData["text/html"] || _clipData["text/plain"]) && targetEl && (htmlContent = targetEl.value || targetEl.outerHTML || targetEl.innerHTML) && (textContent = targetEl.value || targetEl.textContent || targetEl.innerText)) {
+        event.clipboardData.clearData();
+        event.clipboardData.setData("text/plain", textContent);
+        if (htmlContent !== textContent) {
+          event.clipboardData.setData("text/html", htmlContent);
+        }
+      } else if (!_clipData["text/plain"] && event.target && (textContent = event.target.getAttribute("data-clipboard-text"))) {
+        event.clipboardData.clearData();
+        event.clipboardData.setData("text/plain", textContent);
+      }
+      break;
+
+     case "aftercopy":
+      _queueEmitClipboardErrors(event);
+      ZeroClipboard.clearData();
+      if (element && element !== _safeActiveElement() && element.focus) {
+        element.focus();
+      }
+      break;
+
+     case "_mouseover":
+      ZeroClipboard.focus(element);
+      if (_globalConfig.bubbleEvents === true && sourceIsSwf) {
+        if (element && element !== event.relatedTarget && !_containedBy(event.relatedTarget, element)) {
+          _fireMouseEvent(_extend({}, event, {
+            type: "mouseenter",
+            bubbles: false,
+            cancelable: false
+          }));
+        }
+        _fireMouseEvent(_extend({}, event, {
+          type: "mouseover"
+        }));
+      }
+      break;
+
+     case "_mouseout":
+      ZeroClipboard.blur();
+      if (_globalConfig.bubbleEvents === true && sourceIsSwf) {
+        if (element && element !== event.relatedTarget && !_containedBy(event.relatedTarget, element)) {
+          _fireMouseEvent(_extend({}, event, {
+            type: "mouseleave",
+            bubbles: false,
+            cancelable: false
+          }));
+        }
+        _fireMouseEvent(_extend({}, event, {
+          type: "mouseout"
+        }));
+      }
+      break;
+
+     case "_mousedown":
+      _addClass(element, _globalConfig.activeClass);
+      if (_globalConfig.bubbleEvents === true && sourceIsSwf) {
+        _fireMouseEvent(_extend({}, event, {
+          type: event.type.slice(1)
+        }));
+      }
+      break;
+
+     case "_mouseup":
+      _removeClass(element, _globalConfig.activeClass);
+      if (_globalConfig.bubbleEvents === true && sourceIsSwf) {
+        _fireMouseEvent(_extend({}, event, {
+          type: event.type.slice(1)
+        }));
+      }
+      break;
+
+     case "_click":
+      _copyTarget = null;
+      if (_globalConfig.bubbleEvents === true && sourceIsSwf) {
+        _fireMouseEvent(_extend({}, event, {
+          type: event.type.slice(1)
+        }));
+      }
+      break;
+
+     case "_mousemove":
+      if (_globalConfig.bubbleEvents === true && sourceIsSwf) {
+        _fireMouseEvent(_extend({}, event, {
+          type: event.type.slice(1)
+        }));
+      }
+      break;
+    }
+    if (/^_(?:click|mouse(?:over|out|down|up|move))$/.test(event.type)) {
+      return true;
+    }
+  };
+  /**
+ * Check an "aftercopy" event for clipboard errors and emit a corresponding "error" event.
+ * @private
+ */
+  var _queueEmitClipboardErrors = function(aftercopyEvent) {
+    if (aftercopyEvent.errors && aftercopyEvent.errors.length > 0) {
+      var errorEvent = _deepCopy(aftercopyEvent);
+      _extend(errorEvent, {
+        type: "error",
+        name: "clipboard-error"
+      });
+      delete errorEvent.success;
+      _setTimeout(function() {
+        ZeroClipboard.emit(errorEvent);
+      }, 0);
+    }
+  };
+  /**
+ * Dispatch a synthetic MouseEvent.
+ *
+ * @returns `undefined`
+ * @private
+ */
+  var _fireMouseEvent = function(event) {
+    if (!(event && typeof event.type === "string" && event)) {
+      return;
+    }
+    var e, target = event.target || null, doc = target && target.ownerDocument || _document, defaults = {
+      view: doc.defaultView || _window,
+      canBubble: true,
+      cancelable: true,
+      detail: event.type === "click" ? 1 : 0,
+      button: typeof event.which === "number" ? event.which - 1 : typeof event.button === "number" ? event.button : doc.createEvent ? 0 : 1
+    }, args = _extend(defaults, event);
+    if (!target) {
+      return;
+    }
+    if (doc.createEvent && target.dispatchEvent) {
+      args = [ args.type, args.canBubble, args.cancelable, args.view, args.detail, args.screenX, args.screenY, args.clientX, args.clientY, args.ctrlKey, args.altKey, args.shiftKey, args.metaKey, args.button, args.relatedTarget ];
+      e = doc.createEvent("MouseEvents");
+      if (e.initMouseEvent) {
+        e.initMouseEvent.apply(e, args);
+        e._source = "js";
+        target.dispatchEvent(e);
+      }
+    }
+  };
+  /**
+ * Continuously poll the DOM until either:
+ *  (a) the fallback content becomes visible, or
+ *  (b) we receive an event from SWF (handled elsewhere)
+ *
+ * IMPORTANT:
+ * This is NOT a necessary check but it can result in significantly faster
+ * detection of bad `swfPath` configuration and/or network/server issues [in
+ * supported browsers] than waiting for the entire `flashLoadTimeout` duration
+ * to elapse before detecting that the SWF cannot be loaded. The detection
+ * duration can be anywhere from 10-30 times faster [in supported browsers] by
+ * using this approach.
+ *
+ * @returns `undefined`
+ * @private
+ */
+  var _watchForSwfFallbackContent = function() {
+    var maxWait = _globalConfig.flashLoadTimeout;
+    if (typeof maxWait === "number" && maxWait >= 0) {
+      var pollWait = Math.min(1e3, maxWait / 10);
+      var fallbackContentId = _globalConfig.swfObjectId + "_fallbackContent";
+      _swfFallbackCheckInterval = _setInterval(function() {
+        var el = _document.getElementById(fallbackContentId);
+        if (_isElementVisible(el)) {
+          _clearTimeoutsAndPolling();
+          _flashState.deactivated = null;
+          ZeroClipboard.emit({
+            type: "error",
+            name: "swf-not-found"
+          });
+        }
+      }, pollWait);
+    }
+  };
+  /**
+ * Create the HTML bridge element to embed the Flash object into.
+ * @private
+ */
+  var _createHtmlBridge = function() {
+    var container = _document.createElement("div");
+    container.id = _globalConfig.containerId;
+    container.className = _globalConfig.containerClass;
+    container.style.position = "absolute";
+    container.style.left = "0px";
+    container.style.top = "-9999px";
+    container.style.width = "1px";
+    container.style.height = "1px";
+    container.style.zIndex = "" + _getSafeZIndex(_globalConfig.zIndex);
+    return container;
+  };
+  /**
+ * Get the HTML element container that wraps the Flash bridge object/element.
+ * @private
+ */
+  var _getHtmlBridge = function(flashBridge) {
+    var htmlBridge = flashBridge && flashBridge.parentNode;
+    while (htmlBridge && htmlBridge.nodeName === "OBJECT" && htmlBridge.parentNode) {
+      htmlBridge = htmlBridge.parentNode;
+    }
+    return htmlBridge || null;
+  };
+  /**
+ * Create the SWF object.
+ *
+ * @returns The SWF object reference.
+ * @private
+ */
+  var _embedSwf = function() {
+    var len, flashBridge = _flashState.bridge, container = _getHtmlBridge(flashBridge);
+    if (!flashBridge) {
+      var allowScriptAccess = _determineScriptAccess(_window.location.host, _globalConfig);
+      var allowNetworking = allowScriptAccess === "never" ? "none" : "all";
+      var flashvars = _vars(_extend({
+        jsVersion: ZeroClipboard.version
+      }, _globalConfig));
+      var swfUrl = _globalConfig.swfPath + _cacheBust(_globalConfig.swfPath, _globalConfig);
+      container = _createHtmlBridge();
+      var divToBeReplaced = _document.createElement("div");
+      container.appendChild(divToBeReplaced);
+      _document.body.appendChild(container);
+      var tmpDiv = _document.createElement("div");
+      var usingActiveX = _flashState.pluginType === "activex";
+      tmpDiv.innerHTML = '<object id="' + _globalConfig.swfObjectId + '" name="' + _globalConfig.swfObjectId + '" ' + 'width="100%" height="100%" ' + (usingActiveX ? 'classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"' : 'type="application/x-shockwave-flash" data="' + swfUrl + '"') + ">" + (usingActiveX ? '<param name="movie" value="' + swfUrl + '"/>' : "") + '<param name="allowScriptAccess" value="' + allowScriptAccess + '"/>' + '<param name="allowNetworking" value="' + allowNetworking + '"/>' + '<param name="menu" value="false"/>' + '<param name="wmode" value="transparent"/>' + '<param name="flashvars" value="' + flashvars + '"/>' + '<div id="' + _globalConfig.swfObjectId + '_fallbackContent">&nbsp;</div>' + "</object>";
+      flashBridge = tmpDiv.firstChild;
+      tmpDiv = null;
+      _unwrap(flashBridge).ZeroClipboard = ZeroClipboard;
+      container.replaceChild(flashBridge, divToBeReplaced);
+      _watchForSwfFallbackContent();
+    }
+    if (!flashBridge) {
+      flashBridge = _document[_globalConfig.swfObjectId];
+      if (flashBridge && (len = flashBridge.length)) {
+        flashBridge = flashBridge[len - 1];
+      }
+      if (!flashBridge && container) {
+        flashBridge = container.firstChild;
+      }
+    }
+    _flashState.bridge = flashBridge || null;
+    return flashBridge;
+  };
+  /**
+ * Destroy the SWF object.
+ * @private
+ */
+  var _unembedSwf = function() {
+    var flashBridge = _flashState.bridge;
+    if (flashBridge) {
+      var htmlBridge = _getHtmlBridge(flashBridge);
+      if (htmlBridge) {
+        if (_flashState.pluginType === "activex" && "readyState" in flashBridge) {
+          flashBridge.style.display = "none";
+          (function removeSwfFromIE() {
+            if (flashBridge.readyState === 4) {
+              for (var prop in flashBridge) {
+                if (typeof flashBridge[prop] === "function") {
+                  flashBridge[prop] = null;
+                }
+              }
+              if (flashBridge.parentNode) {
+                flashBridge.parentNode.removeChild(flashBridge);
+              }
+              if (htmlBridge.parentNode) {
+                htmlBridge.parentNode.removeChild(htmlBridge);
+              }
+            } else {
+              _setTimeout(removeSwfFromIE, 10);
+            }
+          })();
+        } else {
+          if (flashBridge.parentNode) {
+            flashBridge.parentNode.removeChild(flashBridge);
+          }
+          if (htmlBridge.parentNode) {
+            htmlBridge.parentNode.removeChild(htmlBridge);
+          }
+        }
+      }
+      _clearTimeoutsAndPolling();
+      _flashState.ready = null;
+      _flashState.bridge = null;
+      _flashState.deactivated = null;
+      _zcSwfVersion = undefined;
+    }
+  };
+  /**
+ * Map the data format names of the "clipData" to Flash-friendly names.
+ *
+ * @returns A new transformed object.
+ * @private
+ */
+  var _mapClipDataToFlash = function(clipData) {
+    var newClipData = {}, formatMap = {};
+    if (!(typeof clipData === "object" && clipData)) {
+      return;
+    }
+    for (var dataFormat in clipData) {
+      if (dataFormat && _hasOwn.call(clipData, dataFormat) && typeof clipData[dataFormat] === "string" && clipData[dataFormat]) {
+        switch (dataFormat.toLowerCase()) {
+         case "text/plain":
+         case "text":
+         case "air:text":
+         case "flash:text":
+          newClipData.text = clipData[dataFormat];
+          formatMap.text = dataFormat;
+          break;
+
+         case "text/html":
+         case "html":
+         case "air:html":
+         case "flash:html":
+          newClipData.html = clipData[dataFormat];
+          formatMap.html = dataFormat;
+          break;
+
+         case "application/rtf":
+         case "text/rtf":
+         case "rtf":
+         case "richtext":
+         case "air:rtf":
+         case "flash:rtf":
+          newClipData.rtf = clipData[dataFormat];
+          formatMap.rtf = dataFormat;
+          break;
+
+         default:
+          break;
+        }
+      }
+    }
+    return {
+      data: newClipData,
+      formatMap: formatMap
+    };
+  };
+  /**
+ * Map the data format names from Flash-friendly names back to their original "clipData" names (via a format mapping).
+ *
+ * @returns A new transformed object.
+ * @private
+ */
+  var _mapClipResultsFromFlash = function(clipResults, formatMap) {
+    if (!(typeof clipResults === "object" && clipResults && typeof formatMap === "object" && formatMap)) {
+      return clipResults;
+    }
+    var newResults = {};
+    for (var prop in clipResults) {
+      if (_hasOwn.call(clipResults, prop)) {
+        if (prop === "errors") {
+          newResults[prop] = clipResults[prop] ? clipResults[prop].slice() : [];
+          for (var i = 0, len = newResults[prop].length; i < len; i++) {
+            newResults[prop][i].format = formatMap[newResults[prop][i].format];
+          }
+        } else if (prop !== "success" && prop !== "data") {
+          newResults[prop] = clipResults[prop];
+        } else {
+          newResults[prop] = {};
+          var tmpHash = clipResults[prop];
+          for (var dataFormat in tmpHash) {
+            if (dataFormat && _hasOwn.call(tmpHash, dataFormat) && _hasOwn.call(formatMap, dataFormat)) {
+              newResults[prop][formatMap[dataFormat]] = tmpHash[dataFormat];
+            }
+          }
+        }
+      }
+    }
+    return newResults;
+  };
+  /**
+ * Will look at a path, and will create a "?noCache={time}" or "&noCache={time}"
+ * query param string to return. Does NOT append that string to the original path.
+ * This is useful because ExternalInterface often breaks when a Flash SWF is cached.
+ *
+ * @returns The `noCache` query param with necessary "?"/"&" prefix.
+ * @private
+ */
+  var _cacheBust = function(path, options) {
+    var cacheBust = options == null || options && options.cacheBust === true;
+    if (cacheBust) {
+      return (path.indexOf("?") === -1 ? "?" : "&") + "noCache=" + _now();
+    } else {
+      return "";
+    }
+  };
+  /**
+ * Creates a query string for the FlashVars param.
+ * Does NOT include the cache-busting query param.
+ *
+ * @returns FlashVars query string
+ * @private
+ */
+  var _vars = function(options) {
+    var i, len, domain, domains, str = "", trustedOriginsExpanded = [];
+    if (options.trustedDomains) {
+      if (typeof options.trustedDomains === "string") {
+        domains = [ options.trustedDomains ];
+      } else if (typeof options.trustedDomains === "object" && "length" in options.trustedDomains) {
+        domains = options.trustedDomains;
+      }
+    }
+    if (domains && domains.length) {
+      for (i = 0, len = domains.length; i < len; i++) {
+        if (_hasOwn.call(domains, i) && domains[i] && typeof domains[i] === "string") {
+          domain = _extractDomain(domains[i]);
+          if (!domain) {
+            continue;
+          }
+          if (domain === "*") {
+            trustedOriginsExpanded.length = 0;
+            trustedOriginsExpanded.push(domain);
+            break;
+          }
+          trustedOriginsExpanded.push.apply(trustedOriginsExpanded, [ domain, "//" + domain, _window.location.protocol + "//" + domain ]);
+        }
+      }
+    }
+    if (trustedOriginsExpanded.length) {
+      str += "trustedOrigins=" + _encodeURIComponent(trustedOriginsExpanded.join(","));
+    }
+    if (options.forceEnhancedClipboard === true) {
+      str += (str ? "&" : "") + "forceEnhancedClipboard=true";
+    }
+    if (typeof options.swfObjectId === "string" && options.swfObjectId) {
+      str += (str ? "&" : "") + "swfObjectId=" + _encodeURIComponent(options.swfObjectId);
+    }
+    if (typeof options.jsVersion === "string" && options.jsVersion) {
+      str += (str ? "&" : "") + "jsVersion=" + _encodeURIComponent(options.jsVersion);
+    }
+    return str;
+  };
+  /**
+ * Extract the domain (e.g. "github.com") from an origin (e.g. "https://github.com") or
+ * URL (e.g. "https://github.com/zeroclipboard/zeroclipboard/").
+ *
+ * @returns the domain
+ * @private
+ */
+  var _extractDomain = function(originOrUrl) {
+    if (originOrUrl == null || originOrUrl === "") {
+      return null;
+    }
+    originOrUrl = originOrUrl.replace(/^\s+|\s+$/g, "");
+    if (originOrUrl === "") {
+      return null;
+    }
+    var protocolIndex = originOrUrl.indexOf("//");
+    originOrUrl = protocolIndex === -1 ? originOrUrl : originOrUrl.slice(protocolIndex + 2);
+    var pathIndex = originOrUrl.indexOf("/");
+    originOrUrl = pathIndex === -1 ? originOrUrl : protocolIndex === -1 || pathIndex === 0 ? null : originOrUrl.slice(0, pathIndex);
+    if (originOrUrl && originOrUrl.slice(-4).toLowerCase() === ".swf") {
+      return null;
+    }
+    return originOrUrl || null;
+  };
+  /**
+ * Set `allowScriptAccess` based on `trustedDomains` and `window.location.host` vs. `swfPath`.
+ *
+ * @returns The appropriate script access level.
+ * @private
+ */
+  var _determineScriptAccess = function() {
+    var _extractAllDomains = function(origins) {
+      var i, len, tmp, resultsArray = [];
+      if (typeof origins === "string") {
+        origins = [ origins ];
+      }
+      if (!(typeof origins === "object" && origins && typeof origins.length === "number")) {
+        return resultsArray;
+      }
+      for (i = 0, len = origins.length; i < len; i++) {
+        if (_hasOwn.call(origins, i) && (tmp = _extractDomain(origins[i]))) {
+          if (tmp === "*") {
+            resultsArray.length = 0;
+            resultsArray.push("*");
+            break;
+          }
+          if (resultsArray.indexOf(tmp) === -1) {
+            resultsArray.push(tmp);
+          }
+        }
+      }
+      return resultsArray;
+    };
+    return function(currentDomain, configOptions) {
+      var swfDomain = _extractDomain(configOptions.swfPath);
+      if (swfDomain === null) {
+        swfDomain = currentDomain;
+      }
+      var trustedDomains = _extractAllDomains(configOptions.trustedDomains);
+      var len = trustedDomains.length;
+      if (len > 0) {
+        if (len === 1 && trustedDomains[0] === "*") {
+          return "always";
+        }
+        if (trustedDomains.indexOf(currentDomain) !== -1) {
+          if (len === 1 && currentDomain === swfDomain) {
+            return "sameDomain";
+          }
+          return "always";
+        }
+      }
+      return "never";
+    };
+  }();
+  /**
+ * Get the currently active/focused DOM element.
+ *
+ * @returns the currently active/focused element, or `null`
+ * @private
+ */
+  var _safeActiveElement = function() {
+    try {
+      return _document.activeElement;
+    } catch (err) {
+      return null;
+    }
+  };
+  /**
+ * Add a class to an element, if it doesn't already have it.
+ *
+ * @returns The element, with its new class added.
+ * @private
+ */
+  var _addClass = function(element, value) {
+    var c, cl, className, classNames = [];
+    if (typeof value === "string" && value) {
+      classNames = value.split(/\s+/);
+    }
+    if (element && element.nodeType === 1 && classNames.length > 0) {
+      if (element.classList) {
+        for (c = 0, cl = classNames.length; c < cl; c++) {
+          element.classList.add(classNames[c]);
+        }
+      } else if (element.hasOwnProperty("className")) {
+        className = " " + element.className + " ";
+        for (c = 0, cl = classNames.length; c < cl; c++) {
+          if (className.indexOf(" " + classNames[c] + " ") === -1) {
+            className += classNames[c] + " ";
+          }
+        }
+        element.className = className.replace(/^\s+|\s+$/g, "");
+      }
+    }
+    return element;
+  };
+  /**
+ * Remove a class from an element, if it has it.
+ *
+ * @returns The element, with its class removed.
+ * @private
+ */
+  var _removeClass = function(element, value) {
+    var c, cl, className, classNames = [];
+    if (typeof value === "string" && value) {
+      classNames = value.split(/\s+/);
+    }
+    if (element && element.nodeType === 1 && classNames.length > 0) {
+      if (element.classList && element.classList.length > 0) {
+        for (c = 0, cl = classNames.length; c < cl; c++) {
+          element.classList.remove(classNames[c]);
+        }
+      } else if (element.className) {
+        className = (" " + element.className + " ").replace(/[\r\n\t]/g, " ");
+        for (c = 0, cl = classNames.length; c < cl; c++) {
+          className = className.replace(" " + classNames[c] + " ", " ");
+        }
+        element.className = className.replace(/^\s+|\s+$/g, "");
+      }
+    }
+    return element;
+  };
+  /**
+ * Attempt to interpret the element's CSS styling. If `prop` is `"cursor"`,
+ * then we assume that it should be a hand ("pointer") cursor if the element
+ * is an anchor element ("a" tag).
+ *
+ * @returns The computed style property.
+ * @private
+ */
+  var _getStyle = function(el, prop) {
+    var value = _getComputedStyle(el, null).getPropertyValue(prop);
+    if (prop === "cursor") {
+      if (!value || value === "auto") {
+        if (el.nodeName === "A") {
+          return "pointer";
+        }
+      }
+    }
+    return value;
+  };
+  /**
+ * Get the absolutely positioned coordinates of a DOM element.
+ *
+ * @returns Object containing the element's position, width, and height.
+ * @private
+ */
+  var _getElementPosition = function(el) {
+    var pos = {
+      left: 0,
+      top: 0,
+      width: 0,
+      height: 0
+    };
+    if (el.getBoundingClientRect) {
+      var elRect = el.getBoundingClientRect();
+      var pageXOffset = _window.pageXOffset;
+      var pageYOffset = _window.pageYOffset;
+      var leftBorderWidth = _document.documentElement.clientLeft || 0;
+      var topBorderWidth = _document.documentElement.clientTop || 0;
+      var leftBodyOffset = 0;
+      var topBodyOffset = 0;
+      if (_getStyle(_document.body, "position") === "relative") {
+        var bodyRect = _document.body.getBoundingClientRect();
+        var htmlRect = _document.documentElement.getBoundingClientRect();
+        leftBodyOffset = bodyRect.left - htmlRect.left || 0;
+        topBodyOffset = bodyRect.top - htmlRect.top || 0;
+      }
+      pos.left = elRect.left + pageXOffset - leftBorderWidth - leftBodyOffset;
+      pos.top = elRect.top + pageYOffset - topBorderWidth - topBodyOffset;
+      pos.width = "width" in elRect ? elRect.width : elRect.right - elRect.left;
+      pos.height = "height" in elRect ? elRect.height : elRect.bottom - elRect.top;
+    }
+    return pos;
+  };
+  /**
+ * Determine is an element is visible somewhere within the document (page).
+ *
+ * @returns Boolean
+ * @private
+ */
+  var _isElementVisible = function(el) {
+    if (!el) {
+      return false;
+    }
+    var styles = _getComputedStyle(el, null);
+    var hasCssHeight = _parseFloat(styles.height) > 0;
+    var hasCssWidth = _parseFloat(styles.width) > 0;
+    var hasCssTop = _parseFloat(styles.top) >= 0;
+    var hasCssLeft = _parseFloat(styles.left) >= 0;
+    var cssKnows = hasCssHeight && hasCssWidth && hasCssTop && hasCssLeft;
+    var rect = cssKnows ? null : _getElementPosition(el);
+    var isVisible = styles.display !== "none" && styles.visibility !== "collapse" && (cssKnows || !!rect && (hasCssHeight || rect.height > 0) && (hasCssWidth || rect.width > 0) && (hasCssTop || rect.top >= 0) && (hasCssLeft || rect.left >= 0));
+    return isVisible;
+  };
+  /**
+ * Clear all existing timeouts and interval polling delegates.
+ *
+ * @returns `undefined`
+ * @private
+ */
+  var _clearTimeoutsAndPolling = function() {
+    _clearTimeout(_flashCheckTimeout);
+    _flashCheckTimeout = 0;
+    _clearInterval(_swfFallbackCheckInterval);
+    _swfFallbackCheckInterval = 0;
+  };
+  /**
+ * Reposition the Flash object to cover the currently activated element.
+ *
+ * @returns `undefined`
+ * @private
+ */
+  var _reposition = function() {
+    var htmlBridge;
+    if (_currentElement && (htmlBridge = _getHtmlBridge(_flashState.bridge))) {
+      var pos = _getElementPosition(_currentElement);
+      _extend(htmlBridge.style, {
+        width: pos.width + "px",
+        height: pos.height + "px",
+        top: pos.top + "px",
+        left: pos.left + "px",
+        zIndex: "" + _getSafeZIndex(_globalConfig.zIndex)
+      });
+    }
+  };
+  /**
+ * Sends a signal to the Flash object to display the hand cursor if `true`.
+ *
+ * @returns `undefined`
+ * @private
+ */
+  var _setHandCursor = function(enabled) {
+    if (_flashState.ready === true) {
+      if (_flashState.bridge && typeof _flashState.bridge.setHandCursor === "function") {
+        _flashState.bridge.setHandCursor(enabled);
+      } else {
+        _flashState.ready = false;
+      }
+    }
+  };
+  /**
+ * Get a safe value for `zIndex`
+ *
+ * @returns an integer, or "auto"
+ * @private
+ */
+  var _getSafeZIndex = function(val) {
+    if (/^(?:auto|inherit)$/.test(val)) {
+      return val;
+    }
+    var zIndex;
+    if (typeof val === "number" && !_isNaN(val)) {
+      zIndex = val;
+    } else if (typeof val === "string") {
+      zIndex = _getSafeZIndex(_parseInt(val, 10));
+    }
+    return typeof zIndex === "number" ? zIndex : "auto";
+  };
+  /**
+ * Attempt to detect if ZeroClipboard is executing inside of a sandboxed iframe.
+ * If it is, Flash Player cannot be used, so ZeroClipboard is dead in the water.
+ *
+ * @see {@link http://lists.w3.org/Archives/Public/public-whatwg-archive/2014Dec/0002.html}
+ * @see {@link https://github.com/zeroclipboard/zeroclipboard/issues/511}
+ * @see {@link http://zeroclipboard.org/test-iframes.html}
+ *
+ * @returns `true` (is sandboxed), `false` (is not sandboxed), or `null` (uncertain) 
+ * @private
+ */
+  var _detectSandbox = function(doNotReassessFlashSupport) {
+    var effectiveScriptOrigin, frame, frameError, previousState = _flashState.sandboxed, isSandboxed = null;
+    doNotReassessFlashSupport = doNotReassessFlashSupport === true;
+    if (_pageIsFramed === false) {
+      isSandboxed = false;
+    } else {
+      try {
+        frame = window.frameElement || null;
+      } catch (e) {
+        frameError = {
+          name: e.name,
+          message: e.message
+        };
+      }
+      if (frame && frame.nodeType === 1 && frame.nodeName === "IFRAME") {
+        try {
+          isSandboxed = frame.hasAttribute("sandbox");
+        } catch (e) {
+          isSandboxed = null;
+        }
+      } else {
+        try {
+          effectiveScriptOrigin = document.domain || null;
+        } catch (e) {
+          effectiveScriptOrigin = null;
+        }
+        if (effectiveScriptOrigin === null || frameError && frameError.name === "SecurityError" && /(^|[\s\(\[@])sandbox(es|ed|ing|[\s\.,!\)\]@]|$)/.test(frameError.message.toLowerCase())) {
+          isSandboxed = true;
+        }
+      }
+    }
+    _flashState.sandboxed = isSandboxed;
+    if (previousState !== isSandboxed && !doNotReassessFlashSupport) {
+      _detectFlashSupport(_ActiveXObject);
+    }
+    return isSandboxed;
+  };
+  /**
+ * Detect the Flash Player status, version, and plugin type.
+ *
+ * @see {@link https://code.google.com/p/doctype-mirror/wiki/ArticleDetectFlash#The_code}
+ * @see {@link http://stackoverflow.com/questions/12866060/detecting-pepper-ppapi-flash-with-javascript}
+ *
+ * @returns `undefined`
+ * @private
+ */
+  var _detectFlashSupport = function(ActiveXObject) {
+    var plugin, ax, mimeType, hasFlash = false, isActiveX = false, isPPAPI = false, flashVersion = "";
+    /**
+   * Derived from Apple's suggested sniffer.
+   * @param {String} desc e.g. "Shockwave Flash 7.0 r61"
+   * @returns {String} "7.0.61"
+   * @private
+   */
+    function parseFlashVersion(desc) {
+      var matches = desc.match(/[\d]+/g);
+      matches.length = 3;
+      return matches.join(".");
+    }
+    function isPepperFlash(flashPlayerFileName) {
+      return !!flashPlayerFileName && (flashPlayerFileName = flashPlayerFileName.toLowerCase()) && (/^(pepflashplayer\.dll|libpepflashplayer\.so|pepperflashplayer\.plugin)$/.test(flashPlayerFileName) || flashPlayerFileName.slice(-13) === "chrome.plugin");
+    }
+    function inspectPlugin(plugin) {
+      if (plugin) {
+        hasFlash = true;
+        if (plugin.version) {
+          flashVersion = parseFlashVersion(plugin.version);
+        }
+        if (!flashVersion && plugin.description) {
+          flashVersion = parseFlashVersion(plugin.description);
+        }
+        if (plugin.filename) {
+          isPPAPI = isPepperFlash(plugin.filename);
+        }
+      }
+    }
+    if (_navigator.plugins && _navigator.plugins.length) {
+      plugin = _navigator.plugins["Shockwave Flash"];
+      inspectPlugin(plugin);
+      if (_navigator.plugins["Shockwave Flash 2.0"]) {
+        hasFlash = true;
+        flashVersion = "2.0.0.11";
+      }
+    } else if (_navigator.mimeTypes && _navigator.mimeTypes.length) {
+      mimeType = _navigator.mimeTypes["application/x-shockwave-flash"];
+      plugin = mimeType && mimeType.enabledPlugin;
+      inspectPlugin(plugin);
+    } else if (typeof ActiveXObject !== "undefined") {
+      isActiveX = true;
+      try {
+        ax = new ActiveXObject("ShockwaveFlash.ShockwaveFlash.7");
+        hasFlash = true;
+        flashVersion = parseFlashVersion(ax.GetVariable("$version"));
+      } catch (e1) {
+        try {
+          ax = new ActiveXObject("ShockwaveFlash.ShockwaveFlash.6");
+          hasFlash = true;
+          flashVersion = "6.0.21";
+        } catch (e2) {
+          try {
+            ax = new ActiveXObject("ShockwaveFlash.ShockwaveFlash");
+            hasFlash = true;
+            flashVersion = parseFlashVersion(ax.GetVariable("$version"));
+          } catch (e3) {
+            isActiveX = false;
+          }
+        }
+      }
+    }
+    _flashState.disabled = hasFlash !== true;
+    _flashState.outdated = flashVersion && _parseFloat(flashVersion) < _parseFloat(_minimumFlashVersion);
+    _flashState.version = flashVersion || "0.0.0";
+    _flashState.pluginType = isPPAPI ? "pepper" : isActiveX ? "activex" : hasFlash ? "netscape" : "unknown";
+  };
+  /**
+ * Invoke the Flash detection algorithms immediately upon inclusion so we're not waiting later.
+ */
+  _detectFlashSupport(_ActiveXObject);
+  /**
+ * Always assess the `sandboxed` state of the page at important Flash-related moments.
+ */
+  _detectSandbox(true);
+  /**
+ * A shell constructor for `ZeroClipboard` client instances.
+ *
+ * @constructor
+ */
+  var ZeroClipboard = function() {
+    if (!(this instanceof ZeroClipboard)) {
+      return new ZeroClipboard();
+    }
+    if (typeof ZeroClipboard._createClient === "function") {
+      ZeroClipboard._createClient.apply(this, _args(arguments));
+    }
+  };
+  /**
+ * The ZeroClipboard library's version number.
+ *
+ * @static
+ * @readonly
+ * @property {string}
+ */
+  _defineProperty(ZeroClipboard, "version", {
+    value: "2.2.0",
+    writable: false,
+    configurable: true,
+    enumerable: true
+  });
+  /**
+ * Update or get a copy of the ZeroClipboard global configuration.
+ * Returns a copy of the current/updated configuration.
+ *
+ * @returns Object
+ * @static
+ */
+  ZeroClipboard.config = function() {
+    return _config.apply(this, _args(arguments));
+  };
+  /**
+ * Diagnostic method that describes the state of the browser, Flash Player, and ZeroClipboard.
+ *
+ * @returns Object
+ * @static
+ */
+  ZeroClipboard.state = function() {
+    return _state.apply(this, _args(arguments));
+  };
+  /**
+ * Check if Flash is unusable for any reason: disabled, outdated, deactivated, etc.
+ *
+ * @returns Boolean
+ * @static
+ */
+  ZeroClipboard.isFlashUnusable = function() {
+    return _isFlashUnusable.apply(this, _args(arguments));
+  };
+  /**
+ * Register an event listener.
+ *
+ * @returns `ZeroClipboard`
+ * @static
+ */
+  ZeroClipboard.on = function() {
+    return _on.apply(this, _args(arguments));
+  };
+  /**
+ * Unregister an event listener.
+ * If no `listener` function/object is provided, it will unregister all listeners for the provided `eventType`.
+ * If no `eventType` is provided, it will unregister all listeners for every event type.
+ *
+ * @returns `ZeroClipboard`
+ * @static
+ */
+  ZeroClipboard.off = function() {
+    return _off.apply(this, _args(arguments));
+  };
+  /**
+ * Retrieve event listeners for an `eventType`.
+ * If no `eventType` is provided, it will retrieve all listeners for every event type.
+ *
+ * @returns array of listeners for the `eventType`; if no `eventType`, then a map/hash object of listeners for all event types; or `null`
+ */
+  ZeroClipboard.handlers = function() {
+    return _listeners.apply(this, _args(arguments));
+  };
+  /**
+ * Event emission receiver from the Flash object, forwarding to any registered JavaScript event listeners.
+ *
+ * @returns For the "copy" event, returns the Flash-friendly "clipData" object; otherwise `undefined`.
+ * @static
+ */
+  ZeroClipboard.emit = function() {
+    return _emit.apply(this, _args(arguments));
+  };
+  /**
+ * Create and embed the Flash object.
+ *
+ * @returns The Flash object
+ * @static
+ */
+  ZeroClipboard.create = function() {
+    return _create.apply(this, _args(arguments));
+  };
+  /**
+ * Self-destruct and clean up everything, including the embedded Flash object.
+ *
+ * @returns `undefined`
+ * @static
+ */
+  ZeroClipboard.destroy = function() {
+    return _destroy.apply(this, _args(arguments));
+  };
+  /**
+ * Set the pending data for clipboard injection.
+ *
+ * @returns `undefined`
+ * @static
+ */
+  ZeroClipboard.setData = function() {
+    return _setData.apply(this, _args(arguments));
+  };
+  /**
+ * Clear the pending data for clipboard injection.
+ * If no `format` is provided, all pending data formats will be cleared.
+ *
+ * @returns `undefined`
+ * @static
+ */
+  ZeroClipboard.clearData = function() {
+    return _clearData.apply(this, _args(arguments));
+  };
+  /**
+ * Get a copy of the pending data for clipboard injection.
+ * If no `format` is provided, a copy of ALL pending data formats will be returned.
+ *
+ * @returns `String` or `Object`
+ * @static
+ */
+  ZeroClipboard.getData = function() {
+    return _getData.apply(this, _args(arguments));
+  };
+  /**
+ * Sets the current HTML object that the Flash object should overlay. This will put the global
+ * Flash object on top of the current element; depending on the setup, this may also set the
+ * pending clipboard text data as well as the Flash object's wrapping element's title attribute
+ * based on the underlying HTML element and ZeroClipboard configuration.
+ *
+ * @returns `undefined`
+ * @static
+ */
+  ZeroClipboard.focus = ZeroClipboard.activate = function() {
+    return _focus.apply(this, _args(arguments));
+  };
+  /**
+ * Un-overlays the Flash object. This will put the global Flash object off-screen; depending on
+ * the setup, this may also unset the Flash object's wrapping element's title attribute based on
+ * the underlying HTML element and ZeroClipboard configuration.
+ *
+ * @returns `undefined`
+ * @static
+ */
+  ZeroClipboard.blur = ZeroClipboard.deactivate = function() {
+    return _blur.apply(this, _args(arguments));
+  };
+  /**
+ * Returns the currently focused/"activated" HTML element that the Flash object is wrapping.
+ *
+ * @returns `HTMLElement` or `null`
+ * @static
+ */
+  ZeroClipboard.activeElement = function() {
+    return _activeElement.apply(this, _args(arguments));
+  };
+  /**
+ * Keep track of the ZeroClipboard client instance counter.
+ */
+  var _clientIdCounter = 0;
+  /**
+ * Keep track of the state of the client instances.
+ *
+ * Entry structure:
+ *   _clientMeta[client.id] = {
+ *     instance: client,
+ *     elements: [],
+ *     handlers: {}
+ *   };
+ */
+  var _clientMeta = {};
+  /**
+ * Keep track of the ZeroClipboard clipped elements counter.
+ */
+  var _elementIdCounter = 0;
+  /**
+ * Keep track of the state of the clipped element relationships to clients.
+ *
+ * Entry structure:
+ *   _elementMeta[element.zcClippingId] = [client1.id, client2.id];
+ */
+  var _elementMeta = {};
+  /**
+ * Keep track of the state of the mouse event handlers for clipped elements.
+ *
+ * Entry structure:
+ *   _mouseHandlers[element.zcClippingId] = {
+ *     mouseover:  function(event) {},
+ *     mouseout:   function(event) {},
+ *     mouseenter: function(event) {},
+ *     mouseleave: function(event) {},
+ *     mousemove:  function(event) {}
+ *   };
+ */
+  var _mouseHandlers = {};
+  /**
+ * Extending the ZeroClipboard configuration defaults for the Client module.
+ */
+  _extend(_globalConfig, {
+    autoActivate: true
+  });
+  /**
+ * The real constructor for `ZeroClipboard` client instances.
+ * @private
+ */
+  var _clientConstructor = function(elements) {
+    var client = this;
+    client.id = "" + _clientIdCounter++;
+    _clientMeta[client.id] = {
+      instance: client,
+      elements: [],
+      handlers: {}
+    };
+    if (elements) {
+      client.clip(elements);
+    }
+    ZeroClipboard.on("*", function(event) {
+      return client.emit(event);
+    });
+    ZeroClipboard.on("destroy", function() {
+      client.destroy();
+    });
+    ZeroClipboard.create();
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.Client.prototype.on`.
+ * @private
+ */
+  var _clientOn = function(eventType, listener) {
+    var i, len, events, added = {}, meta = _clientMeta[this.id], handlers = meta && meta.handlers;
+    if (!meta) {
+      throw new Error("Attempted to add new listener(s) to a destroyed ZeroClipboard client instance");
+    }
+    if (typeof eventType === "string" && eventType) {
+      events = eventType.toLowerCase().split(/\s+/);
+    } else if (typeof eventType === "object" && eventType && typeof listener === "undefined") {
+      for (i in eventType) {
+        if (_hasOwn.call(eventType, i) && typeof i === "string" && i && typeof eventType[i] === "function") {
+          this.on(i, eventType[i]);
+        }
+      }
+    }
+    if (events && events.length) {
+      for (i = 0, len = events.length; i < len; i++) {
+        eventType = events[i].replace(/^on/, "");
+        added[eventType] = true;
+        if (!handlers[eventType]) {
+          handlers[eventType] = [];
+        }
+        handlers[eventType].push(listener);
+      }
+      if (added.ready && _flashState.ready) {
+        this.emit({
+          type: "ready",
+          client: this
+        });
+      }
+      if (added.error) {
+        for (i = 0, len = _flashStateErrorNames.length; i < len; i++) {
+          if (_flashState[_flashStateErrorNames[i].replace(/^flash-/, "")]) {
+            this.emit({
+              type: "error",
+              name: _flashStateErrorNames[i],
+              client: this
+            });
+            break;
+          }
+        }
+        if (_zcSwfVersion !== undefined && ZeroClipboard.version !== _zcSwfVersion) {
+          this.emit({
+            type: "error",
+            name: "version-mismatch",
+            jsVersion: ZeroClipboard.version,
+            swfVersion: _zcSwfVersion
+          });
+        }
+      }
+    }
+    return this;
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.Client.prototype.off`.
+ * @private
+ */
+  var _clientOff = function(eventType, listener) {
+    var i, len, foundIndex, events, perEventHandlers, meta = _clientMeta[this.id], handlers = meta && meta.handlers;
+    if (!handlers) {
+      return this;
+    }
+    if (arguments.length === 0) {
+      events = _keys(handlers);
+    } else if (typeof eventType === "string" && eventType) {
+      events = eventType.split(/\s+/);
+    } else if (typeof eventType === "object" && eventType && typeof listener === "undefined") {
+      for (i in eventType) {
+        if (_hasOwn.call(eventType, i) && typeof i === "string" && i && typeof eventType[i] === "function") {
+          this.off(i, eventType[i]);
+        }
+      }
+    }
+    if (events && events.length) {
+      for (i = 0, len = events.length; i < len; i++) {
+        eventType = events[i].toLowerCase().replace(/^on/, "");
+        perEventHandlers = handlers[eventType];
+        if (perEventHandlers && perEventHandlers.length) {
+          if (listener) {
+            foundIndex = perEventHandlers.indexOf(listener);
+            while (foundIndex !== -1) {
+              perEventHandlers.splice(foundIndex, 1);
+              foundIndex = perEventHandlers.indexOf(listener, foundIndex);
+            }
+          } else {
+            perEventHandlers.length = 0;
+          }
+        }
+      }
+    }
+    return this;
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.Client.prototype.handlers`.
+ * @private
+ */
+  var _clientListeners = function(eventType) {
+    var copy = null, handlers = _clientMeta[this.id] && _clientMeta[this.id].handlers;
+    if (handlers) {
+      if (typeof eventType === "string" && eventType) {
+        copy = handlers[eventType] ? handlers[eventType].slice(0) : [];
+      } else {
+        copy = _deepCopy(handlers);
+      }
+    }
+    return copy;
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.Client.prototype.emit`.
+ * @private
+ */
+  var _clientEmit = function(event) {
+    if (_clientShouldEmit.call(this, event)) {
+      if (typeof event === "object" && event && typeof event.type === "string" && event.type) {
+        event = _extend({}, event);
+      }
+      var eventCopy = _extend({}, _createEvent(event), {
+        client: this
+      });
+      _clientDispatchCallbacks.call(this, eventCopy);
+    }
+    return this;
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.Client.prototype.clip`.
+ * @private
+ */
+  var _clientClip = function(elements) {
+    if (!_clientMeta[this.id]) {
+      throw new Error("Attempted to clip element(s) to a destroyed ZeroClipboard client instance");
+    }
+    elements = _prepClip(elements);
+    for (var i = 0; i < elements.length; i++) {
+      if (_hasOwn.call(elements, i) && elements[i] && elements[i].nodeType === 1) {
+        if (!elements[i].zcClippingId) {
+          elements[i].zcClippingId = "zcClippingId_" + _elementIdCounter++;
+          _elementMeta[elements[i].zcClippingId] = [ this.id ];
+          if (_globalConfig.autoActivate === true) {
+            _addMouseHandlers(elements[i]);
+          }
+        } else if (_elementMeta[elements[i].zcClippingId].indexOf(this.id) === -1) {
+          _elementMeta[elements[i].zcClippingId].push(this.id);
+        }
+        var clippedElements = _clientMeta[this.id] && _clientMeta[this.id].elements;
+        if (clippedElements.indexOf(elements[i]) === -1) {
+          clippedElements.push(elements[i]);
+        }
+      }
+    }
+    return this;
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.Client.prototype.unclip`.
+ * @private
+ */
+  var _clientUnclip = function(elements) {
+    var meta = _clientMeta[this.id];
+    if (!meta) {
+      return this;
+    }
+    var clippedElements = meta.elements;
+    var arrayIndex;
+    if (typeof elements === "undefined") {
+      elements = clippedElements.slice(0);
+    } else {
+      elements = _prepClip(elements);
+    }
+    for (var i = elements.length; i--; ) {
+      if (_hasOwn.call(elements, i) && elements[i] && elements[i].nodeType === 1) {
+        arrayIndex = 0;
+        while ((arrayIndex = clippedElements.indexOf(elements[i], arrayIndex)) !== -1) {
+          clippedElements.splice(arrayIndex, 1);
+        }
+        var clientIds = _elementMeta[elements[i].zcClippingId];
+        if (clientIds) {
+          arrayIndex = 0;
+          while ((arrayIndex = clientIds.indexOf(this.id, arrayIndex)) !== -1) {
+            clientIds.splice(arrayIndex, 1);
+          }
+          if (clientIds.length === 0) {
+            if (_globalConfig.autoActivate === true) {
+              _removeMouseHandlers(elements[i]);
+            }
+            delete elements[i].zcClippingId;
+          }
+        }
+      }
+    }
+    return this;
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.Client.prototype.elements`.
+ * @private
+ */
+  var _clientElements = function() {
+    var meta = _clientMeta[this.id];
+    return meta && meta.elements ? meta.elements.slice(0) : [];
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.Client.prototype.destroy`.
+ * @private
+ */
+  var _clientDestroy = function() {
+    if (!_clientMeta[this.id]) {
+      return;
+    }
+    this.unclip();
+    this.off();
+    delete _clientMeta[this.id];
+  };
+  /**
+ * Inspect an Event to see if the Client (`this`) should honor it for emission.
+ * @private
+ */
+  var _clientShouldEmit = function(event) {
+    if (!(event && event.type)) {
+      return false;
+    }
+    if (event.client && event.client !== this) {
+      return false;
+    }
+    var meta = _clientMeta[this.id];
+    var clippedEls = meta && meta.elements;
+    var hasClippedEls = !!clippedEls && clippedEls.length > 0;
+    var goodTarget = !event.target || hasClippedEls && clippedEls.indexOf(event.target) !== -1;
+    var goodRelTarget = event.relatedTarget && hasClippedEls && clippedEls.indexOf(event.relatedTarget) !== -1;
+    var goodClient = event.client && event.client === this;
+    if (!meta || !(goodTarget || goodRelTarget || goodClient)) {
+      return false;
+    }
+    return true;
+  };
+  /**
+ * Handle the actual dispatching of events to a client instance.
+ *
+ * @returns `undefined`
+ * @private
+ */
+  var _clientDispatchCallbacks = function(event) {
+    var meta = _clientMeta[this.id];
+    if (!(typeof event === "object" && event && event.type && meta)) {
+      return;
+    }
+    var async = _shouldPerformAsync(event);
+    var wildcardTypeHandlers = meta && meta.handlers["*"] || [];
+    var specificTypeHandlers = meta && meta.handlers[event.type] || [];
+    var handlers = wildcardTypeHandlers.concat(specificTypeHandlers);
+    if (handlers && handlers.length) {
+      var i, len, func, context, eventCopy, originalContext = this;
+      for (i = 0, len = handlers.length; i < len; i++) {
+        func = handlers[i];
+        context = originalContext;
+        if (typeof func === "string" && typeof _window[func] === "function") {
+          func = _window[func];
+        }
+        if (typeof func === "object" && func && typeof func.handleEvent === "function") {
+          context = func;
+          func = func.handleEvent;
+        }
+        if (typeof func === "function") {
+          eventCopy = _extend({}, event);
+          _dispatchCallback(func, context, [ eventCopy ], async);
+        }
+      }
+    }
+  };
+  /**
+ * Prepares the elements for clipping/unclipping.
+ *
+ * @returns An Array of elements.
+ * @private
+ */
+  var _prepClip = function(elements) {
+    if (typeof elements === "string") {
+      elements = [];
+    }
+    return typeof elements.length !== "number" ? [ elements ] : elements;
+  };
+  /**
+ * Add a `mouseover` handler function for a clipped element.
+ *
+ * @returns `undefined`
+ * @private
+ */
+  var _addMouseHandlers = function(element) {
+    if (!(element && element.nodeType === 1)) {
+      return;
+    }
+    var _suppressMouseEvents = function(event) {
+      if (!(event || (event = _window.event))) {
+        return;
+      }
+      if (event._source !== "js") {
+        event.stopImmediatePropagation();
+        event.preventDefault();
+      }
+      delete event._source;
+    };
+    var _elementMouseOver = function(event) {
+      if (!(event || (event = _window.event))) {
+        return;
+      }
+      _suppressMouseEvents(event);
+      ZeroClipboard.focus(element);
+    };
+    element.addEventListener("mouseover", _elementMouseOver, false);
+    element.addEventListener("mouseout", _suppressMouseEvents, false);
+    element.addEventListener("mouseenter", _suppressMouseEvents, false);
+    element.addEventListener("mouseleave", _suppressMouseEvents, false);
+    element.addEventListener("mousemove", _suppressMouseEvents, false);
+    _mouseHandlers[element.zcClippingId] = {
+      mouseover: _elementMouseOver,
+      mouseout: _suppressMouseEvents,
+      mouseenter: _suppressMouseEvents,
+      mouseleave: _suppressMouseEvents,
+      mousemove: _suppressMouseEvents
+    };
+  };
+  /**
+ * Remove a `mouseover` handler function for a clipped element.
+ *
+ * @returns `undefined`
+ * @private
+ */
+  var _removeMouseHandlers = function(element) {
+    if (!(element && element.nodeType === 1)) {
+      return;
+    }
+    var mouseHandlers = _mouseHandlers[element.zcClippingId];
+    if (!(typeof mouseHandlers === "object" && mouseHandlers)) {
+      return;
+    }
+    var key, val, mouseEvents = [ "move", "leave", "enter", "out", "over" ];
+    for (var i = 0, len = mouseEvents.length; i < len; i++) {
+      key = "mouse" + mouseEvents[i];
+      val = mouseHandlers[key];
+      if (typeof val === "function") {
+        element.removeEventListener(key, val, false);
+      }
+    }
+    delete _mouseHandlers[element.zcClippingId];
+  };
+  /**
+ * Creates a new ZeroClipboard client instance.
+ * Optionally, auto-`clip` an element or collection of elements.
+ *
+ * @constructor
+ */
+  ZeroClipboard._createClient = function() {
+    _clientConstructor.apply(this, _args(arguments));
+  };
+  /**
+ * Register an event listener to the client.
+ *
+ * @returns `this`
+ */
+  ZeroClipboard.prototype.on = function() {
+    return _clientOn.apply(this, _args(arguments));
+  };
+  /**
+ * Unregister an event handler from the client.
+ * If no `listener` function/object is provided, it will unregister all handlers for the provided `eventType`.
+ * If no `eventType` is provided, it will unregister all handlers for every event type.
+ *
+ * @returns `this`
+ */
+  ZeroClipboard.prototype.off = function() {
+    return _clientOff.apply(this, _args(arguments));
+  };
+  /**
+ * Retrieve event listeners for an `eventType` from the client.
+ * If no `eventType` is provided, it will retrieve all listeners for every event type.
+ *
+ * @returns array of listeners for the `eventType`; if no `eventType`, then a map/hash object of listeners for all event types; or `null`
+ */
+  ZeroClipboard.prototype.handlers = function() {
+    return _clientListeners.apply(this, _args(arguments));
+  };
+  /**
+ * Event emission receiver from the Flash object for this client's registered JavaScript event listeners.
+ *
+ * @returns For the "copy" event, returns the Flash-friendly "clipData" object; otherwise `undefined`.
+ */
+  ZeroClipboard.prototype.emit = function() {
+    return _clientEmit.apply(this, _args(arguments));
+  };
+  /**
+ * Register clipboard actions for new element(s) to the client.
+ *
+ * @returns `this`
+ */
+  ZeroClipboard.prototype.clip = function() {
+    return _clientClip.apply(this, _args(arguments));
+  };
+  /**
+ * Unregister the clipboard actions of previously registered element(s) on the page.
+ * If no elements are provided, ALL registered elements will be unregistered.
+ *
+ * @returns `this`
+ */
+  ZeroClipboard.prototype.unclip = function() {
+    return _clientUnclip.apply(this, _args(arguments));
+  };
+  /**
+ * Get all of the elements to which this client is clipped.
+ *
+ * @returns array of clipped elements
+ */
+  ZeroClipboard.prototype.elements = function() {
+    return _clientElements.apply(this, _args(arguments));
+  };
+  /**
+ * Self-destruct and clean up everything for a single client.
+ * This will NOT destroy the embedded Flash object.
+ *
+ * @returns `undefined`
+ */
+  ZeroClipboard.prototype.destroy = function() {
+    return _clientDestroy.apply(this, _args(arguments));
+  };
+  /**
+ * Stores the pending plain text to inject into the clipboard.
+ *
+ * @returns `this`
+ */
+  ZeroClipboard.prototype.setText = function(text) {
+    if (!_clientMeta[this.id]) {
+      throw new Error("Attempted to set pending clipboard data from a destroyed ZeroClipboard client instance");
+    }
+    ZeroClipboard.setData("text/plain", text);
+    return this;
+  };
+  /**
+ * Stores the pending HTML text to inject into the clipboard.
+ *
+ * @returns `this`
+ */
+  ZeroClipboard.prototype.setHtml = function(html) {
+    if (!_clientMeta[this.id]) {
+      throw new Error("Attempted to set pending clipboard data from a destroyed ZeroClipboard client instance");
+    }
+    ZeroClipboard.setData("text/html", html);
+    return this;
+  };
+  /**
+ * Stores the pending rich text (RTF) to inject into the clipboard.
+ *
+ * @returns `this`
+ */
+  ZeroClipboard.prototype.setRichText = function(richText) {
+    if (!_clientMeta[this.id]) {
+      throw new Error("Attempted to set pending clipboard data from a destroyed ZeroClipboard client instance");
+    }
+    ZeroClipboard.setData("application/rtf", richText);
+    return this;
+  };
+  /**
+ * Stores the pending data to inject into the clipboard.
+ *
+ * @returns `this`
+ */
+  ZeroClipboard.prototype.setData = function() {
+    if (!_clientMeta[this.id]) {
+      throw new Error("Attempted to set pending clipboard data from a destroyed ZeroClipboard client instance");
+    }
+    ZeroClipboard.setData.apply(this, _args(arguments));
+    return this;
+  };
+  /**
+ * Clears the pending data to inject into the clipboard.
+ * If no `format` is provided, all pending data formats will be cleared.
+ *
+ * @returns `this`
+ */
+  ZeroClipboard.prototype.clearData = function() {
+    if (!_clientMeta[this.id]) {
+      throw new Error("Attempted to clear pending clipboard data from a destroyed ZeroClipboard client instance");
+    }
+    ZeroClipboard.clearData.apply(this, _args(arguments));
+    return this;
+  };
+  /**
+ * Gets a copy of the pending data to inject into the clipboard.
+ * If no `format` is provided, a copy of ALL pending data formats will be returned.
+ *
+ * @returns `String` or `Object`
+ */
+  ZeroClipboard.prototype.getData = function() {
+    if (!_clientMeta[this.id]) {
+      throw new Error("Attempted to get pending clipboard data from a destroyed ZeroClipboard client instance");
+    }
+    return ZeroClipboard.getData.apply(this, _args(arguments));
+  };
+  if (typeof define === "function" && define.amd) {
+    define(function() {
+      return ZeroClipboard;
+    });
+  } else if (typeof module === "object" && module && typeof module.exports === "object" && module.exports) {
+    module.exports = ZeroClipboard;
+  } else {
+    window.ZeroClipboard = ZeroClipboard;
+  }
+})(function() {
+  return this || window;
+}());
+
+/* **********************************************
+     Begin prism-core.js
+********************************************** */
+
+var _self = (typeof window !== 'undefined')
+	? window   // if in browser
+	: (
+		(typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope)
+		? self // if in worker
+		: {}   // if in node js
+	);
+
+/**
+ * Prism: Lightweight, robust, elegant syntax highlighting
+ * MIT license http://www.opensource.org/licenses/mit-license.php/
+ * @author Lea Verou http://lea.verou.me
+ */
+
+var Prism = (function(){
+
+// Private helper vars
+var lang = /\blang(?:uage)?-(?!\*)(\w+)\b/i;
+
+var _ = _self.Prism = {
+	util: {
+		encode: function (tokens) {
+			if (tokens instanceof Token) {
+				return new Token(tokens.type, _.util.encode(tokens.content), tokens.alias);
+			} else if (_.util.type(tokens) === 'Array') {
+				return tokens.map(_.util.encode);
+			} else {
+				return tokens.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\u00a0/g, ' ');
+			}
+		},
+
+		type: function (o) {
+			return Object.prototype.toString.call(o).match(/\[object (\w+)\]/)[1];
+		},
+
+		// Deep clone a language definition (e.g. to extend it)
+		clone: function (o) {
+			var type = _.util.type(o);
+
+			switch (type) {
+				case 'Object':
+					var clone = {};
+
+					for (var key in o) {
+						if (o.hasOwnProperty(key)) {
+							clone[key] = _.util.clone(o[key]);
+						}
+					}
+
+					return clone;
+
+				case 'Array':
+					// Check for existence for IE8
+					return o.map && o.map(function(v) { return _.util.clone(v); });
+			}
+
+			return o;
+		}
+	},
+
+	languages: {
+		extend: function (id, redef) {
+			var lang = _.util.clone(_.languages[id]);
+
+			for (var key in redef) {
+				lang[key] = redef[key];
+			}
+
+			return lang;
+		},
+
+		/**
+		 * Insert a token before another token in a language literal
+		 * As this needs to recreate the object (we cannot actually insert before keys in object literals),
+		 * we cannot just provide an object, we need anobject and a key.
+		 * @param inside The key (or language id) of the parent
+		 * @param before The key to insert before. If not provided, the function appends instead.
+		 * @param insert Object with the key/value pairs to insert
+		 * @param root The object that contains `inside`. If equal to Prism.languages, it can be omitted.
+		 */
+		insertBefore: function (inside, before, insert, root) {
+			root = root || _.languages;
+			var grammar = root[inside];
+			
+			if (arguments.length == 2) {
+				insert = arguments[1];
+				
+				for (var newToken in insert) {
+					if (insert.hasOwnProperty(newToken)) {
+						grammar[newToken] = insert[newToken];
+					}
+				}
+				
+				return grammar;
+			}
+			
+			var ret = {};
+
+			for (var token in grammar) {
+
+				if (grammar.hasOwnProperty(token)) {
+
+					if (token == before) {
+
+						for (var newToken in insert) {
+
+							if (insert.hasOwnProperty(newToken)) {
+								ret[newToken] = insert[newToken];
+							}
+						}
+					}
+
+					ret[token] = grammar[token];
+				}
+			}
+			
+			// Update references in other language definitions
+			_.languages.DFS(_.languages, function(key, value) {
+				if (value === root[inside] && key != inside) {
+					this[key] = ret;
+				}
+			});
+
+			return root[inside] = ret;
+		},
+
+		// Traverse a language definition with Depth First Search
+		DFS: function(o, callback, type) {
+			for (var i in o) {
+				if (o.hasOwnProperty(i)) {
+					callback.call(o, i, o[i], type || i);
+
+					if (_.util.type(o[i]) === 'Object') {
+						_.languages.DFS(o[i], callback);
+					}
+					else if (_.util.type(o[i]) === 'Array') {
+						_.languages.DFS(o[i], callback, i);
+					}
+				}
+			}
+		}
+	},
+
+	highlightAll: function(async, callback) {
+		var elements = document.querySelectorAll('code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code');
+
+		for (var i=0, element; element = elements[i++];) {
+			_.highlightElement(element, async === true, callback);
+		}
+	},
+
+	highlightElement: function(element, async, callback) {
+		// Find language
+		var language, grammar, parent = element;
+
+		while (parent && !lang.test(parent.className)) {
+			parent = parent.parentNode;
+		}
+
+		if (parent) {
+			language = (parent.className.match(lang) || [,''])[1];
+			grammar = _.languages[language];
+		}
+
+		// Set language on the element, if not present
+		element.className = element.className.replace(lang, '').replace(/\s+/g, ' ') + ' language-' + language;
+
+		// Set language on the parent, for styling
+		parent = element.parentNode;
+
+		if (/pre/i.test(parent.nodeName)) {
+			parent.className = parent.className.replace(lang, '').replace(/\s+/g, ' ') + ' language-' + language;
+		}
+
+		if (!grammar) {
+			return;
+		}
+
+		var code = element.textContent;
+
+		if(!code) {
+			return;
+		}
+
+		code = code.replace(/^(?:\r?\n|\r)/,'');
+
+		var env = {
+			element: element,
+			language: language,
+			grammar: grammar,
+			code: code
+		};
+
+		_.hooks.run('before-highlight', env);
+
+		if (async && _self.Worker) {
+			var worker = new Worker(_.filename);
+
+			worker.onmessage = function(evt) {
+				env.highlightedCode = Token.stringify(JSON.parse(evt.data), language);
+
+				_.hooks.run('before-insert', env);
+
+				env.element.innerHTML = env.highlightedCode;
+
+				callback && callback.call(env.element);
+				_.hooks.run('after-highlight', env);
+			};
+
+			worker.postMessage(JSON.stringify({
+				language: env.language,
+				code: env.code
+			}));
+		}
+		else {
+			env.highlightedCode = _.highlight(env.code, env.grammar, env.language);
+
+			_.hooks.run('before-insert', env);
+
+			env.element.innerHTML = env.highlightedCode;
+
+			callback && callback.call(element);
+
+			_.hooks.run('after-highlight', env);
+		}
+	},
+
+	highlight: function (text, grammar, language) {
+		var tokens = _.tokenize(text, grammar);
+		return Token.stringify(_.util.encode(tokens), language);
+	},
+
+	tokenize: function(text, grammar, language) {
+		var Token = _.Token;
+
+		var strarr = [text];
+
+		var rest = grammar.rest;
+
+		if (rest) {
+			for (var token in rest) {
+				grammar[token] = rest[token];
+			}
+
+			delete grammar.rest;
+		}
+
+		tokenloop: for (var token in grammar) {
+			if(!grammar.hasOwnProperty(token) || !grammar[token]) {
+				continue;
+			}
+
+			var patterns = grammar[token];
+			patterns = (_.util.type(patterns) === "Array") ? patterns : [patterns];
+
+			for (var j = 0; j < patterns.length; ++j) {
+				var pattern = patterns[j],
+					inside = pattern.inside,
+					lookbehind = !!pattern.lookbehind,
+					lookbehindLength = 0,
+					alias = pattern.alias;
+
+				pattern = pattern.pattern || pattern;
+
+				for (var i=0; i<strarr.length; i++) { // Don’t cache length as it changes during the loop
+
+					var str = strarr[i];
+
+					if (strarr.length > text.length) {
+						// Something went terribly wrong, ABORT, ABORT!
+						break tokenloop;
+					}
+
+					if (str instanceof Token) {
+						continue;
+					}
+
+					pattern.lastIndex = 0;
+
+					var match = pattern.exec(str);
+
+					if (match) {
+						if(lookbehind) {
+							lookbehindLength = match[1].length;
+						}
+
+						var from = match.index - 1 + lookbehindLength,
+							match = match[0].slice(lookbehindLength),
+							len = match.length,
+							to = from + len,
+							before = str.slice(0, from + 1),
+							after = str.slice(to + 1);
+
+						var args = [i, 1];
+
+						if (before) {
+							args.push(before);
+						}
+
+						var wrapped = new Token(token, inside? _.tokenize(match, inside) : match, alias);
+
+						args.push(wrapped);
+
+						if (after) {
+							args.push(after);
+						}
+
+						Array.prototype.splice.apply(strarr, args);
+					}
+				}
+			}
+		}
+
+		return strarr;
+	},
+
+	hooks: {
+		all: {},
+
+		add: function (name, callback) {
+			var hooks = _.hooks.all;
+
+			hooks[name] = hooks[name] || [];
+
+			hooks[name].push(callback);
+		},
+
+		run: function (name, env) {
+			var callbacks = _.hooks.all[name];
+
+			if (!callbacks || !callbacks.length) {
+				return;
+			}
+
+			for (var i=0, callback; callback = callbacks[i++];) {
+				callback(env);
+			}
+		}
+	}
+};
+
+var Token = _.Token = function(type, content, alias) {
+	this.type = type;
+	this.content = content;
+	this.alias = alias;
+};
+
+Token.stringify = function(o, language, parent) {
+	if (typeof o == 'string') {
+		return o;
+	}
+
+	if (_.util.type(o) === 'Array') {
+		return o.map(function(element) {
+			return Token.stringify(element, language, o);
+		}).join('');
+	}
+
+	var env = {
+		type: o.type,
+		content: Token.stringify(o.content, language, parent),
+		tag: 'span',
+		classes: ['token', o.type],
+		attributes: {},
+		language: language,
+		parent: parent
+	};
+
+	if (env.type == 'comment') {
+		env.attributes['spellcheck'] = 'true';
+	}
+
+	if (o.alias) {
+		var aliases = _.util.type(o.alias) === 'Array' ? o.alias : [o.alias];
+		Array.prototype.push.apply(env.classes, aliases);
+	}
+
+	_.hooks.run('wrap', env);
+
+	var attributes = '';
+
+	for (var name in env.attributes) {
+		attributes += name + '="' + (env.attributes[name] || '') + '"';
+	}
+
+	return '<' + env.tag + ' class="' + env.classes.join(' ') + '" ' + attributes + '>' + env.content + '</' + env.tag + '>';
+
+};
+
+if (!_self.document) {
+	if (!_self.addEventListener) {
+		// in Node.js
+		return _self.Prism;
+	}
+ 	// In worker
+	_self.addEventListener('message', function(evt) {
+		var message = JSON.parse(evt.data),
+		    lang = message.language,
+		    code = message.code;
+
+		_self.postMessage(JSON.stringify(_.util.encode(_.tokenize(code, _.languages[lang]))));
+		_self.close();
+	}, false);
+
+	return _self.Prism;
+}
+
+// Get current script and highlight
+var script = document.getElementsByTagName('script');
+
+script = script[script.length - 1];
+
+if (script) {
+	_.filename = script.src;
+
+	if (document.addEventListener && !script.hasAttribute('data-manual')) {
+		document.addEventListener('DOMContentLoaded', _.highlightAll);
+	}
+}
+
+return _self.Prism;
+
+})();
+
+if (typeof module !== 'undefined' && module.exports) {
+	module.exports = Prism;
+}
+
+
+/* **********************************************
+     Begin prism-markup.js
+********************************************** */
+
+Prism.languages.markup = {
+	'comment': /<!--[\w\W]*?-->/,
+	'prolog': /<\?[\w\W]+?\?>/,
+	'doctype': /<!DOCTYPE[\w\W]+?>/,
+	'cdata': /<!\[CDATA\[[\w\W]*?]]>/i,
+	'tag': {
+		pattern: /<\/?[^\s>\/]+(?:\s+[^\s>\/=]+(?:=(?:("|')(?:\\\1|\\?(?!\1)[\w\W])*\1|[^\s'">=]+))?)*\s*\/?>/i,
+		inside: {
+			'tag': {
+				pattern: /^<\/?[^\s>\/]+/i,
+				inside: {
+					'punctuation': /^<\/?/,
+					'namespace': /^[^\s>\/:]+:/
+				}
+			},
+			'attr-value': {
+				pattern: /=(?:('|")[\w\W]*?(\1)|[^\s>]+)/i,
+				inside: {
+					'punctuation': /[=>"']/
+				}
+			},
+			'punctuation': /\/?>/,
+			'attr-name': {
+				pattern: /[^\s>\/]+/,
+				inside: {
+					'namespace': /^[^\s>\/:]+:/
+				}
+			}
+
+		}
+	},
+	'entity': /&#?[\da-z]{1,8};/i
+};
+
+// Plugin to make entity title show the real entity, idea by Roman Komarov
+Prism.hooks.add('wrap', function(env) {
+
+	if (env.type === 'entity') {
+		env.attributes['title'] = env.content.replace(/&amp;/, '&');
+	}
+});
+
+
+/* **********************************************
+     Begin prism-css.js
+********************************************** */
+
+Prism.languages.css = {
+	'comment': /\/\*[\w\W]*?\*\//,
+	'atrule': {
+		pattern: /@[\w-]+?.*?(;|(?=\s*\{))/i,
+		inside: {
+			'rule': /@[\w-]+/
+			// See rest below
+		}
+	},
+	'url': /url\((?:(["'])(\\(?:\r\n|[\w\W])|(?!\1)[^\\\r\n])*\1|.*?)\)/i,
+	'selector': /[^\{\}\s][^\{\};]*?(?=\s*\{)/,
+	'string': /("|')(\\(?:\r\n|[\w\W])|(?!\1)[^\\\r\n])*\1/,
+	'property': /(\b|\B)[\w-]+(?=\s*:)/i,
+	'important': /\B!important\b/i,
+	'function': /[-a-z0-9]+(?=\()/i,
+	'punctuation': /[(){};:]/
+};
+
+Prism.languages.css['atrule'].inside.rest = Prism.util.clone(Prism.languages.css);
+
+if (Prism.languages.markup) {
+	Prism.languages.insertBefore('markup', 'tag', {
+		'style': {
+			pattern: /<style[\w\W]*?>[\w\W]*?<\/style>/i,
+			inside: {
+				'tag': {
+					pattern: /<style[\w\W]*?>|<\/style>/i,
+					inside: Prism.languages.markup.tag.inside
+				},
+				rest: Prism.languages.css
+			},
+			alias: 'language-css'
+		}
+	});
+	
+	Prism.languages.insertBefore('inside', 'attr-value', {
+		'style-attr': {
+			pattern: /\s*style=("|').*?\1/i,
+			inside: {
+				'attr-name': {
+					pattern: /^\s*style/i,
+					inside: Prism.languages.markup.tag.inside
+				},
+				'punctuation': /^\s*=\s*['"]|['"]\s*$/,
+				'attr-value': {
+					pattern: /.+/i,
+					inside: Prism.languages.css
+				}
+			},
+			alias: 'language-css'
+		}
+	}, Prism.languages.markup.tag);
+}
+
+/* **********************************************
+     Begin prism-clike.js
+********************************************** */
+
+Prism.languages.clike = {
+	'comment': [
+		{
+			pattern: /(^|[^\\])\/\*[\w\W]*?\*\//,
+			lookbehind: true
+		},
+		{
+			pattern: /(^|[^\\:])\/\/.*/,
+			lookbehind: true
+		}
+	],
+	'string': /("|')(\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,
+	'class-name': {
+		pattern: /((?:(?:class|interface|extends|implements|trait|instanceof|new)\s+)|(?:catch\s+\())[a-z0-9_\.\\]+/i,
+		lookbehind: true,
+		inside: {
+			punctuation: /(\.|\\)/
+		}
+	},
+	'keyword': /\b(if|else|while|do|for|return|in|instanceof|function|new|try|throw|catch|finally|null|break|continue)\b/,
+	'boolean': /\b(true|false)\b/,
+	'function': /[a-z0-9_]+(?=\()/i,
+	'number': /\b-?(0x[\dA-Fa-f]+|\d*\.?\d+([Ee]-?\d+)?)\b/,
+	'operator': /[-+]{1,2}|!|<=?|>=?|={1,3}|&{1,2}|\|?\||\?|\*|\/|~|\^|%/,
+	'punctuation': /[{}[\];(),.:]/
+};
+
+
+/* **********************************************
+     Begin prism-javascript.js
+********************************************** */
+
+Prism.languages.javascript = Prism.languages.extend('clike', {
+	'keyword': /\b(as|async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|false|finally|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|set|static|super|switch|this|throw|true|try|typeof|var|void|while|with|yield)\b/,
+	'number': /\b-?(0x[\dA-Fa-f]+|0b[01]+|0o[0-7]+|\d*\.?\d+([Ee][+-]?\d+)?|NaN|Infinity)\b/,
+	'function': /(?!\d)[a-z0-9_$]+(?=\()/i
+});
+
+Prism.languages.insertBefore('javascript', 'keyword', {
+	'regex': {
+		pattern: /(^|[^/])\/(?!\/)(\[.+?]|\\.|[^/\\\r\n])+\/[gimyu]{0,5}(?=\s*($|[\r\n,.;})]))/,
+		lookbehind: true
+	}
+});
+
+Prism.languages.insertBefore('javascript', 'class-name', {
+	'template-string': {
+		pattern: /`(?:\\`|\\?[^`])*`/,
+		inside: {
+			'interpolation': {
+				pattern: /\$\{[^}]+\}/,
+				inside: {
+					'interpolation-punctuation': {
+						pattern: /^\$\{|\}$/,
+						alias: 'punctuation'
+					},
+					rest: Prism.languages.javascript
+				}
+			},
+			'string': /[\s\S]+/
+		}
+	}
+});
+
+if (Prism.languages.markup) {
+	Prism.languages.insertBefore('markup', 'tag', {
+		'script': {
+			pattern: /<script[\w\W]*?>[\w\W]*?<\/script>/i,
+			inside: {
+				'tag': {
+					pattern: /<script[\w\W]*?>|<\/script>/i,
+					inside: Prism.languages.markup.tag.inside
+				},
+				rest: Prism.languages.javascript
+			},
+			alias: 'language-javascript'
+		}
+	});
+}
+
+
+/* **********************************************
+     Begin prism-file-highlight.js
+********************************************** */
+
+(function () {
+	if (!self.Prism || !self.document || !document.querySelector) {
+		return;
+	}
+
+	self.Prism.fileHighlight = function() {
+
+		var Extensions = {
+			'js': 'javascript',
+			'html': 'markup',
+			'svg': 'markup',
+			'xml': 'markup',
+			'py': 'python',
+			'rb': 'ruby',
+			'ps1': 'powershell',
+			'psm1': 'powershell'
+		};
+
+		if(Array.prototype.forEach) { // Check to prevent error in IE8
+			Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+				var src = pre.getAttribute('data-src');
+
+				var language, parent = pre;
+				var lang = /\blang(?:uage)?-(?!\*)(\w+)\b/i;
+				while (parent && !lang.test(parent.className)) {
+					parent = parent.parentNode;
+				}
+
+				if (parent) {
+					language = (pre.className.match(lang) || [, ''])[1];
+				}
+
+				if (!language) {
+					var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+					language = Extensions[extension] || extension;
+				}
+
+				var code = document.createElement('code');
+				code.className = 'language-' + language;
+
+				pre.textContent = '';
+
+				code.textContent = 'Loading…';
+
+				pre.appendChild(code);
+
+				var xhr = new XMLHttpRequest();
+
+				xhr.open('GET', src, true);
+
+				xhr.onreadystatechange = function () {
+					if (xhr.readyState == 4) {
+
+						if (xhr.status < 400 && xhr.responseText) {
+							code.textContent = xhr.responseText;
+
+							Prism.highlightElement(code);
+						}
+						else if (xhr.status >= 400) {
+							code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+						}
+						else {
+							code.textContent = '✖ Error: File does not exist or is empty';
+						}
+					}
+				};
+
+				xhr.send(null);
+			});
+		}
+
+	};
+
+	self.Prism.fileHighlight();
+
+})();

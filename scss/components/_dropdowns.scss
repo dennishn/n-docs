@@ -1,0 +1,23 @@
+.dropdown {
+	.dropdown-toggle {
+		.caret {
+			margin-left: 0.5rem;
+		}
+	}
+
+	.dropdown-menu {
+		.selected {
+			color: #ffffff;
+			font-weight: 400;
+			line-height: 2.5rem;
+			padding: 0.4rem 2.0rem;
+			background: $brand-primary;
+			white-space: nowrap;
+			display: block;
+		}
+
+		.fa {
+			margin-right: 0.8rem;
+		}
+	}
+}

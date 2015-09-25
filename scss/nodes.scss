@@ -1,3 +1,40 @@
-body {
+@import "variables";
+@import "mixins";
 
-}
+@import "../bower_components/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "../bower_components/font-awesome/scss/font-awesome";
+
+/**
+ * Elements
+ */
+@import "base/layout";
+@import "base/flex-layout";
+
+/**
+ * Elements
+ */
+@import "elements/headings";
+@import "elements/tables";
+@import "elements/forms";
+@import "elements/buttons";
+@import "elements/badges";
+@import "elements/nodes-link";
+
+/**
+ * Components
+ */
+@import "components/panels";
+@import "components/pagination";
+@import "components/dropdowns";
+@import "components/modals";
+@import "components/breadcrumbs";
+@import "components/alerts";
+@import "components/navigation";
+@import "components/flash-messages";
+
+/**
+ * Pages
+ */
+@import 'pages/login';
+@import 'pages/roles-capabilities';
+@import 'pages/translations';

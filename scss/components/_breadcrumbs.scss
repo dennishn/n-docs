@@ -1,0 +1,32 @@
+.breadcrumb {
+	margin: 0;
+	border: 1px solid #dddddd;
+	background-color: #ffffff;
+
+	li {
+		color: $gray;
+
+		.fa {
+			margin-right: 3px;
+		}
+
+		a {
+			color: $gray;
+			text-decoration: none;
+
+			&:hover {
+				color: $brand-primary;
+			}
+		}
+
+		&:not(:first-child):before {
+			content: '›';
+			margin: 0 0.5rem;
+			display: inline-block;
+		}
+
+		&:last-child {
+			color: $gray-darker;
+		}
+	}
+}

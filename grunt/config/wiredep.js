@@ -7,7 +7,7 @@ var bowerExclude = [
 module.exports = {
 	vendor: {
 		src: [
-			'<%= paths.doc %>includes/vendor-scripts.html'
+			'<%= paths.doc %>layouts/*.html'
 		],
 
 		options: {

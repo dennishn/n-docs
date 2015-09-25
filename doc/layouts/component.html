@@ -12,15 +12,12 @@
 
         <script src="{{assets}}/js/modernizr.js"></script>
     </head>
-    <body>
-        <h1>COMPONENT.HTML</h1>
-        <div class="row">
-            <div class="large-3 medium-4 columns">
+    <body class="fullbleed">
+        <div class="layout horizontal fit">
+            <div class="flex-1">
                 {{> sidebar}}
             </div>
-            <div class="large-9 medium-8 columns">
-                <h1 id="{{slugify title}}">{{title}}</h1>
-                <div id="component-name" name="{{title}}"></div>
+            <div class="flex-2 scroll">
                 {{#markdown}}
                 {{> body }}
                 {{/markdown}}
@@ -30,7 +27,10 @@
         <!-- build:js ../assets/js/vendor.js -->
         <!-- bower:js -->
         <script src="../../bower_components/jquery/dist/jquery.js"></script>
+        <script src="../../bower_components/bootstrap-sass/assets/javascripts/bootstrap.js"></script>
+        <script src="../../bower_components/zeroclipboard/dist/ZeroClipboard.js"></script>
         <!-- endbower -->
+        <script src="../../bower_components/prism/prism.js"></script>
         <!-- endbuild -->
         <script src="{{assets}}/js/docs.js"></script>
         <script src="{{assets}}/js/nodes.js"></script>

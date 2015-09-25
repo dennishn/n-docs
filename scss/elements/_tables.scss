@@ -1,0 +1,31 @@
+.table {
+	margin: 1.5rem 0 0;
+
+	> thead > tr > th, > tbody > tr > th, > tfoot > tr > th,
+	> thead > tr > td, > tbody > tr > td, > tfoot > tr > td {
+		padding: 1.0rem 0.8rem;
+		vertical-align: middle;
+	}
+
+	&.table-form {
+		> tbody {
+			> tr {
+				> td, > th {
+					padding: 1.0rem 1.2rem;
+				}
+
+				> th {
+					font-weight: 600;
+					border-width: 0 0.1rem 0 0;
+					border-style: solid;
+					border-color: #dddddd;
+					text-align: right;
+				}
+
+				> td {
+					border: 0;
+				}
+			}
+		}
+	}
+}

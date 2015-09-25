@@ -11,6 +11,7 @@ build:
   - 'concat'
   - 'uglify'
   - 'usemin'
+  - 'modernizr'
 # Server
 server:
   - 'build'

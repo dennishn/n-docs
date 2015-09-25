@@ -1,5 +1,9 @@
-@import
-  "code";
+@import "code/code";
+@import "code/example";
+@import "code/xray";
+@import "code/syntax-highlighting";
+
+@import "section/section";
 
 body {
 

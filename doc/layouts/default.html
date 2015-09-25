@@ -12,9 +12,9 @@
 
         <script src="{{assets}}/js/modernizr.js"></script>
     </head>
-    <body>
-        <h1>DEFAULT.HTML</h1>
-        <div class="row">
+    <body class="full-bleed">
+
+        <div class="container-fluid">
             <div class="large-3 medium-4 columns">
                 {{> sidebar}}
             </div>
@@ -30,7 +30,10 @@
         <!-- build:js assets/js/vendor.js -->
         <!-- bower:js -->
         <script src="../../bower_components/jquery/dist/jquery.js"></script>
+        <script src="../../bower_components/bootstrap-sass/assets/javascripts/bootstrap.js"></script>
+        <script src="../../bower_components/zeroclipboard/dist/ZeroClipboard.js"></script>
         <!-- endbower -->
+        <script src="../../bower_components/prism/prism.js"></script>
         <!-- endbuild -->
 
         <script src="{{assets}}/js/docs.js"></script>

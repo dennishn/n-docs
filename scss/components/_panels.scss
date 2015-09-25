@@ -1,0 +1,66 @@
+.panel {
+	margin: 2.5rem 0 0;
+	border: 0.1rem solid #dddddd;
+
+	.panel-heading {
+		padding: 1.5rem 1.5rem 0;
+		border: 0;
+		background-color: transparent;
+
+		&.border {
+			padding: 1.5rem 0;
+			margin: 0 1.5rem;
+			border-bottom: 1px solid #dddddd;
+		}
+
+		&.boxed {
+			padding: 1.5rem;
+			border-bottom: 1px solid #dddddd;
+		}
+
+		h3, .panel-title {
+			font-size: 2.0rem;
+			text-transform: uppercase;
+		}
+
+		@include headings(1, 6) {
+			color: $headings-color;
+			margin: 0;
+			vertical-align: middle;
+			display: inline-block;
+		}
+
+		.btn {
+			margin-left: 1.0rem;
+		}
+	}
+
+	.panel-body {
+		padding: 1.5rem;
+
+		&.no-padding {
+			padding: 0;
+		}
+
+		.table:first-child {
+			margin: 0;
+		}
+	}
+
+	&.panel-nested {
+		border: 0;
+
+		&:first-of-type {
+			margin: 0;
+		}
+
+		.panel-heading {
+			padding: 0;
+
+			&.border {
+				margin: 0;
+				padding: 0 0 0.6rem;
+			}
+		}
+	}
+}

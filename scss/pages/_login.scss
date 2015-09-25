@@ -1,0 +1,103 @@
+#login {
+    max-width: 400px;
+    @include box-shadow(0 0 15px 3px rgba(red($gray), green($gray), blue($gray), .4));
+
+    .panel-heading {
+        padding: 2.5rem 0 2.0rem;
+	    text-align: center;
+
+        &.no-margin {
+          padding: 2.5rem 0 0;
+        }
+
+        .panel-title {
+            font-size: 2.5rem;
+            text-align: center;
+            text-transform: uppercase;
+
+            &:after {
+                width: 40px;
+                height: 2px;
+                content: '';
+                margin: 1.5rem auto 0;
+                background-color: $brand-primary;
+                display: block;
+            }
+        }
+    }
+
+    .panel-body {
+        > .description {
+            font-size: 1.2rem;
+        }
+
+        .checkbox {
+            margin-top: 0;
+            margin-bottom: 0;
+
+            input[type='checkbox'] {
+                margin-top: 0.7rem;
+            }
+        }
+    }
+
+    .alert {
+	    margin: 0 0 1.5rem;
+        text-align: center;
+    }
+}
+
+/**
+ * "Secret" page curl
+ */
+#alternative-login {
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    top: 0; right: 0;
+    background:
+    linear-gradient(
+                    225deg,
+                    transparent 40%,
+                    #f3f3f3 50%,
+                    #ccc 50%,
+                    #bbb 50%,
+                    #ddd 62%,
+                    #f3f3f3 80%,
+                    #fff 100%
+    ), #f3f3f3 url('/vendor/nodes/backend/images/nodes.png') top right no-repeat;
+    background-size: auto, 62px;
+    box-shadow : 0 0 10px rgba(0, 0, 0, .5);
+    transition: all .35s ease;
+
+    &:before, &:after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        left: 12.5%;
+        bottom: 5.8%;
+        width: 70%;
+        max-width: 100px;
+        max-height: 80px;
+        height: 55%;
+        box-shadow: 0 12px 15px rgba(0, 0, 0, .3);
+        transform: skew(10deg) rotate(6deg);
+    }
+
+    &:after {
+        left: auto;
+        right: 5.8%;
+        bottom: auto;
+        top: 14.16%;
+        transform: skew(-15deg) rotate(-84deg);
+    }
+
+    &:hover {
+        width: 80px;
+        height: 80px;
+
+        &:before, &:after {
+            box-shadow: 0 14px 20px rgba(0, 0, 0, .3);
+        }
+    }
+}
