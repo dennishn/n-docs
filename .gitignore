@@ -16,6 +16,7 @@
 .yardoc
 
 bower_components
+.tmp
 dist
 /docs2/public/*
 vendor
