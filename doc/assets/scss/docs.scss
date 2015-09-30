@@ -1,7 +1,21 @@
+@mixin clearfix {
+	&:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+}
+
+@import "../../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap";
+
 @import "code/code";
 @import "code/example";
 @import "code/xray";
 @import "code/syntax-highlighting";
+
+@import "palette/palette";
+
+@import "whitespace/whitespace";
 
 @import "section/section";
 

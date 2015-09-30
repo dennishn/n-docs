@@ -2,54 +2,108 @@
 title: Buttons
 layout: component.html
 ---
-meget bedre
+<style>
+    .demo .snippet .btn {
+        display: block;
+        margin-bottom: 10px;
+    }
+</style>
+<h1 class="docs--page-header">
+    Buttons
+</h1>
 
-<div data-xrayhtml class="prism"><aside>
-    <blockquote>
-        <p>It is the unofficial force—the Baker Street irregulars.</p>
-    </blockquote>
-    <address>Sherlock Holmes</address>
-    <cite>Sign of Four</cite>
-</aside></div>
+<p class="docs--page-description">
+    Use the button classes on an <code>&lt;a&gt;</code>, <code>&lt;button&gt;</code>, or <code>&lt;input&gt;</code> element.
+</p>
 
-{{#markdown}}
-```scss
-$include-html-button-classes: $include-html-classes;
+<h2 class="docs--section-header">Button types</h2>
+<p class="docs--section-description">
+    Extending on the button styles provided by Bootstrap, the following button types are available
+</p>
 
-// We use these to build padding for buttons.
-$button-med: rem-calc(12);
-$button-tny: rem-calc(7);
-$button-sml: rem-calc(9);
-$button-lrg: rem-calc(16);
+<div class="docs--code-example">
+    <button class="btn btn-default docs--copy-code-btn">Copy to clipboard</button>
+    <div class="docs--example-container demo docs--prism" data-xrayhtml><button class="btn btn-default">Default</button>
+<button class="btn btn-primary">Primary</button>
+<button class="btn btn-secondary">Secondary</button>
+<button class="btn btn-info">Info</button>
+<button class="btn btn-success">Success</button>
+<button class="btn btn-warning">Warning</button>
+<button class="btn btn-danger">Danger</button>
+<button class="btn btn-transparent">Transparent</button>
+<button class="btn btn-link">Link</button></div>
+</div>
 
-// We use this to control the display property.
-$button-display: inline-block;
-$button-margin-bottom: rem-calc(20);
+<h2 class="docs--section-header">Button sizes</h2>
+<p class="docs--section-description">
+    Sometimes buttons need to stand out, or the opposite. Add <code>.btn-lg</code>, <code>.btn-sm</code>, or <code>.btn-xs</code> for additional sizes.
+</p>
 
-// We use these to control button text styles.
-$button-font-family: inherit;
-$button-font-color: #fff;
-$button-font-color-alt: #333;
-$button-font-med: rem-calc(16);
-$button-font-tny: rem-calc(11);
-$button-font-sml: rem-calc(13);
-$button-font-lrg: rem-calc(20);
-$button-font-weight: bold;
-$button-font-align: center;
+<div class="docs--code-example">
+<button class="btn btn-default docs--copy-code-btn">Copy to clipboard</button>
+<div class="docs--example-container demo docs--prism" data-xrayhtml><button class="btn btn-default">Large size</button>
+<button class="btn btn-default">Default size</button>
+<button class="btn btn-default btn-sm">Small size</button>
+<button class="btn btn-default btn-xs">Tiny size</button></div>
+</div>
 
-// We use these to control various hover effects.
-$button-function-factor: 10%;
+<p class="docs--section-description">
+    Create block level buttons that spans the entire width of the parent container by adding <code>.btn-block</code>
+</p>
 
-// We use these to control button border styles.
-$button-border-width: 1px;
-$button-border-style: solid;
+<div class="docs--code-example">
+    <button class="btn btn-default docs--copy-code-btn">Copy to clipboard</button>
+    <div class="docs--example-container demo docs--prism" data-xrayhtml><button class="btn btn-default btn-block">Large size</button>
+<button class="btn btn-default btn-block">Default size</button>
+<button class="btn btn-default btn-sm btn-block">Small size</button>
+<button class="btn btn-default btn-xs btn-block">Tiny size</button></div>
+</div>
 
-// We use this to set the default radius used throughout the core.
-$button-radius: $global-radius;
-$button-round: $global-rounded;
+<h2 class="docs--section-header">Button states</h2>
+<p class="docs--section-description">
+    Want a button to appear as hovered, or active? You can add <code>.hover</code>, or <code>.active</code> and make fake pseudo states.
+</p>
 
-// We use this to set default opacity and cursor for disabled buttons.
-$button-disabled-opacity: 0.6;
-$button-disabled-cursor: $cursor-default-value;
-```
-{{/markdown}}
+<div class="docs--code-example">
+    <button class="btn btn-default docs--copy-code-btn">Copy to clipboard</button>
+    <div class="docs--example-container demo docs--prism" data-xrayhtml><button class="btn btn-default">Normal</button>
+<button class="btn btn-default hover">Hover</button>
+<button class="btn btn-default active">Active</button>
+<button class="btn btn-primary">Normal</button>
+<button class="btn btn-primary hover">Hover</button>
+<button class="btn btn-primary active">Active</button>
+<button class="btn btn-secondary">Normal</button>
+<button class="btn btn-secondary hover">Hover</button>
+<button class="btn btn-secondary active">Active</button>
+<button class="btn btn-info">Normal</button>
+<button class="btn btn-info hover">Hover</button>
+<button class="btn btn-info active">Active</button>
+<button class="btn btn-success">Normal</button>
+<button class="btn btn-success hover">Hover</button>
+<button class="btn btn-success active">Active</button>
+<button class="btn btn-warning">Normal</button>
+<button class="btn btn-warning hover">Hover</button>
+<button class="btn btn-warning active">Active</button>
+<button class="btn btn-danger">Normal</button>
+<button class="btn btn-danger hover">Hover</button>
+<button class="btn btn-danger active">Active</button>
+<button class="btn btn-transparent">Normal</button>
+<button class="btn btn-transparent hover">Hover</button>
+<button class="btn btn-transparent active">Active</button></div>
+</div>
+
+<p class="docs--section-description">
+    Make buttons unclickable by adding a <code>disabled</code> attribute to <code>&lt;button&gt;</code> or <code>.disabled</code> to <code>&lt;a&gt;</code>.
+</p>
+
+<div class="docs--code-example">
+    <button class="btn btn-default docs--copy-code-btn">Copy to clipboard</button>
+    <div class="docs--example-container demo docs--prism" data-xrayhtml><button class="btn btn-default disabled">Disabled</button>
+<button class="btn btn-primary disabled">Disabled</button>
+<button class="btn btn-secondary disabled">Disabled</button>
+<button class="btn btn-info disabled">Disabled</button>
+<button class="btn btn-success disabled">Disabled</button>
+<button class="btn btn-warning disabled">Disabled</button>
+<button class="btn btn-danger disabled">Disabled</button>
+<button class="btn btn-transparent disabled">Disabled</button></div>
+</div>

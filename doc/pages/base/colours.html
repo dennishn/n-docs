@@ -1,0 +1,189 @@
+---
+title: Colors
+layout: component.html
+---
+<h1 class="docs--page-header">
+    Colors
+</h1>
+
+<h1>Dennis skal docce mixins</h1>
+
+<p class="docs--page-description">
+    In bootstrap only one "brand" color is available: <code>$brand-primary</code>. In nStack we need alot more,
+    and as such we have chosen to disband bootstraps way of using colors in favour of our own more complex solution...
+    The color system consists of 2 colored palettes.
+</p>
+
+<h2 class="docs--section-header">Text colors</h2>
+
+<p class="docs--section-description">
+    Text colors are designed to be used complementary to the opposite main color backgrounds.
+</p>
+
+<div class="docs--visual-example">
+    <p class="text-primary-light">text-primary-light <a href="#">link</a></p>
+    <p class="text-primary-dark">text-primary-dark <a href="#">link</a></p>
+    <p class="text-secondary-light">text-secondary-light <a href="#">link</a></p>
+    <p class="text-secondary-dark">text-secondary-dark <a href="#">link</a></p>
+</div>
+
+<h2 class="docs--section-header">Text shades</h2>
+
+<p class="docs--section-description">
+    Shades are designed to be used with contextual backgrounds, but can work equally well on the primary and secondary color backgrounds.
+    Text can be shaded light and dark, each with 3 variations: primary, secondary, hint (hint is for hint-text, disabled etc.).
+</p>
+
+<div class="docs--visual-example">
+    <div style="background: #333; padding-left: 10px;">
+        <p class="text-shade-light-primary">.text-shade-light-primary</p>
+        <p class="text-shade-light-secondary">.text-shade-light-secondary</p>
+        <p class="text-shade-light-hint">.text-shade-light-hint</p>
+    </div>
+    <div style="background: #eee; padding-left: 10px;">
+        <p class="text-shade-dark-primary">.text-shade-dark-primary</p>
+        <p class="text-shade-dark-secondary">.text-shade-dark-secondary</p>
+        <p class="text-shade-dark-hint">.text-shade-dark-hint</p>
+    </div>
+</div>
+
+<h2 class="docs--section-header">Colour palettes</h2>
+
+<p class="docs--section-description">
+    A palette consists of a "base" color, and 4 variatioins in lighter and darker shades.
+</p>
+
+<div class="docs--visual-example">
+
+    <ul class="docs--palette-list">
+        <li class="docs--palette-title">
+            Primary Color
+        </li>
+
+        <li class="docs--palette background-primary-darker" title=".background-primary-darker">
+        </li>
+        <li class="docs--palette background-primary-dark" title=".background-primary-dark">
+        </li>
+        <li class="docs--palette background-primary" title=".background-primary">
+        </li>
+        <li class="docs--palette background-primary-light" title=".background-primary-light">
+        </li>
+        <li class="docs--palette background-primary-lighter" title=".background-primary-lighter">
+        </li>
+    </ul>
+    
+    <ul class="docs--palette-list">
+        <li class="docs--palette-title">
+            Secondary Color
+        </li>
+        
+        <li class="docs--palette background-secondary-darker" title=".background-secondary-darker">
+        </li>
+        <li class="docs--palette background-secondary-dark" title=".background-secondary-dark">
+        </li>
+        <li class="docs--palette background-secondary" title=".background-secondary">
+        </li>
+        <li class="docs--palette background-secondary-light" title=".background-secondary-light">
+        </li>
+        <li class="docs--palette background-secondary-lighter" title=".background-secondary-lighter">
+        </li>
+    </ul>
+    
+    <ul class="docs--palette-list">
+        <li class="docs--palette-title">
+            Info Contextual Color
+        </li>
+        
+        <li class="docs--palette background-info-darker" title=".background-info-darker">
+        </li>
+        <li class="docs--palette background-info-dark" title=".background-info-dark">
+        </li>
+        <li class="docs--palette background-info" title=".background-info">
+        </li>
+        <li class="docs--palette background-info-light" title=".background-info-light">
+        </li>
+        <li class="docs--palette background-info-lighter" title=".background-info-lighter">
+        </li>
+    </ul>
+    
+    <ul class="docs--palette-list">
+        <li class="docs--palette-title">
+            Success Contextual Color
+        </li>
+        
+        <li class="docs--palette background-success-darker" title=".background-success-darker">
+        </li>
+        <li class="docs--palette background-success-dark" title=".background-success-dark">
+        </li>
+        <li class="docs--palette background-success" title=".background-success">
+        </li>
+        <li class="docs--palette background-success-light" title=".background-success-light">
+        </li>
+        <li class="docs--palette background-success-lighter" title=".background-success-lighter">
+        </li>
+    </ul>
+    
+    <ul class="docs--palette-list">
+        <li class="docs--palette-title">
+            Warning Contextual Color
+        </li>
+        
+        <li class="docs--palette background-warning-darker" title=".background-warning-darker">
+        </li>
+        <li class="docs--palette background-warning-dark" title=".background-warning-dark">
+        </li>
+        <li class="docs--palette background-warning" title=".background-warning">
+        </li>
+        <li class="docs--palette background-warning-light" title=".background-warning-light">
+        </li>
+        <li class="docs--palette background-warning-lighter" title=".background-warning-lighter">
+        </li>
+    </ul>
+    
+    <ul class="docs--palette-list">
+        <li class="docs--palette-title">
+            Danger Contextual Color
+        </li>
+        
+        <li class="docs--palette background-danger-darker" title=".background-danger-darker">
+        </li>
+        <li class="docs--palette background-danger-dark" title=".background-danger-dark">
+        </li>
+        <li class="docs--palette background-danger" title=".background-danger">
+        </li>
+        <li class="docs--palette background-danger-light" title=".background-danger-light">
+        </li>
+        <li class="docs--palette background-danger-lighter" title=".background-danger-lighter">
+        </li>
+    </ul>
+
+</div>
+
+<h2 class="docs--section-header">When to use text-colors</h2>
+
+<div class="docs--visual-example">
+
+    <ul class="docs--palette-list">
+        <li class="docs--palette background-secondary-darker" title=".background-secondary-darker">
+            <p class="text-primary-light">What a callout! ( I am .text-primary-light )</p>
+            <p class="text-secondary-light">I look great! ( I am .text-secondary-light )</p>
+        </li>
+        <li class="docs--palette background-secondary-dark" title=".background-secondary-dark">
+            <p class="text-primary-light">What a callout! ( I am .text-primary-light )</p>
+            <p class="text-secondary-light">I look great! ( I am .text-secondary-light )</p>
+        </li>
+        <li class="docs--palette background-secondary" title=".background-secondary">
+            <p class="text-primary-light">What a callout! ( I am .text-primary-light )</p>
+            <p class="text-primary-dark">Almost callout! ( I am .text-primary-light )</p>
+            <p class="text-secondary-light">I am very muted but still looking hot! ( I am .text-secondary-light )</p>
+        </li>
+        <li class="docs--palette background-secondary-light" title=".background-secondary-light">
+            <p class="text-secondary-dark">I look great! ( I am .text-secondary-dark )</p>
+        </li>
+        <li class="docs--palette background-secondary-lighter" title=".background-secondary-lighter">
+            <p class="text-secondary-light">I look great! ( I am .text-secondary-light )</p>
+            <p class="text-secondary-dark">I look great! ( I am .text-secondary-dark )</p>
+        </li>
+    </ul>
+
+</div>

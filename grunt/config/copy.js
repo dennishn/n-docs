@@ -1,6 +1,6 @@
 // https://github.com/gruntjs/grunt-contrib-copy
 module.exports = {
-	dist: {
+	docs: {
 		files: [{
 			expand: true,
 			dot: true,
@@ -8,9 +8,23 @@ module.exports = {
 			src: [
 				'*.{ico,png}',
 				'.htaccess',
-				'assets/img/**/*.{jpeg,jpg,png,svg,webp}',
-				'assets/fonts/*',
-				'assets/icons/*.{svg,png}'
+				'img/**/*.{jpeg,jpg,png,svg,webp}',
+				'fonts/*',
+				'icons/*.{svg,png}'
+			],
+			dest: '<%= paths.dist %>assets/'
+		}]
+	},
+	dist: {
+		files: [{
+			expand: true,
+			dot: true,
+			cwd: '<%= paths.assets %>',
+			src: [
+				'*.{ico,png}',
+				'img/**/*.{jpeg,jpg,png,svg,webp}',
+				'fonts/*',
+				'icons/*.{svg,png}'
 			],
 			dest: '<%= paths.dist %>assets/'
 		}]

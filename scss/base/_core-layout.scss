@@ -1,0 +1,23 @@
+.core-layout {
+
+}
+.core-layout__sidebar {
+	@include background-color($secondary-color-dark);
+
+	min-width: $core-sidebar-width;
+	max-width: $core-sidebar-width;
+
+}
+.core-layout__content {
+
+}
+.core-layout__topbar {
+	@include background-color($secondary-color);
+
+	min-height: $core-topbar-height;
+	max-height: $core-topbar-height;
+
+}
+.core-layout__page {
+
+}

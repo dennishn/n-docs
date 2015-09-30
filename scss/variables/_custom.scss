@@ -1,0 +1,103 @@
+$logo-size: 96px;
+$logo-size-small: 48px;
+
+
+
+//
+//  Primary Colors
+//
+$primary-color: #37EF81;
+$primary-color-dark: #13CE5E;
+$primary-color-darker: #00923A;
+$primary-color-light: #76F5A8;
+$primary-color-lighter: #B8FFD4;
+
+//
+// Secondary Colors
+//
+$secondary-color: #2B4454;
+$secondary-color-dark: #12222F;
+$secondary-color-darker: #121016;
+$secondary-color-light: #638796;
+$secondary-color-lighter: #E8EEF0;
+
+//
+// Grays
+//
+$gray: $secondary-color;
+$gray-dark: $secondary-color-dark;
+$gray-darker: $secondary-color-darker;
+$gray-light: $secondary-color-light;
+$gray-lighter: $secondary-color-lighter;
+
+//
+// Contextual Colors
+//
+$info-color: #639FDB;
+$info-color-dark: darken($info-color, 15);
+$info-color-darker: darken($info-color, 30);
+$info-color-light: lighten($info-color, 15);
+$info-color-lighter: lighten($info-color, 30);
+
+$success-color: #37DDAD;
+$success-color-dark: darken($success-color, 15);
+$success-color-darker: darken($success-color, 30);
+$success-color-light: lighten($success-color, 15);
+$success-color-lighter: lighten($success-color, 30);
+
+$warning-color: #E3D968;
+$warning-color-dark: darken($warning-color, 15);
+$warning-color-darker: darken($warning-color, 30);
+$warning-color-light: lighten($warning-color, 15);
+$warning-color-lighter: lighten($warning-color, 30);
+
+$danger-color: #CF664E;
+$danger-color-dark: darken($danger-color, 15);
+$danger-color-darker: darken($danger-color, 30);
+$danger-color-light: lighten($danger-color, 15);
+$danger-color-lighter: lighten($danger-color, 30);
+
+//
+// Text Coloring
+//
+$white: #fff;
+$black: #000;
+// Coloring
+$text-primary-light: $primary-color;
+$text-primary-dark: $primary-color-darker;
+$text-secondary-light: $secondary-color-light;
+$text-secondary-dark: $secondary-color;
+// Shading
+$text-shade-light-primary-opacity: 1;
+$text-shade-light-secondary-opacity: 0.7;
+$text-shade-light-hint-opacity: 0.3;
+$text-shade-dark-primary-opacity: 0.87;
+$text-shade-dark-secondary-opacity: 0.54;
+$text-shade-dark-hint-opacity: 0.38;
+
+//
+// Whitespace
+//
+$whitespace-root: 5px;
+
+$whitespace-small-modifier: 2;
+$whitespace-base-modifier: 4;
+$whitespace-large-modifier: 6;
+$whitespace-xlarge-modifier: 8;
+
+//
+// Core Layout sizes
+//
+$core-sidebar-width: 320px;
+$core-topbar-height: 60px;
+
+//
+// Page Header
+//
+$page-header-height: 130px;
+
+// Jumbotrons Extended
+$jumbotron-inverse-color:			$white;
+$jumbotron-inverse-bg:				$secondary-color-dark;
+$jumbotron-inverse-heading-color:	$white;
+$jumbotron-inverse-link-color:		$secondary-color-light;

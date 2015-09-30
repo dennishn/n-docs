@@ -15,18 +15,18 @@ $gray:                          lighten($gray-base, 28%) !default;
 $gray-light:                    lighten($gray-base, 46.7%) !default;
 $gray-lighter:                  lighten($gray-base, 51.5%) !default;
 
-$brand-primary:                 #665ca7 !default;
-$brand-success:                 #61b5a2 !default;
-$brand-info:                    #56acc6 !default;
-$brand-warning:                 #d79b4e !default;
-$brand-danger:                  #df4660 !default;
+$brand-primary:                 $primary-color !default;
+$brand-success:                 $success-color !default;
+$brand-info:                    $info-color !default;
+$brand-warning:                 $warning-color !default;
+$brand-danger:                  $danger-color !default;
 
 //== Scaffolding
 //
 //## Settings for some of the most global styles.
 
 //** Background color for `<body>`.
-$body-bg:                       #ebebeb !default;
+$body-bg:                       #fff !default;
 //** Global text color on `<body>`.
 $text-color:                    #474747 !default;
 
@@ -42,7 +42,7 @@ $link-hover-decoration: underline !default;
 //
 //## Font, line-height, and color for body text, headings, and more.
 
-$font-family-sans-serif:        'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif !default;
+$font-family-sans-serif:        'Work Sans', Helvetica, Arial, sans-serif !default;
 $font-family-serif:       		Georgia, "Times New Roman", Times, serif !default;
 //** Default monospace fonts for `<code>`, `<kbd>`, and `<pre>`.
 $font-family-monospace:   		Menlo, Monaco, Consolas, "Courier New", monospace !default;
@@ -66,7 +66,7 @@ $line-height-computed:          $font-size-base * $line-height-base !default;
 
 //** By default, this inherits from the `<body>`.
 $headings-font-family:    		inherit !default;
-$headings-font-weight:    		500 !default;
+$headings-font-weight:    		400 !default;
 $headings-line-height:    		1.1 !default;
 $headings-color:          		inherit !default;
 
@@ -91,17 +91,17 @@ $icon-font-svg-id:        		"glyphicons_halflingsregular" !default;
 //
 //## Define common padding and border radius sizes and more. Values based on 14px text and 1.428 line-height (~20px to start).
 
-$padding-base-vertical:     		6px !default;
-$padding-base-horizontal:   		12px !default;
+$padding-base-vertical:     		$whitespace-root * $whitespace-small-modifier !default; // 10px
+$padding-base-horizontal:   		$whitespace-root * $whitespace-base-modifier !default; // 20px
 
-$padding-large-vertical:    		10px !default;
-$padding-large-horizontal:  		16px !default;
+$padding-large-vertical:    		$whitespace-root * $whitespace-base-modifier !default; // 20px
+$padding-large-horizontal:  		$whitespace-root * $whitespace-large-modifier !default; // 30px
 
-$padding-small-vertical:    		5px !default;
-$padding-small-horizontal:  		10px !default;
+$padding-small-vertical:    		$whitespace-root !default; // 5px
+$padding-small-horizontal:  		$whitespace-root * $whitespace-small-modifier !default; // 10px
 
-$padding-xs-vertical:       		1px !default;
-$padding-xs-horizontal:     		5px !default;
+$padding-xs-vertical:       		$whitespace-root !default; // 5px
+$padding-xs-horizontal:     		$whitespace-root !default; // 5px
 
 $line-height-large:         		1.3333333 !default; // extra decimals for Win 8.1 Chrome
 $line-height-small:         		1.5 !default;
@@ -148,9 +148,9 @@ $table-border-color:            		#ddd !default;
 
 $btn-font-weight:                		normal !default;
 
-$btn-default-color:              		#333 !default;
-$btn-default-bg:                 		#fff !default;
-$btn-default-border:            		#ccc !default;
+$btn-default-color:              		$secondary-color-dark !default;
+$btn-default-bg:                 		$white !default;
+$btn-default-border:            		$secondary-color-lighter !default;
 
 $btn-primary-color:              		#fff !default;
 $btn-primary-bg:                 		$brand-primary !default;
@@ -492,8 +492,8 @@ $jumbotron-padding:              30px !default;
 $jumbotron-color:                inherit !default;
 $jumbotron-bg:                   $gray-lighter !default;
 $jumbotron-heading-color:        inherit !default;
-$jumbotron-font-size:            ceil(($font-size-base * 1.5)) !default;
-$jumbotron-heading-font-size:    ceil(($font-size-base * 4.5)) !default;
+$jumbotron-font-size:            16px !default;
+$jumbotron-heading-font-size:    $font-size-h1 !default;
 
 
 //== Form states and alerts
@@ -715,10 +715,10 @@ $list-group-link-heading-color: #333 !default;
 //##
 
 $panel-bg:                    #fff !default;
-$panel-body-padding:          15px !default;
-$panel-heading-padding:       10px 15px !default;
-$panel-footer-padding:        $panel-heading-padding !default;
-$panel-border-radius:         $border-radius-base !default;
+$panel-body-padding:          $padding-base-vertical $padding-base-horizontal !default;
+$panel-heading-padding:       $padding-base-vertical $padding-base-horizontal !default;
+$panel-footer-padding:        $padding-base-vertical $padding-base-horizontal !default;
+$panel-border-radius:         0 !default;
 
 //** Border color for elements within panels
 $panel-inner-border:          #ddd !default;

@@ -11,6 +11,7 @@ module.exports = function(grunt) {
 			grunt: 'grunt/',
 			js: 'js/',
 			scss: 'scss/',
+			assets: 'assets/',
 			vendor: grunt.file.readJSON('.bowerrc').directory + '/'
 		},
 		files: {

@@ -1,0 +1,76 @@
+---
+title: App Install
+layout: blade-templates.html
+---
+<div class="layout vertical fit scroll">
+    <header class="layout vertical flex-1 app-install__header">
+        <div class="flex jumbotron jumbotron-inverse text-center whitespace-horizontal reset-whitespace-bottom">
+            <img src="../../assets/img/n-stack-logo.svg" class="logo logo-small"/>
+            <h1>iOS9 Enterprise installation guide</h1>
+            <div class="slick-slider-indicators"></div>
+        </div>
+        <div class="panel background-secondary-darker">
+            <div class="panel-body">
+                <p class="no-margin-bottom text-secondary-light">Open the link to the enterprise build on your test device.</p>
+            </div>
+        </div>
+    </header>
+    <section class="flex-2 app-install__carousel">
+        <div class="slick-slider">
+
+            <div class="slick-slide__wrapper">
+                <div class="slick-slide__inner">slide-1</div>
+            </div>
+            <div class="slick-slide__wrapper">
+                <div class="slick-slide__inner">slide-2</div>
+            </div>
+            <div class="slick-slide__wrapper">
+                <div class="slick-slide__inner">slide-3</div>
+            </div>
+            <div class="slick-slide__wrapper">
+                <div class="slick-slide__inner">slide-4</div>
+            </div>
+            <div class="slick-slide__wrapper">
+                <div class="slick-slide__inner">slide-5</div>
+            </div>
+            <div class="slick-slide__wrapper">
+                <div class="slick-slide__inner">slide-6</div>
+            </div>
+            <div class="slick-slide__wrapper">
+                <div class="slick-slide__inner">slide-7</div>
+            </div>
+            <div class="slick-slide__wrapper">
+                <div class="slick-slide__inner">slide-8</div>
+            </div>
+            <div class="slick-slide__wrapper">
+                <div class="slick-slide__inner">slide-9</div>
+            </div>
+
+
+        </div>
+    </section>
+</div>
+
+<script>
+    $(document).ready(function() {
+
+        var appInstallSlickSettings = {
+
+            mobileFirst: true,
+            slidesToShow: 1,
+            infinite: false,
+            centerMode: true,
+
+            customPaging: function(slider, i) {
+                return '<span></span>';
+            },
+            appendDots: $('.slick-slider-indicators'),
+
+            arrows: false,
+            dots: true
+        };
+
+        $('.slick-slider').slick(appInstallSlickSettings);
+
+    });
+</script>

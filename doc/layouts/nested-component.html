@@ -12,35 +12,33 @@
         <link href="{{assets}}/css/docs.css" rel="stylesheet" />
         <link href="{{assets}}/css/nodes.css" rel="stylesheet" />
 
-        <!-- build:js assets/js/vendor.js -->
+        <!-- build:js ../../assets/js/vendor.js -->
         <!-- bower:js -->
         <script src="../../bower_components/jquery/dist/jquery.js"></script>
         <script src="../../bower_components/bootstrap-sass/assets/javascripts/bootstrap.js"></script>
         <script src="../../bower_components/zeroclipboard/dist/ZeroClipboard.js"></script>
         <script src="../../bower_components/slick-carousel/slick/slick.min.js"></script>
         <!-- endbower -->
-        <script src="../../bower_components/prism/prism.js"></script>
+        <script src="../../../bower_components/prism/prism.js"></script>
         <!-- endbuild -->
 
         <script src="{{assets}}/js/modernizr.js"></script>
     </head>
     <body class="fullbleed">
 
-        <div class="container-fluid">
-            <div class="large-3 medium-4 columns">
+        <div class="layout horizontal fit">
+            <div class="flex-1">
                 {{> sidebar}}
             </div>
-            <div class="large-9 medium-8 columns">
-                <h1 id="{{slugify title}}">{{title}}</h1>
-                <div id="component-name" name="{{title}}"></div>
+            <div class="flex-2 scroll">
                 {{#markdown}}
                 {{> body }}
                 {{/markdown}}
             </div>
         </div>
 
-        <script src="{{assets}}/js/docs.js"></script>
-        <script src="{{assets}}/js/nodes.js"></script>
+        <script src="../{{assets}}/js/docs.js"></script>
+        <script src="../{{assets}}/js/nodes.js"></script>
     </body>
 
 </html>

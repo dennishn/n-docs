@@ -5,7 +5,8 @@
     "jquery": "~2.1.4",
     "bootstrap-sass": "~3.3.5",
     "prism": "~1.0.1",
-    "zeroclipboard": "~2.2.0"
+    "zeroclipboard": "~2.2.0",
+    "slick-carousel": "~1.5.8"
   },
   "devDependencies": {},
   "private": true
