@@ -1,18 +1,37 @@
 .app-install__header {
+	min-height: 334px;
 	max-height: 334px;
 
+	.jumbotron {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		padding: 0;
+	}
+
+	.logo, h1, .panel {
+		flex: 1;
+	}
+
 	.logo {
+		@include whitespace($type: margin, $side: top, $size: xl);
 		@include whitespace($type: margin, $side: bottom, $size: lg);
 	}
 
 	h1 {
+		margin-top: 0;
+		@include whitespace($type: margin, $side: bottom, $size: lg);
 		@include whitespace($type: padding, $side: horizontal, $size: default);
 		font-size: $font-size-h3;
 	}
 
 	.panel {
+		display: flex;
+		align-items: center;
 		margin-bottom: 0;
 		@media screen and (min-width: $screen-sm-min) {
+			justify-content: center;
 			p {
 				text-align: center;
 			}
@@ -20,6 +39,11 @@
 	}
 	.panel-body {
 		@include whitespace($type: padding, $side: vertical, $size: default);
+	}
+
+	.slick-slider-indicators {
+		@include whitespace($type: margin, $side: bottom, $size: default);
+		height: 16px;
 	}
 
 	.slick-dots {
@@ -62,16 +86,26 @@
 }
 .app-install__carousel {
 	.slick-slider {
-		margin: 0 auto;
 		width: 100%;
-		height: 480px;
+		margin: 0 auto;
+		padding-bottom: 20px;
 		@media screen and (min-width: $screen-xs-min) {
 			width: 320px * 2;
-			height: 480px * 2;
 		}
 	}
+	.slick-track:hover {
+		cursor: move; /* fallback if grab cursor is unsupported */
+		cursor: grab;
+		cursor: -moz-grab;
+		cursor: -webkit-grab;
+	}
+	.slick-track:active {
+		cursor: grabbing;
+		cursor: -moz-grabbing;
+		cursor: -webkit-grabbing;
+	}
 	.slick-slide {
-		height: 100%;
+
 		padding: 20px 10px 0 10px;
 		&:focus {
 			outline: none;
@@ -79,10 +113,6 @@
 	}
 	.slick-slide__inner {
 		position: relative;
-		height: 100%;
-
-		background: tomato; // debug
-
 		&:after {
 			content: '';
 			position: absolute;
@@ -94,6 +124,14 @@
 			opacity: 1;
 			transition: opacity .2s;
 		}
+		@media screen and (min-width: $screen-sm-min) {
+			&:after {
+				opacity: 0;
+			}
+		}
+	}
+	.slick-slide__inner img {
+		margin: 0 auto;
 	}
 	.slick-center .slick-slide__inner:after {
 		opacity: 0;
