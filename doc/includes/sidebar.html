@@ -1,43 +1,64 @@
-<div class="sidebar">
-    <h5>nStack.io Styleguide</h5>
+<ul class="docs--sidebar">
 
-    <nav>
-        <ul class="side-nav">
-            <li class="heading">Setup</li>
-            <li><a href="{{rel 'index.html'}}" data-search="">Getting Started</a></li>
+    <li class="docs--sidebar__heading">Setup</li>
+    <li class="docs--sidebar__item{{#is basename "index"}} active{{/is}}">
+        <a href="{{rel 'index.html'}}" data-search="">Getting Started</a>
+    </li>
 
-            <li class="divider"></li>
-            <li class="heading">Base</li>
-            <li><a href="{{rel 'base/layout.html'}}" data-search="">Layout</a></li>
-            <li><a href="{{rel 'base/flex-layout.html'}}" data-search="">Flex-layout</a></li>
-            <li><a href="{{rel 'base/colours.html'}}" data-search="">Colours</a></li>
-            <li><a href="{{rel 'base/whitespace.html'}}" data-search="">Whitespace</a></li>
+    <li class="docs--sidebar__heading">Base</li>
+    <li class="docs--sidebar__item{{#is basename "layout"}} active{{/is}}">
+        <a href="{{rel 'base/layout.html'}}" data-search="">Layout</a>
+    </li>
+    <li class="docs--sidebar__item{{#is basename "flex-layout"}} active{{/is}}">
+        <a href="{{rel 'base/flex-layout.html'}}" data-search="">Flex-layout</a>
+    </li>
+    <li class="docs--sidebar__divider"></li>
+    <li class="docs--sidebar__item{{#is basename "colours"}} active{{/is}}">
+        <a href="{{rel 'base/colours.html'}}" data-search="">Colours</a>
+    </li>
+    <li class="docs--sidebar__item{{#is basename "whitespace"}} active{{/is}}">
+        <a href="{{rel 'base/whitespace.html'}}" data-search="">Whitespace</a>
+    </li>
 
-            <li class="divider"></li>
-            <li class="heading">Stuff</li>
-            <li><a href="{{rel 'elements/buttons.html'}}" data-search="">Buttons</a></li>
-            <li>
-                Forms
-                <ul>
-                    <li><a href="{{rel 'elements/forms/action-wrappers.html'}}" data-search="">Action Wrappers</a></li>
-                </ul>
-            </li>
+    <li class="docs--sidebar__heading">Elements</li>
+    <li class="docs--sidebar__item{{#is basename "buttons"}} active{{/is}}">
+        <a href="{{rel 'elements/buttons.html'}}" data-search="">Buttons</a>
+    </li>
 
-            <li class="divider"></li>
-            <li class="heading">Blade Templating</li>
-            <li>
-                Layouts
-                <ul>
-                    <li><a href="{{rel 'blade-templates/layouts/core.html'}}" data-search="">Core Layout</a></li>
-                </ul>
-            </li>
-            <li>
-                Pages
-                <ul>
-                    <li><a href="{{rel 'blade-templates/pages/app-install.html'}}" data-search="">App Install</a></li>
-                </ul>
+    <li class="docs--sidebar__heading">Components</li>
+    <li class="docs--sidebar__item{{#is basename "breadcrumbs"}} active{{/is}}">
+        <a href="{{rel 'components/breadcrumbs.html'}}" data-search="">Breadcrumbs</a>
+    </li>
+    <li class="docs--sidebar__item{{#is basename "page-header"}} active{{/is}}">
+        <a href="{{rel 'components/page-header.html'}}" data-search="">Page-header</a>
+    </li>
+    <li class="docs--sidebar__has-subnav">
+        <span>Forms</span>
+        <ul class="docs--sidebar__subnav">
+            <li class="docs--sidebar__item{{#is basename "action-wrappers"}} active{{/is}}">
+                <a href="{{rel 'components/forms/action-wrappers.html'}}" data-search="">Action Wrappers</a>
             </li>
         </ul>
-    </nav>
+    </li>
+    <li class="docs--sidebar__item{{#is basename "side-navigation"}} active{{/is}}">
+      <a href="{{rel 'components/side-navigation.html'}}" data-search="">Side-navigation</a>
+    </li>
 
-</div>
+    <li class="docs--sidebar__heading">Blade Templates</li>
+    <li class="docs--sidebar__has-subnav">
+        <span>Layouts</span>
+        <ul class="docs--sidebar__subnav">
+            <li class="docs--sidebar__item{{#is basename "core"}} active{{/is}}">
+                <a href="{{rel 'blade-templates/layouts/core.html'}}" data-search="">Core Layout</a>
+            </li>
+        </ul>
+    </li>
+    <li class="docs--sidebar__has-subnav">
+        Pages
+        <ul class="docs--sidebar__subnav">
+            <li class="docs--sidebar__item{{#is basename "app-install"}} active{{/is}}">
+                <a href="{{rel 'blade-templates/pages/app-install.html'}}" data-search="">App Install</a>
+            </li>
+        </ul>
+    </li>
+</ul>

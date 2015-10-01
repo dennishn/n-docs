@@ -7,6 +7,12 @@
 }
 
 @import "../../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "../../../scss/nodes";
+
+@import "layout/core-layout";
+@import "layout/blade-templates";
+@import "layout/topbar";
+@import "layout/sidebar";
 
 @import "code/code";
 @import "code/example";

@@ -8,11 +8,11 @@ module.exports = {
 			src: [
 				'*.{ico,png}',
 				'.htaccess',
-				'img/**/*.{jpeg,jpg,png,svg,webp}',
-				'fonts/*',
-				'icons/*.{svg,png}'
+				'assets/img/**/*.{jpeg,jpg,png,svg,webp}',
+				'assets/fonts/*',
+				'assets/icons/*.{svg,png}'
 			],
-			dest: '<%= paths.dist %>assets/'
+			dest: '<%= paths.dist %>/'
 		}]
 	},
 	dist: {

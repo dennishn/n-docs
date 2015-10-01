@@ -1,0 +1,55 @@
+.docs--layout-sidebar {
+	@include background-color($gray-lighter);
+}
+
+.docs--sidebar,
+.docs--sidebar__subnav {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.docs--sidebar__item a,
+.docs--sidebar__heading {
+	@include whitespace($type: padding, $side: vertical, $size: sm);
+	@include whitespace($type: padding, $side: horizontal);
+}
+.docs--sidebar__has-subnav {
+	padding-bottom: 0;
+	> span {
+		@include whitespace($type: padding, $side: vertical, $size: sm);
+		@include whitespace($type: padding, $side: horizontal);
+		display: block;
+	}
+}
+.docs--sidebar__subnav li a {
+	@include whitespace($type: padding, $side: left, $size: xl);
+}
+
+.docs--sidebar__heading {
+	@include background-color($gray-light);
+	font-weight: 500;
+}
+
+.docs--sidebar__item {
+	a {
+		@include font-color($text-secondary-light);
+
+		display: block;
+		&:hover {
+			@include background-color($gray-light);
+			@include font-color($text-secondary-dark);
+			text-decoration: none;
+		}
+	}
+
+	&.active a {
+		@include background-color($gray-dark);
+		@include font-color($secondary-color);
+	}
+}
+
+.docs--sidebar__divider {
+	@include background-color($gray-light);
+	height: 2px;
+}

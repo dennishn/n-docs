@@ -35,13 +35,15 @@
  * Components
  */
 @import "components/action-wrappers";
+@import "components/breadcrumbs";
 @import "components/jumbotron";
+@import "components/page-header";
+@import "components/side-navigation";
 
 @import "components/panels";
 @import "components/pagination";
 @import "components/dropdowns";
 @import "components/modals";
-@import "components/breadcrumbs";
 @import "components/alerts";
 @import "components/navigation";
 @import "components/flash-messages";

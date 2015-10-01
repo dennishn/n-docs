@@ -24,11 +24,11 @@ $secondary-color-lighter: #E8EEF0;
 //
 // Grays
 //
-$gray: $secondary-color;
-$gray-dark: $secondary-color-dark;
-$gray-darker: $secondary-color-darker;
-$gray-light: $secondary-color-light;
-$gray-lighter: $secondary-color-lighter;
+$gray-darker: $secondary-color-light;
+$gray-dark: lighten($gray-darker, 16);
+$gray: lighten($gray-darker, 32);
+$gray-light: $secondary-color-lighter;
+$gray-lighter: lighten($gray-light, 4);
 
 //
 // Contextual Colors

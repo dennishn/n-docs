@@ -8,6 +8,7 @@
         <title>{{default title meta}} | Foundation Docs</title>
 
         <link href='https://fonts.googleapis.com/css?family=Work+Sans:500,600,400,300,700' rel='stylesheet' type='text/css'>
+        <link rel="shortcut icon" href="/favicon.ico">
 
         <link href="{{assets}}/css/docs.css" rel="stylesheet" />
         <link href="{{assets}}/css/nodes.css" rel="stylesheet" />
@@ -26,17 +27,23 @@
     </head>
     <body class="fullbleed">
 
-        <div class="container-fluid">
-            <div class="large-3 medium-4 columns">
-                {{> sidebar}}
+        <div class="layout vertical fit docs--layout-container">
+
+            <div class="flex-1 docs--layout-topbar">
+                nStack.io UI Framework
             </div>
-            <div class="large-9 medium-8 columns">
-                <h1 id="{{slugify title}}">{{title}}</h1>
-                <div id="component-name" name="{{title}}"></div>
-                {{#markdown}}
-                {{> body }}
-                {{/markdown}}
+
+            <div class="layout horizontal docs--layout-page">
+                <div class="flex-1 scroll docs--layout-sidebar">
+                    {{> sidebar}}
+                </div>
+                <div class="flex-2 scroll docs--layout-content">
+                    {{#markdown}}
+                    {{> body }}
+                    {{/markdown}}
+                </div>
             </div>
+
         </div>
 
         <script src="{{assets}}/js/docs.js"></script>
