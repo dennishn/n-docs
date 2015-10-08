@@ -1,103 +1,120 @@
-$logo-size: 96px;
-$logo-size-small: 48px;
+$default-float: left !default;
 
+//
+// Block-Layout
+//
+$block-layout-elements: 12 !default;
+$block-layout-spacing: 20px !default;
 
+//
+// Logo Size
+//
+$logo-size: 80px !default;
+$logo-size-small: 40px !default;
 
 //
 //  Primary Colors
 //
-$primary-color: #37EF81;
-$primary-color-dark: #13CE5E;
-$primary-color-darker: #00923A;
-$primary-color-light: #76F5A8;
-$primary-color-lighter: #B8FFD4;
+$primary-color: #37EF81 !default;
+$primary-color-dark: #13CE5E !default;
+$primary-color-darker: #00923A !default;
+$primary-color-light: #76F5A8 !default;
+$primary-color-lighter: #B8FFD4 !default;
 
 //
 // Secondary Colors
 //
-$secondary-color: #2B4454;
-$secondary-color-dark: #12222F;
-$secondary-color-darker: #121016;
-$secondary-color-light: #638796;
-$secondary-color-lighter: #E8EEF0;
+$secondary-color: #2B4454 !default;
+$secondary-color-dark: #12222F !default;
+$secondary-color-darker: #121016 !default;
+$secondary-color-light: #638796 !default;
+$secondary-color-lighter: #E8EEF0 !default;
 
 //
 // Grays
 //
-$gray-darker: $secondary-color-light;
-$gray-dark: lighten($gray-darker, 16);
-$gray: lighten($gray-darker, 32);
-$gray-light: $secondary-color-lighter;
-$gray-lighter: lighten($gray-light, 4);
+$gray-darker: $secondary-color-light !default;
+$gray-dark: lighten($gray-darker, 16) !default;
+$gray: lighten($gray-darker, 32) !default;
+$gray-light: $secondary-color-lighter !default;
+$gray-lighter: lighten($gray-light, 4) !default;
 
 //
 // Contextual Colors
 //
-$info-color: #639FDB;
-$info-color-dark: darken($info-color, 15);
-$info-color-darker: darken($info-color, 30);
-$info-color-light: lighten($info-color, 15);
-$info-color-lighter: lighten($info-color, 30);
+$info-color: #639FDB !default;
+$info-color-dark: darken($info-color, 15) !default;
+$info-color-darker: darken($info-color, 30) !default;
+$info-color-light: lighten($info-color, 15) !default;
+$info-color-lighter: lighten($info-color, 30) !default;
 
-$success-color: #37DDAD;
-$success-color-dark: darken($success-color, 15);
-$success-color-darker: darken($success-color, 30);
-$success-color-light: lighten($success-color, 15);
-$success-color-lighter: lighten($success-color, 30);
+$success-color: #37DDAD !default;
+$success-color-dark: darken($success-color, 15) !default;
+$success-color-darker: darken($success-color, 30) !default;
+$success-color-light: lighten($success-color, 15) !default;
+$success-color-lighter: lighten($success-color, 30) !default;
 
-$warning-color: #E3D968;
-$warning-color-dark: darken($warning-color, 15);
-$warning-color-darker: darken($warning-color, 30);
-$warning-color-light: lighten($warning-color, 15);
-$warning-color-lighter: lighten($warning-color, 30);
+$warning-color: #E3D968 !default;
+$warning-color-dark: darken($warning-color, 15) !default;
+$warning-color-darker: darken($warning-color, 30) !default;
+$warning-color-light: lighten($warning-color, 15) !default;
+$warning-color-lighter: lighten($warning-color, 30) !default;
 
-$danger-color: #CF664E;
-$danger-color-dark: darken($danger-color, 15);
-$danger-color-darker: darken($danger-color, 30);
-$danger-color-light: lighten($danger-color, 15);
-$danger-color-lighter: lighten($danger-color, 30);
+$danger-color: #CF664E !default;
+$danger-color-dark: darken($danger-color, 15) !default;
+$danger-color-darker: darken($danger-color, 30) !default;
+$danger-color-light: lighten($danger-color, 15) !default;
+$danger-color-lighter: lighten($danger-color, 30) !default;
 
 //
 // Text Coloring
 //
-$white: #fff;
-$black: #000;
+$white: #fff !default;
+$black: #000 !default;
 // Coloring
-$text-primary-light: $primary-color;
-$text-primary-dark: $primary-color-darker;
-$text-secondary-light: $secondary-color-light;
-$text-secondary-dark: $secondary-color;
+$text-primary-light: $primary-color !default;
+$text-primary-dark: $primary-color-darker !default;
+$text-secondary-light: $secondary-color-light !default;
+$text-secondary-dark: $secondary-color !default;
 // Shading
-$text-shade-light-primary-opacity: 1;
-$text-shade-light-secondary-opacity: 0.7;
-$text-shade-light-hint-opacity: 0.3;
-$text-shade-dark-primary-opacity: 0.87;
-$text-shade-dark-secondary-opacity: 0.54;
-$text-shade-dark-hint-opacity: 0.38;
+$text-shade-light-primary-opacity: 1 !default;
+$text-shade-light-secondary-opacity: 0.7 !default;
+$text-shade-light-hint-opacity: 0.3 !default;
+$text-shade-dark-primary-opacity: 0.87 !default;
+$text-shade-dark-secondary-opacity: 0.54 !default;
+$text-shade-dark-hint-opacity: 0.38 !default;
+
+$shadow-distance-1: 0 2px 10px 0 rgba(0, 0, 0, 0.16) !default;
+$shadow-distance-2: 0 6px 20px 0 rgba(0, 0, 0, 0.19) !default;
+$shadow-distance-3: 0 17px 50px 0 rgba(0, 0, 0, 0.19) !default;
+$shadow-distance-4: 0 25px 55px 0 rgba(0, 0, 0, 0.21) !default;
+$shadow-distance-5: 0 40px 77px 0 rgba(0, 0, 0, 0.22) !default;
 
 //
 // Whitespace
 //
-$whitespace-root: 5px;
+$whitespace-root: 5px !default;
 
-$whitespace-small-modifier: 2;
-$whitespace-base-modifier: 4;
-$whitespace-large-modifier: 6;
-$whitespace-xlarge-modifier: 8;
+$whitespace-small-modifier: 2 !default;
+$whitespace-base-modifier: 4 !default;
+$whitespace-large-modifier: 6 !default;
+$whitespace-xlarge-modifier: 8 !default;
 
 //
 // Core Layout sizes
 //
-$core-sidebar-width: 320px;
-$core-topbar-height: 60px;
+$core-sidebar-width: 250px !default;
+$core-sidebar-logo-height: 100px !default;
+$core-topbar-height: 60px !default;
+$core-topbar-dropdowns-magic-height-number: 500px;
 
 //
 // Page Header
 //
-$page-header-height: 130px;
+$page-header-height: 130px !default;
 
 // Jumbotrons Extended
-$jumbotron-inverse-color:			$white;
-$jumbotron-inverse-bg:				$secondary-color-dark;
-$jumbotron-inverse-heading-color:	$white;
-$jumbotron-inverse-link-color:		$secondary-color-light;
+$jumbotron-inverse-color:			$white !default;
+$jumbotron-inverse-bg:				$secondary-color-dark !default;
+$jumbotron-inverse-heading-color:	$white !default;
+$jumbotron-inverse-link-color:		$secondary-color-light !default;

@@ -12,6 +12,9 @@
     <li class="docs--sidebar__item{{#is basename "flex-layout"}} active{{/is}}">
         <a href="{{rel 'base/flex-layout.html'}}" data-search="">Flex-layout</a>
     </li>
+    <li class="docs--sidebar__item{{#is basename "block-layout"}} active{{/is}}">
+    <a href="{{rel 'base/block-layout.html'}}" data-search="">Block-layout</a>
+    </li>
     <li class="docs--sidebar__divider"></li>
     <li class="docs--sidebar__item{{#is basename "colours"}} active{{/is}}">
         <a href="{{rel 'base/colours.html'}}" data-search="">Colours</a>
@@ -24,6 +27,9 @@
     <li class="docs--sidebar__item{{#is basename "buttons"}} active{{/is}}">
         <a href="{{rel 'elements/buttons.html'}}" data-search="">Buttons</a>
     </li>
+    <li class="docs--sidebar__item{{#is basename "tables"}} active{{/is}}">
+        <a href="{{rel 'elements/tables.html'}}" data-search="">Tables</a>
+    </li>
 
     <li class="docs--sidebar__heading">Components</li>
     <li class="docs--sidebar__item{{#is basename "breadcrumbs"}} active{{/is}}">
@@ -32,11 +38,28 @@
     <li class="docs--sidebar__item{{#is basename "page-header"}} active{{/is}}">
         <a href="{{rel 'components/page-header.html'}}" data-search="">Page-header</a>
     </li>
+    <li class="docs--sidebar__item{{#is basename "app-tiles"}} active{{/is}}">
+    <a href="{{rel 'components/app-tiles.html'}}" data-search="">App-tiles</a>
+    </li>
     <li class="docs--sidebar__has-subnav">
         <span>Forms</span>
         <ul class="docs--sidebar__subnav">
             <li class="docs--sidebar__item{{#is basename "action-wrappers"}} active{{/is}}">
                 <a href="{{rel 'components/forms/action-wrappers.html'}}" data-search="">Action Wrappers</a>
+            </li>
+        </ul>
+    </li>
+    <li class="docs--sidebar__has-subnav">
+        <span>Dropdowns</span>
+        <ul class="docs--sidebar__subnav">
+            <li class="docs--sidebar__item{{#is basename "content-dropdown"}} active{{/is}}">
+                <a href="{{rel 'components/dropdowns/content-dropdown.html'}}" data-search="">Content-dropdowns</a>
+            </li>
+            <li class="docs--sidebar__item{{#is basename "features-dropdown"}} active{{/is}}">
+                <a href="{{rel 'components/dropdowns/features-dropdown.html'}}" data-search="">Features dropdown</a>
+            </li>
+            <li class="docs--sidebar__item{{#is basename "user-dropdown"}} active{{/is}}">
+                <a href="{{rel 'components/dropdowns/user-dropdown.html'}}" data-search="">User dropdown</a>
             </li>
         </ul>
     </li>

@@ -1,4 +1,5 @@
-.side-navigation {
+.side-navigation,
+.side-navigation__sub-navigation {
 	@include clearfix;
 	@include background-color($secondary-color-dark);
 
@@ -12,9 +13,10 @@
 	}
 }
 .side-navigation__logo {
+	@include whitespace($type: margin);
+	@include whitespace($type: margin, $side: bottom, $size: xl);
+	max-height: 40px;
 	a {
-		@include whitespace($type: margin);
-		@include whitespace($type: margin, $side: bottom, $size: xl);
 		display: block;
 	}
 }
@@ -30,13 +32,16 @@
 	}
 }
 .side-navigation__item {
+	a {
+		border-left: 6px solid transparent;
+	}
 	a, span {
 		@include layout();
 		@include font-color($white);
 		align-items: center;
 		height: 50px;
 
-		border-left: 6px solid transparent;
+
 
 		[class*="fa"] {
 			@include font-color($secondary-color-light);
@@ -51,20 +56,38 @@
 		&:hover {
 			cursor: pointer;
 			text-decoration: none;
+			[class*="fa"] {
+				@include font-color($primary-color);
+			}
 		}
 	}
 
 	&:hover {
 		a, span {
-			@include background-color($secondary-color-darker);
+
 		}
 	}
 
 	&.active a,
-	&.active span {
+	&.active span,
+	&.selected a,
+	&.selected span {
 		border-color: $primary-color;
 		[class*="fa"] {
 			@include font-color($primary-color);
+		}
+	}
+
+	.beta-marker {
+		margin-left: 10px;
+		@include font-color($danger-color);
+	}
+}
+.side-navigation__sub-navigation .side-navigation__item {
+	a, span {
+		[class*="fa-"]:first-of-type {
+			@include whitespace($type: margin, $side: right);
+			margin-left: 34px; // border-left - margin-right
 		}
 	}
 }

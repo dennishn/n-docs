@@ -14,6 +14,7 @@
  */
 @import "base/layout";
 @import "base/flex-layout";
+@import "base/block-layout";
 @import "base/core-layout";
 @import "base/colors";
 @import "base/whitespace";
@@ -39,6 +40,9 @@
 @import "components/jumbotron";
 @import "components/page-header";
 @import "components/side-navigation";
+@import "components/top-navigation";
+@import "components/app-tiles";
+@import "components/charts";
 
 @import "components/panels";
 @import "components/pagination";

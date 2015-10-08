@@ -2,10 +2,15 @@
 
 }
 .core-layout__sidebar {
+	@include layout($direction: vertical, $wrap: false);
 	@include background-color($secondary-color-dark);
 
 	min-width: $core-sidebar-width;
 	max-width: $core-sidebar-width;
+
+	.side-navigation {
+		overflow-x: hidden;
+	}
 
 }
 .core-layout__content {
@@ -19,5 +24,22 @@
 
 }
 .core-layout__page {
+	@include layout($direction: vertical, $wrap: false);
+}
+
+// TODO: IK HER
+.page-content {
+	@include flex(1);
+	min-height: 100%;
+}
+
+// If we are shoing the enviroment messages, we must make room for shizznickle
+body.local,
+body.staging {
+
+	.core-layout__sidebar .side-navigation,
+	.core-layout__content .page-content > div {
+		padding-bottom: 40px;
+	}
 
 }

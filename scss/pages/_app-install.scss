@@ -1,22 +1,22 @@
-.app-install__header {
-	min-height: 334px;
-	max-height: 334px;
-
-	.jumbotron {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		padding: 0;
+.app-install {
+	opacity: 0;
+	transition: opacity .2s;
+	&.initialized {
+		opacity: 1;
 	}
+}
 
-	.logo, h1, .panel {
-		flex: 1;
+.app-install__header {
+	.jumbotron {
+		@include clearfix;
+		padding: 0;
 	}
 
 	.logo {
 		@include whitespace($type: margin, $side: top, $size: xl);
 		@include whitespace($type: margin, $side: bottom, $size: lg);
+		margin-right: auto;
+		margin-left: auto;
 	}
 
 	h1 {
@@ -27,23 +27,17 @@
 	}
 
 	.panel {
-		display: flex;
-		align-items: center;
+		transform: translate3d(0,0,0);
 		margin-bottom: 0;
-		@media screen and (min-width: $screen-sm-min) {
-			justify-content: center;
-			p {
-				text-align: center;
-			}
-		}
 	}
 	.panel-body {
 		@include whitespace($type: padding, $side: vertical, $size: default);
 	}
 
 	.slick-slider-indicators {
-		@include whitespace($type: margin, $side: bottom, $size: default);
-		height: 16px;
+		@include clearfix;
+		@include whitespace($type: padding, $side: bottom, $size: default);
+		margin: 0 auto;
 	}
 
 	.slick-dots {
@@ -84,6 +78,23 @@
 		}
 	}
 }
+.slick-slider-child {
+	//width: 320px;
+	width: 100%;
+	margin: 0 auto;
+	@media screen and (min-width: $screen-xs-min) {
+		width: 320px * 2;
+	}
+	.slice-slide {
+		&:focus {
+			outline: none;
+		}
+	}
+	.slick-slide p {
+		max-width: 100%;
+		padding: 0 20px;
+	}
+}
 .app-install__carousel {
 	.slick-slider {
 		width: 100%;
@@ -107,12 +118,21 @@
 	.slick-slide {
 
 		padding: 20px 10px 0 10px;
+
 		&:focus {
 			outline: none;
 		}
 	}
 	.slick-slide__inner {
 		position: relative;
+		text-align: center;
+
+		img {
+			@media screen and (min-width: $screen-xs-min) {
+				max-height: 480px;
+				max-height: 50vh;
+			}
+		}
 		&:after {
 			content: '';
 			position: absolute;

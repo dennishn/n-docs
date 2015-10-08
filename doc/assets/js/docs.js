@@ -34,3 +34,4 @@ $( window ).bind( "create.xrayhtml", function( e ) {
 
 
 });
+$('[data-toggle="tooltip"]').tooltip();
