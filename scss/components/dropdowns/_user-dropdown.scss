@@ -1,6 +1,14 @@
 .dropdown.dropdown-user {
 	@include font-color($secondary-color-light);
 
+	.dropdown-menu {
+		max-width: $core-sidebar-width;
+	}
+
+	.dropdown-content {
+		padding: 0;
+	}
+
 	.user,
 	.company {
 		@include layout($wrap: false);

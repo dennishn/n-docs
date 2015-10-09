@@ -101,12 +101,24 @@ $whitespace-large-modifier: 6 !default;
 $whitespace-xlarge-modifier: 8 !default;
 
 //
+// Animation
+//
+$animation-timing-short: 200ms;
+$animation-timing-base: 400ms;
+$animation-timing-long: 600ms;
+
+$animation-easing-relaxed: ease;
+$animation-easing-beziered: cubic-bezier(.7,0,.3,1);
+
+$animation-expand-magic-number: 500px;
+
+//
 // Core Layout sizes
 //
 $core-sidebar-width: 250px !default;
 $core-sidebar-logo-height: 100px !default;
 $core-topbar-height: 60px !default;
-$core-topbar-dropdowns-magic-height-number: 500px;
+
 
 //
 // Page Header
