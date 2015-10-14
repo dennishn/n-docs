@@ -3,17 +3,42 @@
 	@include layout($direction: horizontal);
 	align-items: center;
 
-	.dropdown {
-		margin-right: 20px;
-		&:last-of-type {
-			margin-right: 0;
-			margin-left: auto;
-		}
-	}
 	.dropdown-toggle {
 		@include font-color($secondary-color-light);
 	}
+
+	.open > .btn.btn-transparent.dropdown-toggle {
+		&:hover, &.hover {
+
+		}
+		&:focus, &.focus,
+		&:active, &.active {
+			@include font-color($secondary-color-light);
+		}
+	}
+
+	.dropdown-features {
+		margin-left: auto;
+	}
+
+	.top-bar__actions-right {
+		@include clearfix;
+		margin-left: auto;
+		.dropdown {
+			float: left;
+		}
+	}
 }
+.top-bar__right {
+	.dropdown-toggle:hover, .dropdown-toggle.hover,
+	.dropdown-toggle:focus, .dropdown-toggle.focus,
+	.dropdown-toggle:active, .dropdown-toggle.active,
+	.open > .btn.btn-transparent.dropdown-toggle {
+		@include font-color(darken($secondary-color-light, 5%));
+	}
+}
+
+
 .top-bar {
 	@include layout($direction: horizontal);
 	@include flex(1);

@@ -22,7 +22,7 @@ layout: nested-component.html
     The classic <code>&lt;ul&gt;</code> dropdown
 </p>
 <div class="dropdown">
-    <button class="btn btn-transparent" data-toggle="dropdown">
+    <button class="btn btn-default" data-toggle="dropdown">
         Basic
     </button>
     <ul class="dropdown-menu">
@@ -52,7 +52,7 @@ layout: nested-component.html
     An <code>&lt;ul&gt;</code> inside a <code>.dropdown</code> container. (Not much point in this, but it is possible.)
 </p>
 <div class="dropdown">
-    <button class="btn btn-transparent" data-toggle="dropdown">
+    <button class="btn btn-default" data-toggle="dropdown">
         <code>&lt;ul&gt;</code> inside a <code>.dropdown</code> container
     </button>
     <div class="dropdown-menu">
@@ -84,7 +84,7 @@ layout: nested-component.html
     A content-dropdown. This is the most advanced dropdown available, and as such it varants it's own documentation! See more examples on how to use it here: <a href="{{rel 'components/dropdowns/content-dropdown.html'}}">Content-dropdowns</a>
 </p>
 <div class="dropdown">
-    <button class="btn btn-transparent" data-toggle="dropdown">
+    <button class="btn btn-default" data-toggle="dropdown">
         Content dropdown
     </button>
     <div class="dropdown-menu dropdown-lg">
@@ -111,7 +111,7 @@ layout: nested-component.html
     You can have your "dropdowns" expand upwards instead of downwards!
 </p>
 <div class="dropup">
-    <button class="btn btn-transparent" data-toggle="dropdown">
+    <button class="btn btn-default" data-toggle="dropdown">
         Small dropdown
     </button>
     <ul class="dropdown-menu">
@@ -146,7 +146,7 @@ layout: nested-component.html
 </p>
 
 <div class="dropdown">
-    <button class="btn btn-transparent" data-toggle="dropdown">
+    <button class="btn btn-default" data-toggle="dropdown">
         Small dropdown
     </button>
     <ul class="dropdown-menu dropdown-sm">
@@ -174,7 +174,7 @@ layout: nested-component.html
 </div>
 
 <div class="dropdown">
-    <button class="btn btn-transparent" data-toggle="dropdown">
+    <button class="btn btn-default" data-toggle="dropdown">
         Large dropdown
     </button>
     <ul class="dropdown-menu dropdown-lg">
@@ -209,7 +209,7 @@ layout: nested-component.html
 </p>
 
 <div class="dropdown">
-    <button class="btn btn-transparent" data-toggle="dropdown">
+    <button class="btn btn-default" data-toggle="dropdown">
         Inversed dropdown
     </button>
     <ul class="dropdown-menu dropdown-inverse">
@@ -244,32 +244,36 @@ layout: nested-component.html
     This is very useful if you know that your dropdown resides close to the right edge of the viewport.
 </p>
 
-<div class="dropdown">
-    <button class="btn btn-transparent" data-toggle="dropdown">
-        Right aligned
-    </button>
-    <ul class="dropdown-menu align-right">
-        <li>
-            <a href="#">
-                Item
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                Item
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                Item
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                Item
-            </a>
-        </li>
-    </ul>
+<div class="row">
+    <div class="col-xs-12 col-md-4">
+        <div class="dropdown">
+            <button class="btn btn-default" data-toggle="dropdown">
+                Right aligned
+            </button>
+            <ul class="dropdown-menu align-right">
+                <li>
+                    <a href="#">
+                        Item
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        Item
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        Item
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        Item
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
 
 <h2 class="docs--section-header">
@@ -307,14 +311,118 @@ layout: nested-component.html
     </tbody>
 </table>
 
-<div class="animation-demo">
-    <div class="dropup">
-        <button class="btn btn-transparent" data-toggle="dropdown">
-            Expand Animation
-        </button>
-        <div class="dropdown-menu animate-expand">
-            <div class="dropdown-content">
-                <ul>
+<div class="row">
+    <div class="col-xs-12 col-md-6">
+        <div class="animation-demo">
+            <div class="dropdown">
+                <button class="btn btn-default" data-toggle="dropdown">
+                    Dropdown Expand Animation
+                </button>
+                <div class="dropdown-menu animate-expand">
+                    <div class="dropdown-content">
+                        <ul>
+                            <li>
+                                <a href="#">
+                                    Item
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    Item
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    Item
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    Item
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-6">
+        <div class="animation-demo">
+            <div class="dropup">
+                <button class="btn btn-default" data-toggle="dropdown">
+                    Dropup Expand Animation
+                </button>
+                <div class="dropdown-menu animate-expand">
+                    <div class="dropdown-content">
+                        <ul>
+                            <li>
+                                <a href="#">
+                                    Item
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    Item
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    Item
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    Item
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-md-6">
+        <div class="animation-demo">
+            <div class="dropdown">
+                <button class="btn btn-default" data-toggle="dropdown">
+                    Dropdown Fade Animation
+                </button>
+                <ul class="dropdown-menu animate-fade">
+                    <li>
+                        <a href="#">
+                            Item
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Item
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Item
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Item
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-6">
+        <div class="animation-demo">
+            <div class="dropup">
+                <button class="btn btn-default" data-toggle="dropdown">
+                    Dropup Fade Animation
+                </button>
+                <ul class="dropdown-menu animate-fade">
                     <li>
                         <a href="#">
                             Item
@@ -341,63 +449,68 @@ layout: nested-component.html
     </div>
 </div>
 
-<div class="animation-demo">
-    <div class="dropdown">
-        <button class="btn btn-transparent" data-toggle="dropdown">
-            Fade Animation
-        </button>
-        <ul class="dropdown-menu animate-fade">
-            <li>
-                <a href="#">
-                    Item
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    Item
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    Item
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    Item
-                </a>
-            </li>
-        </ul>
+<div class="row">
+    <div class="col-xs-12 col-md-6">
+        <div class="animation-demo">
+            <div class="dropdown">
+                <button class="btn btn-default" data-toggle="dropdown">
+                    Dropdown Fade-up Animation
+                </button>
+                <ul class="dropdown-menu animate-fade-up">
+                    <li>
+                        <a href="#">
+                            Item
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Item
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Item
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Item
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
-</div>
-
-<div class="animation-demo">
-    <div class="dropup">
-        <button class="btn btn-transparent" data-toggle="dropdown">
-            Fade-up Animation
-        </button>
-        <ul class="dropdown-menu animate-fade-up">
-            <li>
-                <a href="#">
-                    Item
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    Item
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    Item
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    Item
-                </a>
-            </li>
-        </ul>
+    <div class="col-xs-12 col-md-6">
+        <div class="animation-demo">
+            <div class="dropup">
+                <button class="btn btn-default" data-toggle="dropdown">
+                    Dropup Fade-up Animation
+                </button>
+                <ul class="dropdown-menu animate-fade-up">
+                    <li>
+                        <a href="#">
+                            Item
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Item
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Item
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Item
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -408,7 +521,7 @@ layout: nested-component.html
     Dropdowns comes with a few sub-components to aid in building beautiful dropdowns
 </p>
 <div class="dropdown open">
-    <button class="btn btn-transparent" data-toggle="dropdown">
+    <button class="btn btn-default" data-toggle="dropdown">
         Default
     </button>
     <ul class="dropdown-menu">
@@ -439,7 +552,7 @@ layout: nested-component.html
     </ul>
 </div>
 <div class="dropdown">
-    <button class="btn btn-transparent" data-toggle="dropdown">
+    <button class="btn btn-default" data-toggle="dropdown">
         Inverse
     </button>
     <ul class="dropdown-menu dropdown-inverse">

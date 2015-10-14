@@ -27,8 +27,11 @@
     <li class="docs--sidebar__item{{#is basename "buttons"}} active{{/is}}">
         <a href="{{rel 'elements/buttons.html'}}" data-search="">Buttons</a>
     </li>
+    <li class="docs--sidebar__item{{#is basename "indicators"}} active{{/is}}">
+        <a href="{{rel 'elements/buttons.html'}}" data-search="">Buttons</a>
+    </li>
     <li class="docs--sidebar__item{{#is basename "tables"}} active{{/is}}">
-        <a href="{{rel 'elements/tables.html'}}" data-search="">Tables</a>
+        <a href="{{rel 'elements/indicators.html'}}" data-search="">Indicators</a>
     </li>
 
     <li class="docs--sidebar__heading">Components</li>
@@ -64,8 +67,24 @@
             <li class="docs--sidebar__item{{#is basename "user-dropdown"}} active{{/is}}">
                 <a href="{{rel 'components/dropdowns/user-dropdown.html'}}" data-search="">User dropdown</a>
             </li>
+            <li class="docs--sidebar__item{{#is basename "applications-dropdown"}} active{{/is}}">
+                <a href="{{rel 'components/dropdowns/applications-dropdown.html'}}" data-search="">Applications dropdown</a>
+            </li>
         </ul>
     </li>
+
+    <li class="docs--sidebar__has-subnav">
+        <span>Sidebar</span>
+        <ul class="docs--sidebar__subnav">
+            <li class="docs--sidebar__item{{#is basename "basic-sidebar"}} active{{/is}}">
+                <a href="{{rel 'components/sidebar/basic-sidebar.html'}}" data-search="">Sidebar Basics</a>
+            </li>
+            <li class="docs--sidebar__item{{#is basename "sidebar-components"}} active{{/is}}">
+                <a href="{{rel 'components/sidebar/sidebar-components.html'}}" data-search="">Sidebar Components</a>
+            </li>
+        </ul>
+    </li>
+
     <li class="docs--sidebar__item{{#is basename "side-navigation"}} active{{/is}}">
       <a href="{{rel 'components/side-navigation.html'}}" data-search="">Side-navigation</a>
     </li>
@@ -74,8 +93,11 @@
     <li class="docs--sidebar__has-subnav">
         <span>Layouts</span>
         <ul class="docs--sidebar__subnav">
-            <li class="docs--sidebar__item{{#is basename "core"}} active{{/is}}">
-                <a href="{{rel 'blade-templates/layouts/core.html'}}" data-search="">Core Layout</a>
+            <li class="docs--sidebar__item{{#is basename "core-layout-wide"}} active{{/is}}">
+                <a href="{{rel 'blade-templates/layouts/core-layout-wide.html'}}" data-search="">Core Layout Wide</a>
+            </li>
+            <li class="docs--sidebar__item{{#is basename "core-layout-toggle-sidebar"}} active{{/is}}">
+                <a href="{{rel 'blade-templates/layouts/core-layout-toggle-sidebar.html'}}" data-search="">Core Layout Toggle Sidebar</a>
             </li>
         </ul>
     </li>

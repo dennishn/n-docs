@@ -1,21 +1,7 @@
 .core-layout {
 
 }
-.core-layout__sidebar {
-	@include layout($direction: vertical, $wrap: false);
-	@include background-color($secondary-color-dark);
 
-	min-width: $core-sidebar-width;
-	max-width: $core-sidebar-width;
-
-	.side-navigation {
-		overflow-x: hidden;
-	}
-
-}
-.core-layout__content {
-
-}
 .core-layout__topbar {
 	@include background-color($secondary-color);
 
@@ -23,6 +9,28 @@
 	max-height: $core-topbar-height;
 
 }
+
+.core-layout__content {
+	@include layout($direction: horizontal, $wrap: false);
+	max-height: calc(100vh - #{$core-topbar-height});
+}
+.core-layout__sidebar {
+	@include layout($direction: vertical, $wrap: false);
+	@include flex(1);
+	@include background-color($secondary-color-dark);
+
+	min-width: $core-sidebar-width;
+	max-width: $core-sidebar-width;
+
+	max-height: calc(100vh - #{$core-topbar-height});
+
+	.sidebar__content {
+		overflow-y: auto;
+	}
+
+}
+
+
 .core-layout__page {
 	@include layout($direction: vertical, $wrap: false);
 }
@@ -31,6 +39,8 @@
 .page-content {
 	@include flex(1);
 	min-height: 100%;
+	overflow-y: auto;
+	@include scrollbar($thumb-color: $secondary-color);
 }
 
 // If we are shoing the enviroment messages, we must make room for shizznickle

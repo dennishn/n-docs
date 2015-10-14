@@ -1,0 +1,28 @@
+.sidebar__header,
+.sidebar__content {
+	width: 100%;
+}
+
+.sidebar__header {
+	@include whitespace();
+	@include font-color($secondary-color-light);
+	flex: 1 0 auto;
+
+	a {
+		@include font-color($white);
+		.fa {
+			@include font-color($secondary-color-light);
+			@include whitespace($side: right, $size: sm);
+		}
+
+		&:hover, &.hover,
+		&:active, &.active,
+		&:focus, &.focus {
+			text-decoration: none;
+		}
+	}
+}
+.sidebar__content {
+	@include scrollbar();
+	flex: 2 1 auto;
+}

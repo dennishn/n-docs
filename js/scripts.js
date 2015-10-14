@@ -15,7 +15,8 @@ jQuery(document).ready(function($) {
 	$('[data-popover="true"]').each(function() {
 		var trigger = $(this).data('trigger');
 		$(this).popover({
-			trigger: trigger ? trigger : 'click'
+			trigger: trigger ? trigger : 'click',
+			html: true
 		});
 	});
 
