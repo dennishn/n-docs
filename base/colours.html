@@ -1,0 +1,364 @@
+<!doctype html>
+<!--[if IE 9]><html class="lt-ie10" lang="en" > <![endif]-->
+<html class="no-js" lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Colors | Foundation Docs</title>
+
+        <link href='https://fonts.googleapis.com/css?family=Work+Sans:500,600,400,300,700' rel='stylesheet' type='text/css'>
+        <link rel="shortcut icon" href="/favicon.ico">
+
+        <link href="../assets/css/docs.css" rel="stylesheet" />
+        <link href="../assets/css/nodes.css" rel="stylesheet" />
+
+        <script src="../assets/js/modernizr.js"></script>
+    </head>
+    <body class="fullbleed">
+
+        <div class="layout vertical fit docs--layout-container">
+
+            <div class="flex-1 docs--layout-topbar">
+                nStack.io UI Framework
+            </div>
+
+            <div class="layout horizontal docs--layout-page">
+                <div class="flex-1 scroll docs--layout-sidebar">
+                    <ul class="docs--sidebar">
+
+    <li class="docs--sidebar__heading">Setup</li>
+    <li class="docs--sidebar__item">
+        <a href="../index.html" data-search="">Getting Started</a>
+    </li>
+
+    <li class="docs--sidebar__heading">Base</li>
+    <li class="docs--sidebar__item">
+        <a href="layout.html" data-search="">Layout</a>
+    </li>
+    <li class="docs--sidebar__item">
+        <a href="flex-layout.html" data-search="">Flex-layout</a>
+    </li>
+    <li class="docs--sidebar__item">
+    <a href="block-layout.html" data-search="">Block-layout</a>
+    </li>
+    <li class="docs--sidebar__divider"></li>
+    <li class="docs--sidebar__item active">
+        <a href="colours.html" data-search="">Colours</a>
+    </li>
+    <li class="docs--sidebar__item">
+        <a href="whitespace.html" data-search="">Whitespace</a>
+    </li>
+
+    <li class="docs--sidebar__heading">Elements</li>
+    <li class="docs--sidebar__item">
+        <a href="../elements/buttons.html" data-search="">Buttons</a>
+    </li>
+    <li class="docs--sidebar__item">
+        <a href="../elements/indicators.html" data-search="">Indicators</a>
+    </li>
+    <li class="docs--sidebar__item">
+        <a href="../elements/tables.html" data-search="">Tables</a>
+    </li>
+
+    <li class="docs--sidebar__heading">Components</li>
+    <li class="docs--sidebar__item">
+        <a href="../components/breadcrumbs.html" data-search="">Breadcrumbs</a>
+    </li>
+    <li class="docs--sidebar__item">
+        <a href="../components/page-header.html" data-search="">Page-header</a>
+    </li>
+    <li class="docs--sidebar__item">
+    <a href="../components/app-tiles.html" data-search="">App-tiles</a>
+    </li>
+    <li class="docs--sidebar__has-subnav">
+        <span>Forms</span>
+        <ul class="docs--sidebar__subnav">
+            <li class="docs--sidebar__item">
+                <a href="../components/forms/input-basics.html" data-search="">Input Basics</a>
+            </li>
+            <li class="docs--sidebar__item">
+                <a href="../components/forms/action-wrappers.html" data-search="">Action Wrappers</a>
+            </li>
+            <li class="docs--sidebar__item">
+                <a href="../components/forms/floating-labels.html" data-search="">Floating Labels</a>
+            </li>
+        </ul>
+    </li>
+    <li class="docs--sidebar__has-subnav">
+        <span>Dropdowns</span>
+        <ul class="docs--sidebar__subnav">
+            <li class="docs--sidebar__item">
+                <a href="../components/dropdowns/basics-dropdown.html" data-search="">Dropdown Basics</a>
+            </li>
+            <li class="docs--sidebar__item">
+                <a href="../components/dropdowns/content-dropdown.html" data-search="">Content-dropdowns</a>
+            </li>
+            <li class="docs--sidebar__item">
+                <a href="../components/dropdowns/features-dropdown.html" data-search="">Features dropdown</a>
+            </li>
+            <li class="docs--sidebar__item">
+                <a href="../components/dropdowns/user-dropdown.html" data-search="">User dropdown</a>
+            </li>
+            <li class="docs--sidebar__item">
+                <a href="../components/dropdowns/applications-dropdown.html" data-search="">Applications dropdown</a>
+            </li>
+        </ul>
+    </li>
+
+    <li class="docs--sidebar__has-subnav">
+        <span>Sidebar</span>
+        <ul class="docs--sidebar__subnav">
+            <li class="docs--sidebar__item">
+                <a href="../components/sidebar/basic-sidebar.html" data-search="">Sidebar Basics</a>
+            </li>
+            <li class="docs--sidebar__item">
+                <a href="../components/sidebar/sidebar-components.html" data-search="">Sidebar Components</a>
+            </li>
+        </ul>
+    </li>
+
+    <li class="docs--sidebar__item">
+      <a href="../components/side-navigation.html" data-search="">Side-navigation</a>
+    </li>
+
+    <li class="docs--sidebar__heading">Blade Templates</li>
+    <li class="docs--sidebar__has-subnav">
+        <span>Layouts</span>
+        <ul class="docs--sidebar__subnav">
+            <li class="docs--sidebar__item">
+                <a href="../blade-templates/layouts/core-layout-wide.html" data-search="">Core Layout Wide</a>
+            </li>
+            <li class="docs--sidebar__item">
+                <a href="../blade-templates/layouts/core-layout-toggle-sidebar.html" data-search="">Core Layout Toggle Sidebar</a>
+            </li>
+        </ul>
+    </li>
+    <li class="docs--sidebar__has-subnav">
+        Pages
+        <ul class="docs--sidebar__subnav">
+            <li class="docs--sidebar__item">
+                <a href="../blade-templates/pages/app-install.html" data-search="">App Install</a>
+            </li>
+        </ul>
+    </li>
+</ul>
+                </div>
+                <div class="flex-2 scroll docs--layout-content">
+                    <h1 class="docs--page-header">
+    Colors
+</h1>
+
+<h1>Dennis skal docce mixins</h1>
+
+<p class="docs--page-description">
+    In bootstrap only one &quot;brand&quot; color is available: <code>$brand-primary</code>. In nStack we need alot more,
+    and as such we have chosen to disband bootstraps way of using colors in favour of our own more complex solution...
+    The color system consists of 2 colored palettes, and a selection of grays.
+</p>
+
+<h2 class="docs--section-header">Text colors</h2>
+
+<p class="docs--section-description">
+    Text colors are designed to be used complementary to the opposite main color backgrounds.
+</p>
+
+<div class="docs--visual-example">
+    <p class="text-primary-light">text-primary-light <a href="#">link</a></p>
+    <p class="text-primary-dark">text-primary-dark <a href="#">link</a></p>
+    <p class="text-secondary-light">text-secondary-light <a href="#">link</a></p>
+    <p class="text-secondary-dark">text-secondary-dark <a href="#">link</a></p>
+</div>
+
+<h2 class="docs--section-header">Text shades</h2>
+
+<p class="docs--section-description">
+    Shades are designed to be used with contextual backgrounds, but can work equally well on the primary and secondary color backgrounds.
+    Text can be shaded light and dark, each with 3 variations: primary, secondary, hint (hint is for hint-text, disabled etc.).
+</p>
+
+<div class="docs--visual-example">
+    <div style="background: #333; padding-left: 10px;">
+        <p class="text-shade-light-primary">.text-shade-light-primary</p>
+        <p class="text-shade-light-secondary">.text-shade-light-secondary</p>
+        <p class="text-shade-light-hint">.text-shade-light-hint</p>
+    </div>
+    <div style="background: #eee; padding-left: 10px;">
+        <p class="text-shade-dark-primary">.text-shade-dark-primary</p>
+        <p class="text-shade-dark-secondary">.text-shade-dark-secondary</p>
+        <p class="text-shade-dark-hint">.text-shade-dark-hint</p>
+    </div>
+</div>
+
+<h2 class="docs--section-header">Colour palettes</h2>
+
+<p class="docs--section-description">
+    A palette consists of a &quot;base&quot; color, and 4 variatioins in lighter and darker shades.
+</p>
+
+<div class="docs--visual-example">
+
+    <ul class="docs--palette-list">
+        <li class="docs--palette-title">
+            Primary Color
+        </li>
+
+        <li class="docs--palette background-primary-darker" title=".background-primary-darker">
+        </li>
+        <li class="docs--palette background-primary-dark" title=".background-primary-dark">
+        </li>
+        <li class="docs--palette background-primary" title=".background-primary">
+        </li>
+        <li class="docs--palette background-primary-light" title=".background-primary-light">
+        </li>
+        <li class="docs--palette background-primary-lighter" title=".background-primary-lighter">
+        </li>
+    </ul>
+
+    <ul class="docs--palette-list">
+        <li class="docs--palette-title">
+            Secondary Color
+        </li>
+
+        <li class="docs--palette background-secondary-darker" title=".background-secondary-darker">
+        </li>
+        <li class="docs--palette background-secondary-dark" title=".background-secondary-dark">
+        </li>
+        <li class="docs--palette background-secondary" title=".background-secondary">
+        </li>
+        <li class="docs--palette background-secondary-light" title=".background-secondary-light">
+        </li>
+        <li class="docs--palette background-secondary-lighter" title=".background-secondary-lighter">
+        </li>
+    </ul>
+
+    <ul class="docs--palette-list">
+        <li class="docs--palette-title">
+            Info Contextual Color
+        </li>
+
+        <li class="docs--palette background-info-darker" title=".background-info-darker">
+        </li>
+        <li class="docs--palette background-info-dark" title=".background-info-dark">
+        </li>
+        <li class="docs--palette background-info" title=".background-info">
+        </li>
+        <li class="docs--palette background-info-light" title=".background-info-light">
+        </li>
+        <li class="docs--palette background-info-lighter" title=".background-info-lighter">
+        </li>
+    </ul>
+
+    <ul class="docs--palette-list">
+        <li class="docs--palette-title">
+            Success Contextual Color
+        </li>
+
+        <li class="docs--palette background-success-darker" title=".background-success-darker">
+        </li>
+        <li class="docs--palette background-success-dark" title=".background-success-dark">
+        </li>
+        <li class="docs--palette background-success" title=".background-success">
+        </li>
+        <li class="docs--palette background-success-light" title=".background-success-light">
+        </li>
+        <li class="docs--palette background-success-lighter" title=".background-success-lighter">
+        </li>
+    </ul>
+
+    <ul class="docs--palette-list">
+        <li class="docs--palette-title">
+            Warning Contextual Color
+        </li>
+
+        <li class="docs--palette background-warning-darker" title=".background-warning-darker">
+        </li>
+        <li class="docs--palette background-warning-dark" title=".background-warning-dark">
+        </li>
+        <li class="docs--palette background-warning" title=".background-warning">
+        </li>
+        <li class="docs--palette background-warning-light" title=".background-warning-light">
+        </li>
+        <li class="docs--palette background-warning-lighter" title=".background-warning-lighter">
+        </li>
+    </ul>
+
+    <ul class="docs--palette-list">
+        <li class="docs--palette-title">
+            Danger Contextual Color
+        </li>
+
+        <li class="docs--palette background-danger-darker" title=".background-danger-darker">
+        </li>
+        <li class="docs--palette background-danger-dark" title=".background-danger-dark">
+        </li>
+        <li class="docs--palette background-danger" title=".background-danger">
+        </li>
+        <li class="docs--palette background-danger-light" title=".background-danger-light">
+        </li>
+        <li class="docs--palette background-danger-lighter" title=".background-danger-lighter">
+        </li>
+    </ul>
+
+    <ul class="docs--palette-list">
+        <li class="docs--palette-title">
+            Grays
+        </li>
+
+        <li class="docs--palette background-gray-darker" title=".background-gray-darker">
+        </li>
+        <li class="docs--palette background-gray-dark" title=".background-gray-dark">
+        </li>
+        <li class="docs--palette background-gray" title=".background-gray">
+        </li>
+        <li class="docs--palette background-gray-light" title=".background-gray-light">
+        </li>
+        <li class="docs--palette background-gray-lighter" title=".background-gray-lighter">
+        </li>
+    </ul>
+
+</div>
+
+<h2 class="docs--section-header">When to use text-colors</h2>
+
+<div class="docs--visual-example">
+
+    <ul class="docs--palette-list">
+        <li class="docs--palette background-secondary-darker" title=".background-secondary-darker">
+            <p class="text-primary-light">What a callout! ( I am .text-primary-light )</p>
+            <p class="text-secondary-light">I look great! ( I am .text-secondary-light )</p>
+        </li>
+        <li class="docs--palette background-secondary-dark" title=".background-secondary-dark">
+            <p class="text-primary-light">What a callout! ( I am .text-primary-light )</p>
+            <p class="text-secondary-light">I look great! ( I am .text-secondary-light )</p>
+        </li>
+        <li class="docs--palette background-secondary" title=".background-secondary">
+            <p class="text-primary-light">What a callout! ( I am .text-primary-light )</p>
+            <p class="text-primary-dark">Almost callout! ( I am .text-primary-light )</p>
+            <p class="text-secondary-light">I am very muted but still looking hot! ( I am .text-secondary-light )</p>
+        </li>
+        <li class="docs--palette background-secondary-light" title=".background-secondary-light">
+            <p class="text-secondary-dark">I look great! ( I am .text-secondary-dark )</p>
+        </li>
+        <li class="docs--palette background-secondary-lighter" title=".background-secondary-lighter">
+            <p class="text-secondary-light">I look great! ( I am .text-secondary-light )</p>
+            <p class="text-secondary-dark">I look great! ( I am .text-secondary-dark )</p>
+        </li>
+    </ul>
+
+</div>
+
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <script src="../assets/js/vendor.js"></script>
+        <script src="../assets/js/docs.js"></script>
+        <script src="../assets/js/nodes.js"></script>
+
+    </body>
+
+</html>

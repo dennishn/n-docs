@@ -1,0 +1,262 @@
+<!doctype html>
+<!--[if IE 9]><html class="lt-ie10" lang="en" > <![endif]-->
+<html class="no-js" lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>User dropdown | Foundation Docs</title>
+
+        <link href='https://fonts.googleapis.com/css?family=Work+Sans:500,600,400,300,700' rel='stylesheet' type='text/css'>
+        <link rel="shortcut icon" href="/favicon.ico">
+
+        <link href="../../assets/css/docs.css" rel="stylesheet" />
+        <link href="../../assets/css/nodes.css" rel="stylesheet" />
+
+        <script src="../../assets/js/modernizr.js"></script>
+    </head>
+    <body class="fullbleed">
+
+        <div class="layout vertical fit docs--layout-container">
+
+            <div class="flex-1 docs--layout-topbar">
+                nStack.io UI Framework
+            </div>
+
+            <div class="layout horizontal docs--layout-page">
+                <div class="flex-1 scroll docs--layout-sidebar">
+                    <ul class="docs--sidebar">
+
+    <li class="docs--sidebar__heading">Setup</li>
+    <li class="docs--sidebar__item">
+        <a href="../../index.html" data-search="">Getting Started</a>
+    </li>
+
+    <li class="docs--sidebar__heading">Base</li>
+    <li class="docs--sidebar__item">
+        <a href="../../base/layout.html" data-search="">Layout</a>
+    </li>
+    <li class="docs--sidebar__item">
+        <a href="../../base/flex-layout.html" data-search="">Flex-layout</a>
+    </li>
+    <li class="docs--sidebar__item">
+    <a href="../../base/block-layout.html" data-search="">Block-layout</a>
+    </li>
+    <li class="docs--sidebar__divider"></li>
+    <li class="docs--sidebar__item">
+        <a href="../../base/colours.html" data-search="">Colours</a>
+    </li>
+    <li class="docs--sidebar__item">
+        <a href="../../base/whitespace.html" data-search="">Whitespace</a>
+    </li>
+
+    <li class="docs--sidebar__heading">Elements</li>
+    <li class="docs--sidebar__item">
+        <a href="../../elements/buttons.html" data-search="">Buttons</a>
+    </li>
+    <li class="docs--sidebar__item">
+        <a href="../../elements/indicators.html" data-search="">Indicators</a>
+    </li>
+    <li class="docs--sidebar__item">
+        <a href="../../elements/tables.html" data-search="">Tables</a>
+    </li>
+
+    <li class="docs--sidebar__heading">Components</li>
+    <li class="docs--sidebar__item">
+        <a href="../breadcrumbs.html" data-search="">Breadcrumbs</a>
+    </li>
+    <li class="docs--sidebar__item">
+        <a href="../page-header.html" data-search="">Page-header</a>
+    </li>
+    <li class="docs--sidebar__item">
+    <a href="../app-tiles.html" data-search="">App-tiles</a>
+    </li>
+    <li class="docs--sidebar__has-subnav">
+        <span>Forms</span>
+        <ul class="docs--sidebar__subnav">
+            <li class="docs--sidebar__item">
+                <a href="../forms/input-basics.html" data-search="">Input Basics</a>
+            </li>
+            <li class="docs--sidebar__item">
+                <a href="../forms/action-wrappers.html" data-search="">Action Wrappers</a>
+            </li>
+            <li class="docs--sidebar__item">
+                <a href="../forms/floating-labels.html" data-search="">Floating Labels</a>
+            </li>
+        </ul>
+    </li>
+    <li class="docs--sidebar__has-subnav">
+        <span>Dropdowns</span>
+        <ul class="docs--sidebar__subnav">
+            <li class="docs--sidebar__item">
+                <a href="basics-dropdown.html" data-search="">Dropdown Basics</a>
+            </li>
+            <li class="docs--sidebar__item">
+                <a href="content-dropdown.html" data-search="">Content-dropdowns</a>
+            </li>
+            <li class="docs--sidebar__item">
+                <a href="features-dropdown.html" data-search="">Features dropdown</a>
+            </li>
+            <li class="docs--sidebar__item active">
+                <a href="user-dropdown.html" data-search="">User dropdown</a>
+            </li>
+            <li class="docs--sidebar__item">
+                <a href="applications-dropdown.html" data-search="">Applications dropdown</a>
+            </li>
+        </ul>
+    </li>
+
+    <li class="docs--sidebar__has-subnav">
+        <span>Sidebar</span>
+        <ul class="docs--sidebar__subnav">
+            <li class="docs--sidebar__item">
+                <a href="../sidebar/basic-sidebar.html" data-search="">Sidebar Basics</a>
+            </li>
+            <li class="docs--sidebar__item">
+                <a href="../sidebar/sidebar-components.html" data-search="">Sidebar Components</a>
+            </li>
+        </ul>
+    </li>
+
+    <li class="docs--sidebar__item">
+      <a href="../side-navigation.html" data-search="">Side-navigation</a>
+    </li>
+
+    <li class="docs--sidebar__heading">Blade Templates</li>
+    <li class="docs--sidebar__has-subnav">
+        <span>Layouts</span>
+        <ul class="docs--sidebar__subnav">
+            <li class="docs--sidebar__item">
+                <a href="../../blade-templates/layouts/core-layout-wide.html" data-search="">Core Layout Wide</a>
+            </li>
+            <li class="docs--sidebar__item">
+                <a href="../../blade-templates/layouts/core-layout-toggle-sidebar.html" data-search="">Core Layout Toggle Sidebar</a>
+            </li>
+        </ul>
+    </li>
+    <li class="docs--sidebar__has-subnav">
+        Pages
+        <ul class="docs--sidebar__subnav">
+            <li class="docs--sidebar__item">
+                <a href="../../blade-templates/pages/app-install.html" data-search="">App Install</a>
+            </li>
+        </ul>
+    </li>
+</ul>
+                </div>
+                <div class="flex-2 scroll docs--layout-content">
+                    <h1 class="docs--page-header">User dropdown</h1>
+
+<p class="docs--page-description">
+    This dropdown is designed specifically for the topbar. It can contain user information, company information and more.
+</p>
+
+<div class="dropdown dropdown-user open">
+    <button class="btn btn-transparent" data-toggle="dropdown">
+        <i class="fa fa-user"></i>
+    </button>
+    <div class="dropdown-menu dropdown-inverse animate-expand align-right">
+        <div class="dropdown-content">
+            <p class="dropdown-content__title">
+                User
+            </p>
+            <div class="user">
+                <div class="user__profile">
+                    <img class="img-responsive" src="//placehold.it/300x300"/>
+                </div>
+                <div class="user__info">
+                    <span class="user__info-name" title="John Doe">
+                        John Doe
+                    </span>
+                    <span class="user__info-email" title="john.doe.doe.doe.doe.doe.doe.doe.doe@email.com">
+                        john.doe.doe.doe.doe.doe.doe.doe.doe@email.com
+                    </span>
+                </div>
+            </div>
+            <div class="user-actions">
+                <button class="btn btn-sm btn-transparent user__sign-out">
+                    <i class="fa fa-sign-out"></i>
+                    Sign out
+                </button>
+                <button data-toggle="tooltip" data-placement="left" title="Edit user"
+                        class="btn btn-sm btn-transparent user__settings">
+                    <i class="fa fa-pencil"></i>
+                </button>
+            </div>
+            <p class="dropdown-content__title">
+                Company
+            </p>
+            <div class="company">
+                <div class="company__profile">
+                    <img class="img-responsive" src="//placehold.it/300x300"/>
+                </div>
+                <div class="company__info">
+                    <span class="company__info-name">
+                        Nodes Agency
+                    </span>
+                </div>
+            </div>
+            <p class="dropdown-content__title company-list-title">
+                Switch company
+            </p>
+            <div class="company-list">
+                <ul>
+                    <li>
+                        <a href="#">
+                            eBoks
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            eBoks
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            eBoks
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            eBoks
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            eBoks
+                        </a>
+                    </li>
+                    <li class="company-list__more">
+                        <a href="#">
+                            <i class="fa fa-plus"></i>
+                            more
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="company-actions">
+                <button class="btn btn-transparent company__invite">
+                    <i class="fa fa-user-plus"></i>
+                    Invite to company
+                </button>
+                <button data-toggle="tooltip" data-placement="left" title="Edit company"
+                        class="button btn btn-transparent company__settings">
+                    <i class="fa fa-cog"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <script src="../../assets/js/vendor.js"></script>
+
+        <script src="../../../assets/js/docs.js"></script>
+        <script src="../../../assets/js/nodes.js"></script>
+    </body>
+
+</html>
